@@ -86,7 +86,7 @@ public class Client {
  
 		StringBuffer result = new StringBuffer();
 		String line = "";
-		while ((line = rd.readLine()) != null) {s
+		while ((line = rd.readLine()) != null) {
 			result.append(line);
 		}
  

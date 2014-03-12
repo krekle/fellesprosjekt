@@ -63,9 +63,9 @@ public class Main_Window extends javax.swing.JFrame {
         kom_møte_label1 = new javax.swing.JLabel();
         logout_button = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+       
 
         kom_møte_list.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };

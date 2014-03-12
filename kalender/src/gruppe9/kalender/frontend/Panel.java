@@ -10,6 +10,12 @@
  */
 package gruppe9.kalender.frontend;
 
+import java.util.Collections;
+
+import javax.swing.DefaultListModel;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+
 /**
  *
  * @author krake
@@ -29,93 +35,97 @@ public class Panel extends javax.swing.JPanel
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    public void addAvtale(Avtale a)
+    {
+    	ListModel X;
+    	switch(Avtale.getDay())
+    	{
+    	case "Man":
+    		X = mandag_list.getModel();
+    		X.addElement(a);
+    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		break;
+    	case "Tir":
+    		X = mandag_list.getModel();
+    		X.addElement(a);
+    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		break;
+    	case "Ons":
+    		X = mandag_list.getModel();
+    		X.addElement(a);
+    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		break;
+    	case "Tor":
+    		X = mandag_list.getModel();
+    		X.addElement(a);
+    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		break;
+    	case "Fre":
+    		X = mandag_list.getModel();
+    		X.addElement(a);
+    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		break;
+    	}
+    }
     private void initComponents() {
 
-        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        mandag_list = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
+        tirsdag_list = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList();
+        onsdag_list = new javax.swing.JList();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jList4 = new javax.swing.JList();
+        torsdag_list = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jList5 = new javax.swing.JList();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-
-        jLabel5.setText("Tirsdag");
+        fredag_list = new javax.swing.JList();
+        jLabel1 = new javax.swing.JLabel("Mandag");
+        jLabel2 = new javax.swing.JLabel("Tirsdag");
+        jLabel3 = new javax.swing.JLabel("Onsdag");
+        jLabel4 = new javax.swing.JLabel("Torsdag");
+        jLabel6 = new javax.swing.JLabel("Fredag");
 
         setMaximumSize(null);
 
+        Avtale_renderer renderer = new Avtale_renderer();
+        mandag_list.setAutoscrolls(false);
+        jScrollPane1.setViewportView(mandag_list);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        System.out.println(renderer.toString());
+        mandag_list.setCellRenderer(renderer);
+        DefaultListModel X = new DefaultListModel();
+        X.addElement("BOKPOK");
+        X.addElement("asdasdBOKPOK");
+        mandag_list.setModel(X);
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList1.setAutoscrolls(false);
-        jScrollPane1.setViewportView(jList1);
-
+        
+        tirsdag_list.setAutoscrolls(false);
+        jScrollPane2.setViewportView(tirsdag_list);
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        tirsdag_list.setCellRenderer(renderer);
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList2.setAutoscrolls(false);
-        jScrollPane2.setViewportView(jList2);
-
+        onsdag_list.setAutoscrolls(false);
+        jScrollPane3.setViewportView(onsdag_list);
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        jList3.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList3.setAutoscrolls(false);
-        jScrollPane3.setViewportView(jList3);
-
+        onsdag_list.setCellRenderer(renderer);
+        
+        torsdag_list.setAutoscrolls(false);
+        jScrollPane4.setViewportView(torsdag_list);
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        jList4.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList4.setAutoscrolls(false);
-        jScrollPane4.setViewportView(jList4);
-
+        torsdag_list.setCellRenderer(renderer);
+        
+        fredag_list.setAutoscrolls(false);
+        jScrollPane5.setViewportView(fredag_list);
         jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        fredag_list.setCellRenderer(renderer);
 
-        jList5.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList5.setAutoscrolls(false);
-        jScrollPane5.setViewportView(jList5);
 
-        jLabel1.setText("Mandag");
 
-        jLabel2.setText("Tirsdag");
-
-        jLabel3.setText("Onsdag");
-
-        jLabel4.setText("Torsdag");
-
-        jLabel6.setText("Fredag");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -176,11 +186,11 @@ public class Panel extends javax.swing.JPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
-    private javax.swing.JList jList3;
-    private javax.swing.JList jList4;
-    private javax.swing.JList jList5;
+    private javax.swing.JList mandag_list;
+    private javax.swing.JList tirsdag_list;
+    private javax.swing.JList onsdag_list;
+    private javax.swing.JList torsdag_list;
+    private javax.swing.JList fredag_list;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

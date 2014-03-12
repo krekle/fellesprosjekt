@@ -3,6 +3,7 @@
 /bin/
 target/
 .classpath
+/.classpath
  
 # OS Files #
 .DS_Store

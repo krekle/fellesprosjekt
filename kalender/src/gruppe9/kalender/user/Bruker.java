@@ -5,6 +5,7 @@ public class Bruker {
 	
 	//Her vil vi typisk ha ArrayList<Avtaler>, ArrayList<Varsler> osv, osv
 	
+	private static String username;
 	//field for å holde styr på instansen av Bruker:
 	private static Bruker instance = null;
 	
@@ -17,6 +18,14 @@ public class Bruker {
 			instance = new Bruker();
 		}
 		return instance;
+	}
+
+	public static String getUsername() {
+		return username;
+	}
+
+	public static void setUsername(String username) {
+		Bruker.username = username;
 	}
 
 	//For å bruke metoder fra bruker kall Bruker.getInstance().*

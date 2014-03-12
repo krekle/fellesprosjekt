@@ -3,9 +3,10 @@ package gruppe9.kalender.model;
 import java.util.ArrayList;
 
 public class Meeting {
-	private int id;
-	private int creator;
+	private int meetingId;
+	private int creatorId;
 	//private String creatorName;
+	private String date;
 	private String starttime;
 	private String endtime;
 	private String description;
@@ -14,6 +15,18 @@ public class Meeting {
 	private ArrayList<Notification> notifications;
 
 
+	public Meeting(int id, int creator, String date, String starttime,
+			String endtime, String description, Room room) {
+		super();
+		this.meetingId = id;
+		this.creatorId = creator;
+		this.date = date;
+		this.starttime = starttime;
+		this.endtime = endtime;
+		this.description = description;
+		this.room = room;
+	}
+	
 	public void addPerson(Person person){
 		participants.add(person);
 	}
@@ -21,17 +34,23 @@ public class Meeting {
 		notifications.add(notification);
 	}
 
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getDate() {
+		return date;
+	}
 	public int getId() {
-		return id;
+		return meetingId;
 	}
 	public void setId(int id) {
-		this.id = id;
+		this.meetingId = id;
 	}
 	public int getCreator() {
-		return creator;
+		return creatorId;
 	}
 	public void setCreator(int creator) {
-		this.creator = creator;
+		this.creatorId = creator;
 	}
 	public String getStarttime() {
 		return starttime;
@@ -69,7 +88,4 @@ public class Meeting {
 	public void setNotifications(ArrayList<Notification> notifications) {
 		this.notifications = notifications;
 	}
-
-	
-
 }

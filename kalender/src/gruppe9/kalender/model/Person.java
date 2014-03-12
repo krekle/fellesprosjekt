@@ -9,7 +9,7 @@ public class Person {
 	private String adress;
 	private String email;
 	private String password;
-	private ArrayList<meeting> meetings;
-	private ArrayList<alert> alerts;
-	private ArrayList<notification> notifications;
+	private ArrayList<Meeting> meetings;
+	private ArrayList<Alert> alerts;
+	private ArrayList<Notification> notifications;
 }

@@ -1,4 +1,4 @@
-package tester;
+package gruppe9.kalender.model;
 
 public class Alert {
 	

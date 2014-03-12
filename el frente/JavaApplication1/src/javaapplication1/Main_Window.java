@@ -346,7 +346,7 @@ private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 // TODO add your handling code here:
     //REDIGER AVTALE
-    Edit_Avtale a = new Edit_Avtale();
+    Edit_Avtale a = new Edit_Avtale(this);
     a.setVisible(true);
     this.setVisible(false);
     a.setLocation(this.getLocation());

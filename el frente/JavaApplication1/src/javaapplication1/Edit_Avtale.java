@@ -285,6 +285,11 @@ public class Edit_Avtale extends javax.swing.JFrame {
         });
 
         jButton2.setText("Avbryt");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
@@ -408,6 +413,11 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 // TODO add your handling code here:
 }//GEN-LAST:event_jTextField2ActionPerformed
 
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+main.setVisible(true);// TODO add your handling code here:
+
+}//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -442,7 +452,7 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new Edit_Avtale().setVisible(true);
+                new Edit_Avtale(null).setVisible(true);
             }
         });
     }
@@ -469,8 +479,6 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

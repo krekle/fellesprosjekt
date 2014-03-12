@@ -6,6 +6,7 @@
 	<classpathentry kind="lib" path="libs/httpcore-4.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.3.1.jar"/>
 	<classpathentry kind="lib" path="libs/json-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/swingx-0.9.5.jar"/>
+	<classpathentry kind="lib" path="libs/swingx-0.9.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

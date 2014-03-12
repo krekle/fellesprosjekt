@@ -14,6 +14,13 @@ public class Meeting {
 	private ArrayList<Notification> notifications;
 
 
+	public void addPerson(Person person){
+		participants.add(person);
+	}
+	public void addNotificaton(Notification notification){
+		notifications.add(notification);
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -7,6 +7,17 @@ public class Room {
 	private String description;
 	private int size;
 	
+	
+	
+
+	public Room(int id, String building, int floor, String description, int size) {
+		super();
+		this.id = id;
+		this.building = building;
+		this.floor = floor;
+		this.description = description;
+		this.size = size;
+	}
 
 	public int getId() {
 		return id;

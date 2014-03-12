@@ -6,6 +6,13 @@ public class Notification {
 	private String time;
 	
 	
+	public Notification(String description, Person personCausing, String time) {
+		super();
+		this.description = description;
+		this.personCausing = personCausing;
+		this.time = time;
+	}
+	
 	public String getDescription() {
 		return description;
 	}

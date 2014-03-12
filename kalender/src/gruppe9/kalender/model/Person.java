@@ -13,6 +13,19 @@ public class Person {
 	private ArrayList<Notification> notifications;
 	
 	
+	
+	
+	public Person(int id, String name, int telephonenumber, String adress,
+			String email) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.telephonenumber = telephonenumber;
+		this.adress = adress;
+		this.email = email;
+	}
+	
+	
 	public void addMeeting(Meeting meeting) {
 		meetings.add(meeting);
 	}

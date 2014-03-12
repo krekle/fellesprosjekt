@@ -7,7 +7,11 @@ public class Group {
 	private String description;
 	private ArrayList<Person> people;
 	
-	
+	public Group(String name) {
+		super();
+		this.name = name;
+	}
+
 	public void addPerson(Person person){
 		people.add(person);
 	}

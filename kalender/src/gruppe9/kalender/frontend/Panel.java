@@ -1,4 +1,15 @@
-package gruppe9.kalender.frontend;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * Panel.java
+ *
+ * Created on Mar 11, 2014, 12:53:42 PM
+ */
+package javaapplication1;
+
 /**
  *
  * @author krake
@@ -20,6 +31,7 @@ public class Panel extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -32,47 +44,78 @@ public class Panel extends javax.swing.JPanel
         jList5 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+
+        jLabel5.setText("Tirsdag");
 
         setMaximumSize(null);
 
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        jList1.setAutoscrolls(false);
         jScrollPane1.setViewportView(jList1);
 
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        jList2.setAutoscrolls(false);
         jScrollPane2.setViewportView(jList2);
 
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         jList3.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        jList3.setAutoscrolls(false);
         jScrollPane3.setViewportView(jList3);
 
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         jList4.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        jList4.setAutoscrolls(false);
         jScrollPane4.setViewportView(jList4);
 
+        jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         jList5.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6", "item 6" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        jList5.setAutoscrolls(false);
         jScrollPane5.setViewportView(jList5);
 
         jLabel1.setText("Mandag");
 
         jLabel2.setText("Tirsdag");
+
+        jLabel3.setText("Onsdag");
+
+        jLabel4.setText("Torsdag");
+
+        jLabel6.setText("Fredag");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -91,7 +134,14 @@ public class Panel extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,7 +150,16 @@ public class Panel extends javax.swing.JPanel
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(jLabel2)))
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel6)))
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
@@ -113,6 +172,10 @@ public class Panel extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JList jList1;
     private javax.swing.JList jList2;
     private javax.swing.JList jList3;

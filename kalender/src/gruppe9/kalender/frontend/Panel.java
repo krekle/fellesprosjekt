@@ -8,7 +8,7 @@
  *
  * Created on Mar 11, 2014, 12:53:42 PM
  */
-package javaapplication1;
+package gruppe9.kalender.frontend;
 
 /**
  *

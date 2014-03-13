@@ -1,11 +1,13 @@
 package gruppe9.kalender.user;
 
+import gruppe9.kalender.model.Person;
+
 
 public class Bruker {
 	
 	//Her vil vi typisk ha ArrayList<Avtaler>, ArrayList<Varsler> osv, osv
 	
-	private static String username;
+	private Person bruker;
 	//field for å holde styr på instansen av Bruker:
 	private static Bruker instance = null;
 	
@@ -20,14 +22,13 @@ public class Bruker {
 		return instance;
 	}
 
-	public static String getUsername() {
-		return username;
+	public void setUser(Person p){
+		this.bruker = p;
 	}
-
-	public static void setUsername(String username) {
-		Bruker.username = username;
+	
+	public Person getUser(){
+		return this.bruker;
 	}
-
 	//For å bruke metoder fra bruker kall Bruker.getInstance().*
 	//* = any method, med dette pattern så kan instansen av denne klassen nåes fra hvor som helst.
 }

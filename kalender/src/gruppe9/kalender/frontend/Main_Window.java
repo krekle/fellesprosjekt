@@ -19,6 +19,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 
 /**
@@ -132,6 +133,17 @@ public class Main_Window extends javax.swing.JFrame {
                 avslå_choiceActionPerformed(evt);
             }
         });
+        
+        delta_choice.setText("Delta");
+        delta_choice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delta_choiceActionPerformed(evt);
+            }
+        });
+        
+        ButtonGroup AvslåDelta = new ButtonGroup();
+        AvslåDelta.add(avslå_choice);
+        AvslåDelta.add(delta_choice);
 
         varsling_label.setText("Varsling:");
 
@@ -143,12 +155,7 @@ public class Main_Window extends javax.swing.JFrame {
 
         endre_label.setText("Endre:");
 
-        delta_choice.setText("Delta");
-        delta_choice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delta_choiceActionPerformed(evt);
-            }
-        });
+        
 
         rediger_button.setText("Rediger Avtale");
         rediger_button.addActionListener(new java.awt.event.ActionListener() {

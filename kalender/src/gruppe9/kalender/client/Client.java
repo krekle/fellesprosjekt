@@ -22,7 +22,8 @@ import org.apache.http.message.BasicNameValuePair;
  
 @SuppressWarnings("deprecation")
 
-public class Client {
+public class Client 
+{
  
 	private String url = "http://dev.krekle.net:4242/";
 	private Type request;
@@ -139,5 +140,9 @@ public class Client {
 	{
 		//hash(password);
 		return true;
+	}
+	public void logOut()
+	{
+		
 	}
 }

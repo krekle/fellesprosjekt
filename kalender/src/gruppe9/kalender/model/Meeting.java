@@ -13,6 +13,7 @@ public class Meeting implements Comparable<Meeting>{
 	private int roomId;
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
+	private Alert emailAlert,soundAlert;
 
 	public String toString(){
 		String str = "";
@@ -23,19 +24,39 @@ public class Meeting implements Comparable<Meeting>{
 		return str;
 	}
 
-	public Meeting(int meetingId, int creatorId, String starttime, String endtime,
+	public Meeting(int meetingId, int creatorId, String start, String end,
 			String description, int roomId) {
 		super();
-		this.start = starttime;
 		this.creatorId = creatorId;
-		this.start = starttime;
-		this.end = endtime;
+		this.start = start;
+		this.end = end;
 		this.description = description;
 		this.roomId = roomId;
 		participants = new ArrayList<Person>();
 		notifications = new ArrayList<Notification>();
+		emailAlert = null;
+		soundAlert = null;
 	}
 
+	public String getDuritation(){
+		int minutes = 0;
+		minutes += ((Integer.parseInt(this.getEndTime().substring(0,2))*60) + Integer.parseInt(this.getEndTime().substring(3)));
+		System.out.println(minutes);
+		System.out.println((Integer.parseInt(this.getStartTime().substring(0,2))*60) + Integer.parseInt(this.getStartTime().substring(3)));
+		minutes -= (Integer.parseInt(this.getStartTime().substring(0,2))*60) + Integer.parseInt(this.getStartTime().substring(3));
+		System.out.println(minutes);
+		int hours = (int) Math.floor(minutes/60);
+		System.out.println("hours" + hours);
+		minutes = minutes%60;
+		if (minutes >= 10){
+			return String.valueOf(hours) + ":" + String.valueOf(minutes);
+		}
+		else{
+			return String.valueOf(hours) + ":0" + String.valueOf(minutes);
+		}
+		
+	}
+	
 	private int getYear(){
 		return Integer.parseInt(start.substring(0,4));
 	}
@@ -91,13 +112,13 @@ public class Meeting implements Comparable<Meeting>{
 		this.creatorId = creator;
 	}
 	public String getStart() {
-		return start;
+		return start.replace(" ", "-");
 	}
 	public void setStart(String start) {
 		this.start = start;
 	}
 	public String getEnd() {
-		return end;
+		return end.replace(" ", "-");
 	}
 	public void setEnd(String end) {
 		this.end = end;

@@ -3,7 +3,7 @@ package gruppe9.kalender.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Meeting {
+public class Meeting implements Comparable<Meeting>{
 	private int meetingId;
 	private int creatorId;
 	//private String creatorName;
@@ -125,5 +125,22 @@ public class Meeting {
 	}
 	public void setNotifications(ArrayList<Notification> notifications) {
 		this.notifications = notifications;
+	}
+
+	@Override
+	public int compareTo(Meeting o) {
+		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace(":", ""));
+		if (dateDiff !=0){
+			return dateDiff;
+		}
+		int startDiff = Integer.parseInt(this.getStartTime().replace(":", "")) - Integer.parseInt(o.getStartTime().replace(":", ""));
+		if (startDiff != 0 ){
+			return startDiff;
+		}
+		int endDiff = Integer.parseInt(this.getEndTime().replace(":", "")) - Integer.parseInt(o.getEndTime().replace(":", ""));
+		if (endDiff != 0) {
+			return endDiff;
+		}
+		return 0;
 	}
 }

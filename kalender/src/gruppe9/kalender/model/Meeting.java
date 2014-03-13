@@ -6,25 +6,33 @@ public class Meeting {
 	private int meetingId;
 	private int creatorId;
 	//private String creatorName;
-	private String date;
 	private String starttime;
 	private String endtime;
 	private String description;
-	private Room room;
+	private int roomId;
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
 
 
-	public Meeting(int id, int creator, String date, String starttime,
-			String endtime, String description, Room room) {
+	public Meeting(int meetingId, int creatorId, String starttime, String endtime,
+			String description, int roomId) {
 		super();
-		this.meetingId = id;
-		this.creatorId = creator;
-		this.date = date;
+		this.starttime = starttime;
+		this.creatorId = creatorId;
 		this.starttime = starttime;
 		this.endtime = endtime;
 		this.description = description;
-		this.room = room;
+		this.roomId = roomId;
+	}
+
+	private int getYear(){
+		return Integer.parseInt(starttime.substring(0,4));
+	}
+	private int getMonth(){
+		return Integer.parseInt(starttime.substring(5,7));
+	}
+	private int getDay(){
+		return Integer.parseInt(starttime.substring(8,10));
 	}
 	
 	public void addPerson(Person person){
@@ -33,13 +41,7 @@ public class Meeting {
 	public void addNotificaton(Notification notification){
 		notifications.add(notification);
 	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-	public String getDate() {
-		return date;
-	}
+	
 	public int getId() {
 		return meetingId;
 	}
@@ -70,11 +72,11 @@ public class Meeting {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Room getRoom() {
-		return room;
+	public int getRoom() {
+		return roomId;
 	}
-	public void setRoom(Room room) {
-		this.room = room;
+	public void setRoom(int room) {
+		this.roomId = room;
 	}
 	public ArrayList<Person> getParticipants() {
 		return participants;

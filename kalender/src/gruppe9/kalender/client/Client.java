@@ -46,6 +46,10 @@ public class Client {
 		this.dict = keyvalue;
 		}
  
+	public Client() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * This method executes the request
 	 * @return 
@@ -86,7 +90,7 @@ public class Client {
  
 		StringBuffer result = new StringBuffer();
 		String line = "";
-		while ((line = rd.readLine()) != null) {s
+		while ((line = rd.readLine()) != null) {
 			result.append(line);
 		}
  
@@ -129,5 +133,10 @@ public class Client {
 	}
 	public enum Type{
 		POST, GET
+	}
+	public boolean logIn(String username, String password)
+	{
+		//hash(password);
+		return true;
 	}
 }

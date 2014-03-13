@@ -174,16 +174,16 @@ public class Main_Window extends javax.swing.JFrame {
             }
         });
         
-        delta_choice.setText("Delta");
-        delta_choice.addActionListener(new java.awt.event.ActionListener() {
+        accept_choice.setText("Delta");
+        accept_choice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delta_choiceActionPerformed(evt);
+                accept_choiceActionPerformed(evt);
             }
         });
         
         ButtonGroup AvslåDelta = new ButtonGroup();
-        AvslåDelta.add(avslå_choice);
-        AvslåDelta.add(delta_choice);
+        AvslåDelta.add(decline_choice);
+        AvslåDelta.add(accept_choice);
 
         varsling_label.setText("Varsling:");
 

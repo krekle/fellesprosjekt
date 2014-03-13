@@ -23,8 +23,13 @@ public class ListOfTestmodels {
 	public Room room1 = new Room(0, "Stripa", 1, "bra rom", 5);
 	public Room room2 = new Room(1, "Elektro", 0, "stillerom", 20);
 	
-	public Meeting meeting1 = new Meeting(0, 0, "2014-03-12 20:51:45", "2014-03-12 22:51:45", "lorem ipsum dolor", 0);
-	
-	//mainmethod just sto test
-	
+	//mainmethod to test
+	public static void main(String[] args) {
+		Meeting meeting1 = new Meeting(0, 0, "2014-03-14 20:51:45", "2014-03-12 22:51:45", "lorem ipsum dolor", 0);
+		System.out.println(meeting1.getDayOfWeek());
+		System.out.println(meeting1.getEnd());
+		System.out.println(meeting1.getEndTime());
+		meeting1.setEndTime("21:22");
+		System.out.println(meeting1.getEnd());
+	}
 }

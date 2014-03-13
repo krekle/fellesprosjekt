@@ -33,10 +33,10 @@ public class Database {
 		String result = "";
 		try {
 			result = new Client("add/avtale",Type.GET,
-					"start", m.getStarttime(), 
-					"slutt", m.getEndtime(), 
+					"start", m.getStart(), 
+					"slutt", m.getEnd(), 
 					"beskrivelse", m.getDescription(),
-					"varighet", "2",
+					"varighet", "",
 					"sted", "sad",
 					"skaper", m.getCreator() + "",
 					"romid", m.getRoom()+"")

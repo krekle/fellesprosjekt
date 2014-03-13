@@ -427,6 +427,7 @@ private void jTextFieldRomAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
 
 private void jButtonAvbrytAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAvbrytAction
 main.setVisible(true);// TODO add your handling code here:
+this.setVisible(false);
 
 }//GEN-LAST:event_jButtonAvbrytAction
 

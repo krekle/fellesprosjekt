@@ -3,7 +3,7 @@ import dataset
 db = dataset.connect('mysql://bruker:passord@localhost/db2_gr9')
 
 #Tested and works
-def get_Person(person_id):
+def get_person(person_id):
   personData = db['Person']
   person = personData.find_one(Ansattnummer = id)
   if (person):
@@ -18,6 +18,13 @@ def get_login(email, password):
     return person
   return False
 
+def avtaleToString(avtale):
+  avtale['Starttidspunkt'] = str(avtale['Starttidspunkt'])
+  avtale['Sluttidspunkt'] = str(avtale['Sluttidspunkt'])
+  avtale['SistEndret'] = str(avtale['SistEndret'])
+  avtale['Opprettet'] = str(avtale['Opprettet'])
+  avtale['varighet'] = str(avtale['varighet'])
+
 #Tested and works
 def get_mine_avtaler(person_id):
   deltaker = db['DeltagendeI']
@@ -28,6 +35,8 @@ def get_mine_avtaler(person_id):
     for deltar in md:
       mine_avtaler.append(avtaler.find(AvtaleID=deltar['Avtale_AvtaleID']))
   if(mine_avtaler):
+    for avtale in mine_avtaler:
+      avtaleToString(avtale)
     return mine_avtaler
   return False
 
@@ -36,8 +45,11 @@ def get_avtale(avtale_id):
   avtaleData = db['Avtale']
   avtale = avtaleData.find_one(AvtaleID = avtale_id)
   if (avtale):
+    avtaleToString(avtale)
     return avtale
   return False
+
+print(get_avtale(5))
 
 #Tested and works
 def get_personvarsler(id):

@@ -1,5 +1,6 @@
 from bottle import debug, response, request, route, run, post, get, HTTPResponse
 import time
+import read
 
 @route('/status')
 def status():
@@ -16,12 +17,13 @@ def respond(co, ms, resp):
 def get_avtale(id):
   avtaler = None
   if(id):
-    avtaler = read.avtale(id)
+    avtaler = {}
+    avtaler["avtaler"] = read.get_avtale(id)
     #TODO: lag avtale i read
   else:
     return respond(132, 'Error: Input format', None)
   if(avtaler):
-    return response('Ok', 200, avtaler)
+    return respond(200, 'ok', avtaler)
   else:
     return respond(131, 'Error: Ingen avtaler funnet', None)
 
@@ -48,7 +50,7 @@ def get_gruppe_avtale(gruppeid):
 ### Set Avtaler ###
 
 #Lag ny avtale
-@route('/add/avtale', method ='GET')
+@route('/get/add/avtale', method ='GET')
 def get_avtale(id):
   avtale = request.query.decode() 
   #TODO: Test denne! og parse ut deltakere
@@ -90,6 +92,17 @@ def group_notifications(gruppeid):
 ### Get Personer ###
 #Hent ledige personer i tidsrom?
 # moar?
+@route('/get/person/<personid>', method = 'Get')
+def get_person(personid):
+  person = None
+  if (personid):
+    person = read.get_person(personid)
+  else:
+    return respond(132, 'Error: Input format', None)
+  if (person):
+    return respond(200, 'ok', person)
+  else:
+    return respond(131, 'Error: Ingen varsler funnet', None)
 
 ### Get Rom ###
 #Hent ledige rom i tidsrom?

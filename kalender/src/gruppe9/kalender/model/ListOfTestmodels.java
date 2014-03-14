@@ -25,13 +25,13 @@ public class ListOfTestmodels {
 	
 	//mainmethod to test
 	public static void main(String[] args) {
-		Meeting meeting1 = new Meeting(0, 0, "2014-03-14 20:51:45", "2014-03-12 22:51:45", "lorem ipsum dolor", 0);
+		Meeting meeting1 = new Meeting(0, 0, "2014-03-14 20:51:45", "2014-03-12 22:54:45", "lorem ipsum dolor", 0);
 		Meeting meeting2 = new Meeting(0, 0, "2014-03-14 28:51:45", "2014-03-12 22:51:45", "lorem ipsum dolor", 0);
-		System.out.println(meeting1.getDayOfWeek());
-		System.out.println(meeting1.getEnd());
-		System.out.println(meeting1.getEndTime());
-		meeting1.setEndTime("21:22");
-		System.out.println(meeting1.getEnd());
-		System.out.println();
+//		System.out.println(meeting1.getDayOfWeek());
+//		System.out.println(meeting1.getEnd());
+//		System.out.println(meeting1.getEndTime());
+//		meeting1.setEndTime("21:22");
+//		System.out.println(meeting1.getEnd());
+		System.out.println(meeting1.getDuritation());
 	}
 }

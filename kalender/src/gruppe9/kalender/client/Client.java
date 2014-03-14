@@ -45,10 +45,6 @@ public class Client
 		this.request = request;
 		this.dict = keyvalue;
 		}
- 
-	public Client() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * This method executes the request
@@ -93,7 +89,8 @@ public class Client
 		while ((line = rd.readLine()) != null) {
 			result.append(line);
 		}
- 
+		//TODO: Remove
+		System.out.println("GET: "+ result.toString());
 		return result.toString();
 	}
  
@@ -130,19 +127,11 @@ public class Client
 		while ((line = rd.readLine()) != null) {
 			result.append(line);
 		}
- 
+		//TODO: Remove
+		System.out.println(result.toString());
 		return result.toString();
 	}
 	public enum Type{
 		POST, GET
-	}
-	public boolean logIn(String username, String password)
-	{
-		//hash(password);
-		return true;
-	}
-	public void logOut()
-	{
-		
 	}
 }

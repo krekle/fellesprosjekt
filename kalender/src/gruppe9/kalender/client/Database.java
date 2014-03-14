@@ -48,18 +48,48 @@ public class Database {
 		return new CalResponse(result, null);
 	}
 	
+	public static CalResponse addParticipants(String avtale_id, String csvPeople, String csvStatus){
+		String result = "";
+		//TODO: check status and people length
+		if(csvPeople.split(",").length != csvStatus.split(",").length)
+			return null;
+		try {
+			result = new Client("add/deltakere/" + avtale_id, Type.GET,
+					"people", csvPeople,
+					"status", csvStatus).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new CalResponse(result, null);
+	}
+	
+	public static CalResponse deleteParticipant(String avtale_id, String person_id){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("delete/deltaker", Type.GET,
+					"person_id", avtale_id,
+					"avtale_id", person_id).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new CalResponse(result, null);
+	}
+	
 	public static void main(String args[]){
 //		CalResponse cal = login("eposten3@min.com", "passordet");
 //		Person me = cal.confirmLogin();
 //		System.out.println(me.getName() + me.getTelephonenumber());
 		
-		Meeting meet = new Meeting(23, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
-		CalResponse cal = addMeeting(meet);
-		System.out.println(cal.getCode() + " " + cal.getMsg());
+//		Meeting meet = new Meeting(23, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
+//		CalResponse cal = addMeeting(meet);
+//		System.out.println(cal.getCode() + " " + cal.getMsg());
 //		System.out.println("Getting meetings");
 //		CalResponse c = getMeetings();
 //		System.out.println(c.getMyMeetings());
 		
+		CalResponse cal = deleteParticipant("3","6");
+		cal.getMsg();
 		
 	}
 }

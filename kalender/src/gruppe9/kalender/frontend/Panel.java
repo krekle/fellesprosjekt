@@ -10,6 +10,8 @@
  */
 package gruppe9.kalender.frontend;
 
+import gruppe9.kalender.model.Meeting;
+
 import java.awt.Point;
 import java.util.Collections;
 
@@ -38,50 +40,56 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    public void addAvtale(Avtale a)
+    public void addAvtale(Meeting a)
     {
-    	ListModel X;
-    	switch(Avtale.getDay())
+    	DefaultListModel<Meeting> X;
+    	
+    	switch(a.getDayOfWeek())
     	{
-    	case "Man":
-    		X = mandag_list.getModel();
+    	case 1:
+    		X = (DefaultListModel<Meeting>) mandag_list.getModel();
     		X.addElement(a);
     		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		mandag_list.setModel(X);
     		break;
-    	case "Tir":
-    		X = mandag_list.getModel();
+    	case 2:
+    		X = (DefaultListModel<Meeting>) tirsdag_list.getModel();
     		X.addElement(a);
     		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		tirsdag_list.setModel(X);
     		break;
-    	case "Ons":
-    		X = mandag_list.getModel();
+    	case 3:
+    		X = (DefaultListModel<Meeting>) onsdag_list.getModel();
     		X.addElement(a);
     		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		onsdag_list.setModel(X);
     		break;
-    	case "Tor":
-    		X = mandag_list.getModel();
+    	case 4:
+    		X = (DefaultListModel<Meeting>) torsdag_list.getModel();
     		X.addElement(a);
     		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		torsdag_list.setModel(X);
     		break;
-    	case "Fre":
-    		X = mandag_list.getModel();
+    	case 5:
+    		X = (DefaultListModel<Meeting>) fredag_list.getModel();
     		X.addElement(a);
     		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		fredag_list.setModel(X);
     		break;
     	}
     }
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        mandag_list = new javax.swing.JList();
+        mandag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         jScrollPane2 = new javax.swing.JScrollPane();
-        tirsdag_list = new javax.swing.JList();
+        tirsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         jScrollPane3 = new javax.swing.JScrollPane();
-        onsdag_list = new javax.swing.JList();
+        onsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         jScrollPane4 = new javax.swing.JScrollPane();
-        torsdag_list = new javax.swing.JList();
+        torsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         jScrollPane5 = new javax.swing.JScrollPane();
-        fredag_list = new javax.swing.JList();
+        fredag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         jLabel1 = new javax.swing.JLabel("Mandag");
         jLabel2 = new javax.swing.JLabel("Tirsdag");
         jLabel3 = new javax.swing.JLabel("Onsdag");
@@ -225,6 +233,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     // End of variables declaration//GEN-END:variables
+    private DefaultListModel<Meeting> monday_model;
 	
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub

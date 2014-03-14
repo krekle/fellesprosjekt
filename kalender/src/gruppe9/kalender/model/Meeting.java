@@ -20,13 +20,14 @@ public class Meeting implements Comparable<Meeting>{
 		str += "meetingId: " + String.valueOf(meetingId);
 		str += " creatorId: " + String.valueOf(creatorId);
 		str += " start" + start + " end" + end;
-		str += "NrOfparticipants; " + participants.size();
+		str += " NrOfparticipants: " + participants.size();
 		return str;
 	}
 
 	public Meeting(int meetingId, int creatorId, String start, String end,
 			String description, int roomId) {
 		super();
+		this.meetingId = meetingId;
 		this.creatorId = creatorId;
 		this.start = start;
 		this.end = end;
@@ -60,7 +61,7 @@ public class Meeting implements Comparable<Meeting>{
 	private int getYear(){
 		return Integer.parseInt(start.substring(0,4));
 	}
-	private int getMonth(){//1-12
+	private int getMonth(){
 		return Integer.parseInt(start.substring(5,7));
 	}
 	private int getDayOfMonth(){
@@ -85,11 +86,11 @@ public class Meeting implements Comparable<Meeting>{
 	public int getDayOfWeek(){
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR,getYear());
-		calendar.set(Calendar.MONTH,getMonth() - 1);//0-12
+		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
 		System.out.println(calendar.getTime());
 
-		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);//sun-sat
+		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);
 	}
 	
 	public void addPerson(Person person){
@@ -141,6 +142,17 @@ public class Meeting implements Comparable<Meeting>{
 	public void setParticipants(ArrayList<Person> participants) {
 		this.participants = participants;
 	}
+	public String getStringParticipants(){ // Returns string of participants IDs
+		String idStr = "";
+		for (int i = 0; i < this.participants.size(); i++) {
+			if ((i+1) == this.participants.size()){
+				idStr += participants.get(i).getId();
+			} else {
+				idStr += participants.get(i).getId() + ",";				
+			}
+		}
+		return idStr;
+	}
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}
@@ -150,7 +162,7 @@ public class Meeting implements Comparable<Meeting>{
 
 	@Override
 	public int compareTo(Meeting o) {
-		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace(":", ""));
+		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace("-", ""));
 		if (dateDiff !=0){
 			return dateDiff;
 		}

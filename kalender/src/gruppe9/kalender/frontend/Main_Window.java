@@ -577,7 +577,15 @@ public Meeting getAvtale()
 public void setMeeting(Meeting avtale)
 {
 	this.current_Avtale = avtale;
+	
 }
+
+public void setMeetingFields(Meeting meeting){
+	dato_label.setText("dato: " + meeting.getDayOfMonth()+"."+meeting.getMonth());
+	tidspkt_label.setText("Tidspunkt: " + meeting.getStartTime() + " - " + meeting.getEndTime());
+	
+}
+
     private boolean hasNewNotification() {
     	// TODO Auto-generated method stub
     	return true;

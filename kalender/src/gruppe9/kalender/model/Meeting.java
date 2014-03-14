@@ -58,13 +58,13 @@ public class Meeting implements Comparable<Meeting>{
 		
 	}
 	
-	private int getYear(){
+	public int getYear(){
 		return Integer.parseInt(start.substring(0,4));
 	}
-	private int getMonth(){
+	public int getMonth(){
 		return Integer.parseInt(start.substring(5,7));
 	}
-	private int getDayOfMonth(){
+	public int getDayOfMonth(){
 		return Integer.parseInt(start.substring(8,10));
 	}
 	

@@ -82,7 +82,7 @@ public class Main_Window extends javax.swing.JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) 
 			{
-				client.logOut();
+//				client.logOut();
 				System.out.println("Closing!");
 				System.exit(0);
 			}
@@ -147,6 +147,20 @@ public class Main_Window extends javax.swing.JFrame {
         kom_møte_label.setText("Kommende Møter:");
 
         uke_search.setText("Uke...");
+        uke_search.addActionListener(new ActionListener() 
+        {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				String in = uke_search.getText();
+				if(in.matches("[0-9]*") && Integer.parseInt(in) >= 0 && Integer.parseInt(in)<=52)
+				{	
+					uke_label.setText(uke_search.getText());
+				}
+				
+			}
+		});
 
         prev_button.setFont(new java.awt.Font("Dialog", 1, 18));
         prev_button.setText("<");
@@ -525,13 +539,12 @@ public class Main_Window extends javax.swing.JFrame {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				// TODO Auto-generated method stub
-				Point p = week_list_scroller.getLocation();
-				Panel.getMondayScrollPane().getViewport().setViewPosition(p);
-				tuesdayScrollPane.getViewport().setViewPosition(p);
-				wednesdayScrollPane.getViewport().setViewPosition(p);
-				thursdayScrollPane.getViewport().setViewPosition(p);
-				fridayScrollPane.getViewport().setViewPosition(p);
-				
+//				Point p = week_list_scroller.getLocation();
+//				Panel.getMondayScrollPane().getViewport().setViewPosition(p);
+//				Panel.gettuesdayScrollPane.getViewport().setViewPosition(p);
+//				Panel.getwednesdayScrollPane.getViewport().setViewPosition(p);
+//				Panel.getthursdayScrollPane.getViewport().setViewPosition(p);
+//				Panel.getfridayScrollPane.getViewport().setViewPosition(p);	
 			}
 		});
 
@@ -576,13 +589,12 @@ private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 
 private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 
 {
-	client.logOut();
+//	client.logOut();
 	this.setVisible(false);
 	login.setVisible(true);
 }
 
 private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notification_buttonActionPerformed
-System.out.println(notification_button.getSize());// TODO add your handling code here:
 }//GEN-LAST:event_notification_buttonActionPerformed
 
 

@@ -11,12 +11,19 @@
 package gruppe9.kalender.frontend;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
 import java.util.Date;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
+import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 
@@ -26,14 +33,15 @@ import gruppe9.kalender.model.Person;
  */
 public class Edit_Avtale extends javax.swing.JFrame {
     private Main_Window main;
-    /** Creates new form Main_Window 
-     * @param meeting */
     Meeting meeting;
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
     	initComponents();
     	setMeeting(meeting);
         this.main = main;
+        person_list.setCellRenderer(new list_person_renderer());
+        deltaker_combo.setRenderer(new combo_box_person_renderer());
+//        deltaker_combo.setEditable(true);
     }
     private void setMeeting(Meeting meeting)
     {
@@ -145,12 +153,17 @@ public class Edit_Avtale extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
         deltaker_label.setText("Deltakere:");
+        Person Lars = new Person(0,"Lars", 97133287,"Johannesburgveien 38, Oslo, Norge", "Lajohanburg@gmail.com");
+        deltaker_combo.addItem(Lars);
+        Person Arne = new Person(1,"Arne nilsen", 88370299,"Fredrikshavn, Zimbabwe", "AniZimb@zimbambwe.gov");
+        deltaker_combo.addItem(Arne);
+        Lars = new Person(2,"Kjell", 93201839,"Nordpolen", "santa@clause.sexy");
+        deltaker_combo.addItem(Lars);
+        Group g = new Group("The League");
+        g.setID(10);g.setDescription("Kjekke karer som liker å spise pai.");
+        g.addPerson(Lars); g.addPerson(Arne);
+        deltaker_combo.addItem(g);
 
-        deltaker_combo.setEditable(true);
-//        DefaultListModel list = new DefaultListModel();
-//        list.addElement("Lars");list.addElement("Jonas");list.addElement("Bob");
-//        deltaker_combo.setModel(list);
-        deltaker_combo.addItem("Lars");deltaker_combo.addItem("Bob");deltaker_combo.addItem("Jonas");
         add_button.setText("Legg til");
         add_button.addActionListener(new ActionListener() {
 			
@@ -226,19 +239,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
         start_label.setText("Start:");
 
         slutt_label.setText("Slutt:");
-
-        start_textfield.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                start_textfieldActionPerformed(evt);
-            }
-        });
-
-        stop_textfield.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stop_textfieldActionPerformed(evt);
-            }
-        });
-
+        
         varighet_label.setText("Varighet:");
 
         varighet_textfield.addActionListener(new java.awt.event.ActionListener() {
@@ -398,7 +399,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -444,19 +445,29 @@ public class Edit_Avtale extends javax.swing.JFrame {
         dateChooser.setSelectionDate(date);
         date_textfield.setEditable(false);
     	start_textfield.setToolTipText("Starttidspunkt i formatet HH:MM, f.eks 12:00");
+    	start_textfield.setColumns(5);
+    	
     	stop_textfield.setToolTipText("Sluttidspunkt i formatet HH:MM, f.eks 12:00");
+    	stop_textfield.setColumns(5);
     }// </editor-fold>//GEN-END:initComponents
 
 protected void fjern_buttonActionPerformed(ActionEvent e) 
 {
 	if(person_list.getModel().getSize() >0)
 	{
-	String person = person_list.getModel().getElementAt(person_list.getSelectedIndex()).toString();
-	DefaultListModel newModel = (DefaultListModel) person_list.getModel();
-	newModel.remove(person_list.getSelectedIndex());
-	person_list.setModel(newModel);
-	deltaker_combo.addItem(person);
-	System.out.println(person);
+		Object obj = person_list.getModel().getElementAt(person_list.getSelectedIndex());
+		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
+		newModel.remove(person_list.getSelectedIndex());
+		if(obj instanceof Person)
+		{
+			person_list.setModel(newModel);
+			deltaker_combo.addItem((Person) obj);
+		}
+		else
+		{
+			person_list.setModel(newModel);
+			deltaker_combo.addItem((Group) obj);
+		}
 	}
 	
 }
@@ -464,11 +475,19 @@ protected void add_buttonActionPerformed(ActionEvent e)
 {
 	if(deltaker_combo.getModel().getSize()>0)
 	{
-	String person = deltaker_combo.getSelectedItem().toString();
-	deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
-	DefaultListModel newModel = (DefaultListModel) person_list.getModel();
-	newModel.addElement(person);
-	person_list.setModel(newModel);
+		Object obj = deltaker_combo.getSelectedItem();
+		deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
+		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
+		if(obj instanceof Person)
+		{
+			newModel.addElement((Person) obj);
+			person_list.setModel(newModel);
+		}
+		else
+		{
+			newModel.addElement((Group) obj);
+			person_list.setModel(newModel);
+		}
 	}
 }
 protected void forrige_buttonActionPerformed(ActionEvent evt) 
@@ -528,17 +547,6 @@ private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {
 	editDate(1);
 }
-
-private void stop_textfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_textfieldActionPerformed
-// TODO add your handling code here:
-	System.out.println("textfield5!");
-}//GEN-LAST:event_stop_textfieldActionPerformed
-
-private void start_textfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_start_textfieldActionPerformed
-// TODO add your handling code here:
-	System.out.println("textfield4!");
-}//GEN-LAST:event_start_textfieldActionPerformed
-
 private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt) 
 {
 	System.out.println("textfield3!");
@@ -578,5 +586,82 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField stop_textfield;
     private javax.swing.JTextField varighet_textfield;
     private org.jdesktop.swingx.JXMonthView dateChooser;
-    // End of variables declaration//GEN-END:variables
+    
+    private class combo_box_person_renderer extends JLabel implements ListCellRenderer
+    {
+
+		@Override
+		public JLabel getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) 
+		{
+			this.setBackground(Color.WHITE);
+			if(value == null)
+			{
+				return null;
+			}
+			if(value instanceof Person)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/person.png");
+				this.setIcon(icon);
+				Person person = (Person) value;
+				String name = person.getName();
+				String ID = Integer.toString(person.getId());
+				this.setText(name + " - " + ID);
+			}
+			else
+			{
+				ImageIcon icon = new ImageIcon("resources/images/group.png");
+				this.setIcon(icon);
+				Group group = (Group) value;
+				String name = group.getName();
+				String ID = Integer.toString(group.getID());
+				this.setText("Gruppe "+ID+": " +name);
+			}
+			System.out.println(" ");
+			return this;
+		}
+    	
+    }
+    private class list_person_renderer extends JLabel implements ListCellRenderer
+    {
+
+    	public list_person_renderer()
+    	{
+    		this.setOpaque(true);
+    	}
+		@Override
+		public JLabel getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) 
+		{
+			if(isSelected)
+			{
+				this.setBackground(Color.GRAY);
+			}
+			else
+			{
+				this.setBackground(Color.WHITE);
+			}
+			if(value instanceof Person)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/person.png");
+				this.setIcon(icon);
+				Person person = (Person) value;
+				String name = person.getName();
+				String ID = Integer.toString(person.getId());
+				String email = ((Person) value).getEmail(); 
+				this.setText(name + " - " + ID + " - " + email);
+			}
+			else
+			{
+				ImageIcon icon = new ImageIcon("resources/images/group.png");
+				this.setIcon(icon);
+				Group group = (Group) value;
+				String name = group.getName();
+				String ID = Integer.toString(group.getID());
+				this.setText("Gruppe "+ID+": " +name);
+			}
+			return this;
+		}
+    	
+    }
 }

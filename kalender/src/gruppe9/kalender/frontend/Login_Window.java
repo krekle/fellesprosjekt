@@ -49,8 +49,7 @@ public class Login_Window extends javax.swing.JFrame {
             {
             	login();
             }
-        };
-        
+        };      
         user_field.addActionListener(listener);
         pass_field.addActionListener(listener);
         login_button.addActionListener(listener);

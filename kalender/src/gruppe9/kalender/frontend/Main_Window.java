@@ -1,5 +1,8 @@
 package gruppe9.kalender.frontend;
+import gruppe9.kalender.client.ApiCaller;
+import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
+import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.user.Bruker;
 
@@ -21,15 +24,18 @@ import javax.swing.ImageIcon;
  *
  * @author krake
  */
-public class Main_Window extends javax.swing.JFrame {
+public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
 	Login_Window login;
 	Client client;
 	static boolean popupExists = false;
     /** Creates new form Main_Window */
-    public Main_Window(Login_Window login, Client client) 
+    public Main_Window(Login_Window login) 
     {
-    	this.client = client;
+    	Database.getMeetings(this);
+    	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
+    	// Resultatet kommer til callBack() metoden.
+    	
     	this.login = login;
         initComponents();
         tabWindow.addTab("Me", new Panel(week_list_scroller));
@@ -37,12 +43,20 @@ public class Main_Window extends javax.swing.JFrame {
         for (int x = 1; x<4; x++){
             tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller));
         }
-        //System.out.println(this.avtale_panel.getSize());
-        //Avtale a = new Avtale();
-        //avtale_panel = a;
-        //a.setVisible(true);
     }
 
+    public void callBack(CalResponse response){
+    	if(response.getAvtaler()){
+    		//Avtalene ble hentet fra serveren og ligger nå i
+    		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
+    		
+    		//Her kan man nå kjøre f.eks:
+    		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();
+    	}
+    	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
+    	// response.getVarsler() her
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -589,7 +603,6 @@ private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 
 private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 
 {
-//	client.logOut();
 	this.setVisible(false);
 	login.setVisible(true);
 }

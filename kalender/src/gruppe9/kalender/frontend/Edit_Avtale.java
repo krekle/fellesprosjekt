@@ -23,9 +23,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
+import gruppe9.kalender.user.Bruker;
 
 /**
  *
@@ -33,7 +35,9 @@ import gruppe9.kalender.model.Person;
  */
 public class Edit_Avtale extends javax.swing.JFrame {
     private Main_Window main;
-    Meeting meeting;
+    private Meeting meeting;
+    private boolean edit;
+    
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
     	initComponents();
@@ -45,14 +49,8 @@ public class Edit_Avtale extends javax.swing.JFrame {
     }
     private void setMeeting(Meeting meeting)
     {
-    	if(meeting != null)
-    	{
-    		this.meeting = meeting; 
-    		return;
-    	}
-    	else
-    	{
-    	}
+    	this.edit = ((meeting != null) ? true:false);
+    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0));
     	
     }
     /** This method is called from within the constructor to
@@ -160,7 +158,8 @@ public class Edit_Avtale extends javax.swing.JFrame {
         Lars = new Person(2,"Kjell", 93201839,"Nordpolen", "santa@clause.sexy");
         deltaker_combo.addItem(Lars);
         Group g = new Group("The League");
-        g.setID(10);g.setDescription("Kjekke karer som liker å spise pai.");
+        g.setID(10);
+        g.setDescription("Kjekke karer som liker å spise pai.");
         g.addPerson(Lars); g.addPerson(Arne);
         deltaker_combo.addItem(g);
 
@@ -510,7 +509,8 @@ public void editDate(Integer increment)
 	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
 }
 private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lagre_buttonActionPerformed
-// TODO add your handling code here:
+	//TODO: generate checkAvtale in Meeting
+	//Lagre med Database.addMeeting(null, this.meeting);
 }//GEN-LAST:event_lagre_buttonActionPerformed
 
 private void avtalenavn_textfieldActionPerformed(java.awt.event.ActionEvent evt)

@@ -8,7 +8,7 @@ import gruppe9.kalender.user.Bruker;
 
 public class Database {
 
-	public static CalResponse login(String email, String password) {
+	public static void login(ApiCaller caller, String email, String password) {
 		String result = "";
 		try {
 			Client client =new Client("login", Type.POST, "email", email, "password", password);
@@ -16,20 +16,20 @@ public class Database {
 		} catch (Exception e) {
 			System.out.println("ERR-database client login");
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
 	
-	public static CalResponse getMeetings(){
+	public static void getMeetings(ApiCaller caller){
 		String result = "";
 		try {
 			result = new Client("get/mineavtaler/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return new CalResponse(result, "avtaler");
+		caller.callBack(new CalResponse(result, "avtaler"));
 	}
 	
-	public static CalResponse addMeeting(Meeting m){
+	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
 			result = new Client("add/avtale",Type.GET,
@@ -45,10 +45,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
 	
-	public static CalResponse deleteMeeting(Meeting m){
+	public static void deleteMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
 			result = new Client("delete/avtale", Type.GET,
@@ -56,10 +56,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
  	
-	public static CalResponse updateMeeting(Meeting m){
+	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
 			result = new Client("update/avtale" + m.getId(), Type.GET,
@@ -67,14 +67,14 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
 	
-	public static CalResponse addParticipants(String avtale_id, String csvPeople, String csvStatus){
+	public static void addParticipants(ApiCaller caller, String avtale_id, String csvPeople, String csvStatus){
 		String result = "";
 		//TODO: check status and people length
 		if(csvPeople.split(",").length != csvStatus.split(",").length)
-			return null;
+			return;
 		try {
 			result = new Client("add/deltakere/" + avtale_id, Type.GET,
 					"people", csvPeople,
@@ -82,20 +82,20 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
 	
-	public static CalResponse getParticipants(Meeting m){
+	public static void getParticipants(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
 			result = new Client("get/deltakere/" + m.getId()+"", Type.GET).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, "deltakere");
+		caller.callBack(new CalResponse(result, "deltakere"));
 	}
 	
-	public static CalResponse deleteParticipant(String avtale_id, String person_id){
+	public static void deleteParticipant(ApiCaller caller, String avtale_id, String person_id){
 		String result = "";
 		//TODO: check status and people length
 		try {
@@ -105,10 +105,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
 
-	public static CalResponse updateParticipantStatus(String avtale_id, String person_id, String status){
+	public static void updateParticipantStatus(ApiCaller caller, String avtale_id, String person_id, String status){
 		String result = "";
 		//TODO: check status and people length
 		try {
@@ -118,17 +118,17 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new CalResponse(result, null);
+		caller.callBack(new CalResponse(result, null));
 	}
 
 	public static void main(String args[]){
 //		CalResponse cal = login("eposten3@min.com", "passordet");
 //		Person me = cal.confirmLogin();
 //		System.out.println(me.getName() + me.getTelephonenumber());
-		
-		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
-		CalResponse cal = addMeeting(meet);
-		System.out.println(cal.getCode() + " " + cal.getMsg());
+//		
+//		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
+//		CalResponse cal = addMeeting(meet);
+//		System.out.println(cal.getCode() + " " + cal.getMsg());
 //		System.out.println("Getting meetings");
 //		CalResponse c = getParticipants(meet);
 //		System.out.println(c.getDeltakere().get(1).getPersonID());

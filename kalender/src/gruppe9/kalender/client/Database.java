@@ -22,7 +22,7 @@ public class Database {
 	public static CalResponse getMeetings(){
 		String result = "";
 		try {
-			result = new Client("get/mineavtaler" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+			result = new Client("get/mineavtaler/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -49,12 +49,17 @@ public class Database {
 	}
 	
 	public static void main(String args[]){
-//		CalResponse cal = login("eposten3@min.com", "passordet");
-//		Person me = cal.confirmLogin();
+		CalResponse cal = login("eposten3@min.com", "passordet");
+		Person me = cal.confirmLogin();
 //		System.out.println(me.getName() + me.getTelephonenumber());
 		
-		Meeting meet = new Meeting(23, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Loremipsumdolor", 414);
-		CalResponse cal = addMeeting(meet);
-		System.out.println(cal.getCode() + " " + cal.getMsg());
+//		Meeting meet = new Meeting(23, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Loremipsumdolor", 414);
+//		CalResponse cal = addMeeting(meet);
+//		System.out.println(cal.getCode() + " " + cal.getMsg());
+		
+		CalResponse c = getMeetings();
+		System.out.println(c.getMyMeetings());
+		
+		
 	}
 }

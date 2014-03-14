@@ -32,6 +32,5 @@ public class ListOfTestmodels {
 //		System.out.println(meeting1.getEndTime());
 //		meeting1.setEndTime("21:22");
 //		System.out.println(meeting1.getEnd());
-		System.out.println(meeting1.getDuration());
 	}
 }

@@ -1,5 +1,6 @@
 package gruppe9.kalender.client;
 
+import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
@@ -22,7 +23,7 @@ public class CalResponse {
 	private JSONObject objectResponse;
 	private JSONArray arrayResponse;
 
-	public ArrayList<Meeting> getMyMeetings(){
+	public ArrayList<Meeting> getAvtaler(){
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
 		for (int i = 0; i < arrayResponse.length(); i++) {
 			JSONObject jo;
@@ -36,6 +37,21 @@ public class CalResponse {
 		}
 		return meetList;
 	}
+	
+	public ArrayList<Deltaker> getDeltakere(){
+		ArrayList<Deltaker> deltakerList = new ArrayList<Deltaker>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				deltakerList.add(new Deltaker(jo.getInt("Person_Ansattnummer"), jo.getInt("Avtale_AvtaleID"), jo.getString("Status"), jo.getString("SistSett")));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return deltakerList;
+	}
+	
 	
 	public Person confirmLogin(){
 		try {

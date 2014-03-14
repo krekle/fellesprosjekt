@@ -48,6 +48,17 @@ public class Database {
 		return new CalResponse(result, null);
 	}
 	
+	public static CalResponse deleteMeeting(Meeting m){
+		String result = "";
+		try {
+			result = new Client("delete/avtale", Type.GET,
+					"avtale_id", m.getId()+"").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new CalResponse(result, null);
+	}
+ 	
 	public static CalResponse addParticipants(String avtale_id, String csvPeople, String csvStatus){
 		String result = "";
 		//TODO: check status and people length
@@ -63,6 +74,16 @@ public class Database {
 		return new CalResponse(result, null);
 	}
 	
+	public static CalResponse getParticipants(Meeting m){
+		String result = "";
+		try {
+			result = new Client("get/deltakere/" + m.getId()+"", Type.GET).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new CalResponse(result, "deltakere");
+	}
+	
 	public static CalResponse deleteParticipant(String avtale_id, String person_id){
 		String result = "";
 		//TODO: check status and people length
@@ -75,21 +96,19 @@ public class Database {
 		}
 		return new CalResponse(result, null);
 	}
+
 	
 	public static void main(String args[]){
 //		CalResponse cal = login("eposten3@min.com", "passordet");
 //		Person me = cal.confirmLogin();
 //		System.out.println(me.getName() + me.getTelephonenumber());
 		
-//		Meeting meet = new Meeting(23, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
-//		CalResponse cal = addMeeting(meet);
-//		System.out.println(cal.getCode() + " " + cal.getMsg());
+		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
+		CalResponse cal = addMeeting(meet);
+		System.out.println(cal.getCode() + " " + cal.getMsg());
 //		System.out.println("Getting meetings");
-//		CalResponse c = getMeetings();
-//		System.out.println(c.getMyMeetings());
-		
-		CalResponse cal = deleteParticipant("3","6");
-		cal.getMsg();
+//		CalResponse c = getParticipants(meet);
+//		System.out.println(c.getDeltakere().get(1).getPersonID());
 		
 	}
 }

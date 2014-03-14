@@ -59,6 +59,17 @@ public class Database {
 		return new CalResponse(result, null);
 	}
  	
+	public static CalResponse updateMeeting(Meeting m){
+		String result = "";
+		try {
+			result = new Client("update/avtale" + m.getId(), Type.GET,
+					"avtale_id", m.getId()+"").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new CalResponse(result, null);
+	}
+	
 	public static CalResponse addParticipants(String avtale_id, String csvPeople, String csvStatus){
 		String result = "";
 		//TODO: check status and people length
@@ -97,7 +108,19 @@ public class Database {
 		return new CalResponse(result, null);
 	}
 
-	
+	public static CalResponse updateParticipantStatus(String avtale_id, String person_id, String status){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("update/avtalestatus/"+ Bruker.getInstance().getUser().getId(), Type.GET,
+					"status", status,
+					"avtale_id", avtale_id).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new CalResponse(result, null);
+	}
+
 	public static void main(String args[]){
 //		CalResponse cal = login("eposten3@min.com", "passordet");
 //		Person me = cal.confirmLogin();

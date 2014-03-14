@@ -4,8 +4,11 @@ import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.user.Bruker;
 
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -515,6 +518,22 @@ public class Main_Window extends javax.swing.JFrame {
                     .addComponent(avtale_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        
+        
+        week_list_scroller.addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				// TODO Auto-generated method stub
+				Point p = week_list_scroller.getLocation();
+				Panel.getMondayScrollPane().getViewport().setViewPosition(p);
+				tuesdayScrollPane.getViewport().setViewPosition(p);
+				wednesdayScrollPane.getViewport().setViewPosition(p);
+				thursdayScrollPane.getViewport().setViewPosition(p);
+				fridayScrollPane.getViewport().setViewPosition(p);
+				
+			}
+		});
 
         pack();
         

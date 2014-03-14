@@ -602,6 +602,11 @@ public void setMeeting(Meeting avtale)
 public void setMeetingFields(Meeting meeting){
 	dato_label.setText("dato: " + meeting.getDayOfMonth()+"."+meeting.getMonth());
 	tidspkt_label.setText("Tidspunkt: " + meeting.getStartTime() + " - " + meeting.getEndTime());
+	beskrivelse_area.setText(meeting.getDescription());
+	deltaker_list.setModel(meeting.getParticipantListModel());
+	
+	
+	
 	
 }
 

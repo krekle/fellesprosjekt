@@ -3,7 +3,10 @@ package gruppe9.kalender.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.swing.DefaultListModel;
+
 public class Meeting implements Comparable<Meeting>{
+	
 	private int meetingId;
 	private int creatorId;
 	//private String creatorName;
@@ -15,6 +18,7 @@ public class Meeting implements Comparable<Meeting>{
 	private ArrayList<Notification> notifications;
 	private Alert emailAlert,soundAlert;
 
+	
 	public String toString(){
 		String str = "";
 		str += "meetingId: " + String.valueOf(meetingId);
@@ -153,6 +157,16 @@ public class Meeting implements Comparable<Meeting>{
 		}
 		return idStr;
 	}
+	
+	public DefaultListModel<Person> getParticipantListModel(){
+		DefaultListModel<Person> participantListModel = null;
+		for (int i = 0; i < this.participants.size(); i++){
+			participantListModel.addElement(participants.get(i));
+		}
+		return participantListModel;
+			
+	}
+	
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}

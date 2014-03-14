@@ -13,6 +13,7 @@ package gruppe9.kalender.frontend;
 import gruppe9.kalender.model.Meeting;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.DefaultListModel;
@@ -49,35 +50,44 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     	case 1:
     		X = (DefaultListModel<Meeting>) mandag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
-    		mandag_list.setModel(X);
+    		mandag_list.setModel(sortModel(X));
     		break;
     	case 2:
     		X = (DefaultListModel<Meeting>) tirsdag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
-    		tirsdag_list.setModel(X);
+    		tirsdag_list.setModel(sortModel(X));
     		break;
     	case 3:
     		X = (DefaultListModel<Meeting>) onsdag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
-    		onsdag_list.setModel(X);
+    		onsdag_list.setModel(sortModel(X));
     		break;
     	case 4:
     		X = (DefaultListModel<Meeting>) torsdag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
-    		torsdag_list.setModel(X);
+    		torsdag_list.setModel(sortModel(X));
     		break;
     	case 5:
     		X = (DefaultListModel<Meeting>) fredag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
-    		fredag_list.setModel(X);
+    		fredag_list.setModel(sortModel(X));
     		break;
     	}
     }
+    private DefaultListModel<Meeting> sortModel(DefaultListModel<Meeting> model){
+    	//gets all existing elements
+    	ArrayList<Meeting> meetings = new ArrayList<Meeting>();
+    	for (int i = 0; i < model.getSize(); i++) {
+			meetings.add(model.getElementAt(i));
+		}
+    	Collections.sort(meetings);
+    	DefaultListModel<Meeting> newModel = new DefaultListModel<Meeting>();
+    	for (int i = 0; i < meetings.size(); i++) {
+    		newModel.addElement(meetings.get(i));			
+		}
+    	return newModel;
+    }
+    
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();

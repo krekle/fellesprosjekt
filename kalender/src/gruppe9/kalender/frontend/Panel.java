@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -246,6 +247,26 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     // End of variables declaration//GEN-END:variables
     private DefaultListModel<Meeting> monday_model;
 	
+    public JScrollPane getMondayScrollPane()
+    {
+    	return mondayScrollPane;
+    }
+    public JScrollPane getTuesdayScrollPane()
+    {
+    	return tuesdayScrollPane;
+    }
+    public JScrollPane getOnsdagScrollPane()
+    {
+    	return wednesdayScrollPane;
+    }
+    public JScrollPane getThursdayScrollPane()
+    {
+    	return thursdayScrollPane;
+    }
+    public JScrollPane getFridayScrollPane()
+    {
+    	return fridayScrollPane;
+    }
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
 		

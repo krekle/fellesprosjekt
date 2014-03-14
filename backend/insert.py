@@ -37,11 +37,11 @@ def create_avtale(d):
     print("Error")
     return False
 
-start = now.strftime(f)
-endtime = now + datetime.timedelta(hours=2)
-end = endtime.strftime(f)
-test = {'start':start, 'slutt':end, 'beskrivelse':'lorem ipsum dolor', 'varighet':'2','skaper':'76', 'sted':'4', 'romid':'414'}
-create_avtale(test)
+#start = now.strftime(f)
+#endtime = now + datetime.timedelta(hours=2)
+#end = endtime.strftime(f)
+#test = {'start':start, 'slutt':end, 'beskrivelse':'lorem ipsum dolor', 'varighet':'2','skaper':'76', 'sted':'4', 'romid':'414'}
+#create_avtale(test)
 
 def create_Person(d):
   person = db['Person']
@@ -53,12 +53,26 @@ def create_Person(d):
     print("False")
     return False
 
-def create_varsel():
-  #todo
+### TODO ###
+def create_gruppevarsel(d):
+  varselData = db['Alarm']
   return
 
-def delete_avtale(avtale_id):
-  db['Avtale'].delete(AvtaleID = avtale_id)
-  #Maa delete alle entries fra deltagendeI
-  return True
+def create_personvarsel(d):
+  return
 
+def create_gruppemelding(d):
+  return
+
+def create_personmelding(d):
+  return
+
+### END TODO ###
+
+def delete_avtale(avtale_id):
+  try:
+    db['Avtale'].delete(AvtaleID = avtale_id)
+    return True
+  except:
+    print("Error")
+    return False

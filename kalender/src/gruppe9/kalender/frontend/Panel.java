@@ -10,17 +10,20 @@
  */
 package gruppe9.kalender.frontend;
 
+import java.awt.Point;
 import java.util.Collections;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author krake
  */
-public class Panel extends javax.swing.JPanel
+public class Panel extends javax.swing.JPanel implements ChangeListener
 {
     
     /** Creates new form Panel */
@@ -91,14 +94,17 @@ public class Panel extends javax.swing.JPanel
         mandag_list.setAutoscrolls(false);
         jScrollPane1.setViewportView(mandag_list);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         System.out.println(renderer.toString());
         mandag_list.setCellRenderer(renderer);
         DefaultListModel X = new DefaultListModel();
         X.addElement("BOKPOK");
         X.addElement("asdasdBOKPOK");
+        X.addElement("BOKPOK");
+        X.addElement("asdasdBOKPOK");
+        X.addElement("BOKPOK");
         mandag_list.setModel(X);
-
+       
         
         tirsdag_list.setAutoscrolls(false);
         jScrollPane2.setViewportView(tirsdag_list);
@@ -117,6 +123,10 @@ public class Panel extends javax.swing.JPanel
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         torsdag_list.setCellRenderer(renderer);
+        DefaultListModel Y = new DefaultListModel();
+        Y.addElement("BOKPOK");
+        Y.addElement("asdasdBOKPOK");
+        torsdag_list.setModel(Y);
         
         fredag_list.setAutoscrolls(false);
         jScrollPane5.setViewportView(fredag_list);
@@ -124,7 +134,23 @@ public class Panel extends javax.swing.JPanel
         jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         fredag_list.setCellRenderer(renderer);
 
+        jScrollPane1.getViewport().addChangeListener(new ChangeListener() {
 
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				Point p = jScrollPane1.getViewport().getViewPosition();
+				jScrollPane2.getViewport().setViewPosition(p);
+				jScrollPane3.getViewport().setViewPosition(p);
+				jScrollPane4.getViewport().setViewPosition(p);
+				jScrollPane5.getViewport().setViewPosition(p);
+			}
+        	
+        });
+        jScrollPane2.getViewport().addChangeListener(this);
+        jScrollPane3.getViewport().addChangeListener(this);
+        jScrollPane4.getViewport().addChangeListener(this);
+        jScrollPane5.getViewport().addChangeListener(this);
 
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -178,6 +204,8 @@ public class Panel extends javax.swing.JPanel
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)))
         );
+        
+        
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -197,4 +225,12 @@ public class Panel extends javax.swing.JPanel
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     // End of variables declaration//GEN-END:variables
+	
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+    
+   
 }

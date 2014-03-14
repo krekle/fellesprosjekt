@@ -3,6 +3,8 @@ import gruppe9.kalender.client.Client;
 import gruppe9.kalender.user.Bruker;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -19,14 +21,17 @@ public class Main_Window extends javax.swing.JFrame {
 
 	Login_Window login;
 	Client client;
+	static boolean popupExists = false;
     /** Creates new form Main_Window */
     public Main_Window(Login_Window login, Client client) 
     {
     	this.client = client;
     	this.login = login;
         initComponents();
-        for (int x = 0; x<5; x++){
-            tabWindow.addTab("Gruppe "+x, new Panel());
+        tabWindow.addTab("Me", new Panel(week_list_scroller));
+        tabWindow.addTab("Felles", new Panel(week_list_scroller));
+        for (int x = 1; x<4; x++){
+            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller));
         }
         //System.out.println(this.avtale_panel.getSize());
         //Avtale a = new Avtale();
@@ -91,7 +96,7 @@ public class Main_Window extends javax.swing.JFrame {
 			}
 		});
         tabWindow = new javax.swing.JTabbedPane();
-        jScrollBar1 = new javax.swing.JScrollBar();
+        week_list_scroller = new javax.swing.JScrollBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         kom_møte_list = new javax.swing.JList();
         kom_møte_label = new javax.swing.JLabel();
@@ -108,7 +113,7 @@ public class Main_Window extends javax.swing.JFrame {
         decline_choice = new javax.swing.JRadioButton();
         varsling_label = new javax.swing.JLabel();
         dato_label = new javax.swing.JLabel();
-        alternativ_box = new javax.swing.JComboBox();
+        varsling_box = new javax.swing.JComboBox();
         avtale_label = new javax.swing.JLabel();
         kom_møte_label0 = new javax.swing.JLabel();
         accept_choice = new javax.swing.JRadioButton();
@@ -180,7 +185,6 @@ public class Main_Window extends javax.swing.JFrame {
                 accept_choiceActionPerformed(evt);
             }
         });
-        
         ButtonGroup AvslåDelta = new ButtonGroup();
         AvslåDelta.add(decline_choice);
         AvslåDelta.add(accept_choice);
@@ -189,8 +193,20 @@ public class Main_Window extends javax.swing.JFrame {
 
         dato_label.setText("Dato:");
 
-        alternativ_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Snail-Mail", "Trompet", "Alarm" }));
-
+        varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Snail-Mail", "Trompet", "Alarm" }));
+        varsling_box.addActionListener(new ActionListener() 
+        {
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+					if(!Main_Window.popupExists)
+					{
+						Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), null);
+						p.setVisible(true);
+						Main_Window.popupExists = true;
+					}
+			}
+		});
         avtale_label.setText("Avtale:");
 
         kom_møte_label0.setText("Endre:");
@@ -209,7 +225,7 @@ public class Main_Window extends javax.swing.JFrame {
                 rediger_buttonActionPerformed(evt);
             }
         });
-
+        
         slett_button.setText("Slett Avtale");
         slett_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,6 +246,7 @@ public class Main_Window extends javax.swing.JFrame {
         ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
         notification_button.setIcon(notify_icon);
 
+        
         //Listener som tar seg av endring av ikon for notifikasjonsknapp 
         notification_button.addMouseListener(new MouseListener() {
 			private boolean isHovering = false;
@@ -325,7 +342,7 @@ public class Main_Window extends javax.swing.JFrame {
                 .addContainerGap())
             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
-            .addComponent(alternativ_box, 0, 259, Short.MAX_VALUE)
+            .addComponent(varsling_box, 0, 259, Short.MAX_VALUE)
             .addComponent(rediger_button, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
             .addComponent(slett_button, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
         );
@@ -355,7 +372,7 @@ public class Main_Window extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(varsling_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(alternativ_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(varsling_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(kom_møte_label0)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -438,7 +455,7 @@ public class Main_Window extends javax.swing.JFrame {
                             .addComponent(tabWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(uke_search, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(1, 1, 1)
-                        .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(week_list_scroller, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)
                         .addComponent(next_button, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -473,7 +490,7 @@ public class Main_Window extends javax.swing.JFrame {
                                                 .addGap(41, 41, 41))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(week_list_scroller, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(tabWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -547,7 +564,7 @@ System.out.println(notification_button.getSize());// TODO add your handling code
     private javax.swing.JButton logout_button;
     private javax.swing.JButton notification_button;
     private javax.swing.JButton create_avtale_button;
-    private javax.swing.JComboBox alternativ_box;
+    private javax.swing.JComboBox varsling_box;
     private javax.swing.JComboBox felles_deltakere_box;
     private javax.swing.JLabel kom_møte_label;
     private javax.swing.JLabel kom_møte_label0;
@@ -566,7 +583,7 @@ System.out.println(notification_button.getSize());// TODO add your handling code
     private javax.swing.JPanel top_panel;
     private javax.swing.JRadioButton accept_choice;
     private javax.swing.JRadioButton decline_choice;
-    private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JScrollBar week_list_scroller;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

@@ -33,7 +33,7 @@ def get_mine_avtaler(person_id):
   mine_avtaler = []
   if(md):
     for deltar in md:
-      mine_avtaler.append(avtaler.find(AvtaleID=deltar['Avtale_AvtaleID']))
+      mine_avtaler.append(get_avtale(deltar['Avtale_AvtaleID']))
   if(mine_avtaler):
     for avtale in mine_avtaler:
       avtaleToString(avtale)
@@ -43,13 +43,20 @@ def get_mine_avtaler(person_id):
 #Tested and works
 def get_avtale(avtale_id):
   avtaleData = db['Avtale']
+  romData = db['TarPlassI']
+  skaperData = db['SkaperAv']
+
   avtale = avtaleData.find_one(AvtaleID = avtale_id)
+  avtale['rom'] = str(romData.find_one(Avtale_AvtaleID = avtale_id)['Rom_ID'])
+  print(avtale['rom'])
+  avtale['skaper'] = str(skaperData.find_one(Avtale_AvtaleID = avtale_id)['Person_Ansattnummer'])
+  print(avtale['skaper'])
+
   if (avtale):
+    avtale = dict(avtale)
     avtaleToString(avtale)
     return avtale
   return False
-
-print(get_avtale(5))
 
 #Tested and works
 def get_personvarsler(id):
@@ -76,7 +83,7 @@ def get_gruppevarsler(gruppeid):
   return False
 
 #Tested and works
-def get_personmelding(personid):
+def get_personmeldinger(personid):
   melding = db['Melding']
   varsler = melding.find(Person_Ansattnummer = personid)
   personvarsler = []
@@ -88,7 +95,7 @@ def get_personmelding(personid):
   return False
 
 #Tested and works
-def get_gruppemelding(gruppeid):
+def get_gruppemeldinger(gruppeid):
   melding = db['Melding']
   varsler = melding.find(Avtale_AvtaleID = gruppeid)
   gruppevarsler = []

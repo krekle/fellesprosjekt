@@ -10,11 +10,14 @@
  */
 package gruppe9.kalender.frontend;
 
+import gruppe9.kalender.model.Meeting;
+
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.DefaultListModel;
-import javax.swing.ListCellRenderer;
+import javax.swing.JScrollBar;
 import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -27,7 +30,8 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
 {
     
     /** Creates new form Panel */
-    public Panel() {
+    public Panel(JScrollBar scroller) 
+    {
         initComponents();
     }
 
@@ -38,50 +42,65 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    public void addAvtale(Avtale a)
+    public void addAvtale(Meeting a)
     {
-    	ListModel X;
-    	switch(Avtale.getDay())
+    	DefaultListModel<Meeting> X;
+    	
+    	switch(a.getDayOfWeek())
     	{
-    	case "Man":
-    		X = mandag_list.getModel();
+    	case 1:
+    		X = (DefaultListModel<Meeting>) mandag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		mandag_list.setModel(sortModel(X));
     		break;
-    	case "Tir":
-    		X = mandag_list.getModel();
+    	case 2:
+    		X = (DefaultListModel<Meeting>) tirsdag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		tirsdag_list.setModel(sortModel(X));
     		break;
-    	case "Ons":
-    		X = mandag_list.getModel();
+    	case 3:
+    		X = (DefaultListModel<Meeting>) onsdag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		onsdag_list.setModel(sortModel(X));
     		break;
-    	case "Tor":
-    		X = mandag_list.getModel();
+    	case 4:
+    		X = (DefaultListModel<Meeting>) torsdag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		torsdag_list.setModel(sortModel(X));
     		break;
-    	case "Fre":
-    		X = mandag_list.getModel();
+    	case 5:
+    		X = (DefaultListModel<Meeting>) fredag_list.getModel();
     		X.addElement(a);
-    		Collections.sort(X); //TODO - create custom sorter, either local or general in Avtale.java.
+    		fredag_list.setModel(sortModel(X));
     		break;
     	}
     }
+    private DefaultListModel<Meeting> sortModel(DefaultListModel<Meeting> model){
+    	//gets all existing elements
+    	ArrayList<Meeting> meetings = new ArrayList<Meeting>();
+    	for (int i = 0; i < model.getSize(); i++) {
+			meetings.add(model.getElementAt(i));
+		}
+    	Collections.sort(meetings);
+    	DefaultListModel<Meeting> newModel = new DefaultListModel<Meeting>();
+    	for (int i = 0; i < meetings.size(); i++) {
+    		newModel.addElement(meetings.get(i));			
+		}
+    	return newModel;
+    }
+    
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        mandag_list = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tirsdag_list = new javax.swing.JList();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        onsdag_list = new javax.swing.JList();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        torsdag_list = new javax.swing.JList();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        fredag_list = new javax.swing.JList();
+        mondayScrollPane = new javax.swing.JScrollPane();
+        mandag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
+        tuesdayScrollPane = new javax.swing.JScrollPane();
+        tirsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
+        wednesdayScrollPane = new javax.swing.JScrollPane();
+        onsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
+        thursdayScrollPane = new javax.swing.JScrollPane();
+        torsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
+        fridayScrollPane = new javax.swing.JScrollPane();
+        fredag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         jLabel1 = new javax.swing.JLabel("Mandag");
         jLabel2 = new javax.swing.JLabel("Tirsdag");
         jLabel3 = new javax.swing.JLabel("Onsdag");
@@ -92,9 +111,9 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
 
         Avtale_renderer renderer = new Avtale_renderer();
         mandag_list.setAutoscrolls(false);
-        jScrollPane1.setViewportView(mandag_list);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        mondayScrollPane.setViewportView(mandag_list);
+        mondayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        mondayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         System.out.println(renderer.toString());
         mandag_list.setCellRenderer(renderer);
         DefaultListModel X = new DefaultListModel();
@@ -107,21 +126,21 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
        
         
         tirsdag_list.setAutoscrolls(false);
-        jScrollPane2.setViewportView(tirsdag_list);
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        tuesdayScrollPane.setViewportView(tirsdag_list);
+        tuesdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        tuesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         tirsdag_list.setCellRenderer(renderer);
 
         onsdag_list.setAutoscrolls(false);
-        jScrollPane3.setViewportView(onsdag_list);
-        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        wednesdayScrollPane.setViewportView(onsdag_list);
+        wednesdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        wednesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         onsdag_list.setCellRenderer(renderer);
         
         torsdag_list.setAutoscrolls(false);
-        jScrollPane4.setViewportView(torsdag_list);
-        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        thursdayScrollPane.setViewportView(torsdag_list);
+        thursdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        thursdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         torsdag_list.setCellRenderer(renderer);
         DefaultListModel Y = new DefaultListModel();
         Y.addElement("BOKPOK");
@@ -129,28 +148,28 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         torsdag_list.setModel(Y);
         
         fredag_list.setAutoscrolls(false);
-        jScrollPane5.setViewportView(fredag_list);
-        jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane5.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        fridayScrollPane.setViewportView(fredag_list);
+        fridayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        fridayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         fredag_list.setCellRenderer(renderer);
 
-        jScrollPane1.getViewport().addChangeListener(new ChangeListener() {
+        mondayScrollPane.getViewport().addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
-				Point p = jScrollPane1.getViewport().getViewPosition();
-				jScrollPane2.getViewport().setViewPosition(p);
-				jScrollPane3.getViewport().setViewPosition(p);
-				jScrollPane4.getViewport().setViewPosition(p);
-				jScrollPane5.getViewport().setViewPosition(p);
+				Point p = mondayScrollPane.getViewport().getViewPosition();
+				tuesdayScrollPane.getViewport().setViewPosition(p);
+				wednesdayScrollPane.getViewport().setViewPosition(p);
+				thursdayScrollPane.getViewport().setViewPosition(p);
+				fridayScrollPane.getViewport().setViewPosition(p);
 			}
         	
         });
-        jScrollPane2.getViewport().addChangeListener(this);
-        jScrollPane3.getViewport().addChangeListener(this);
-        jScrollPane4.getViewport().addChangeListener(this);
-        jScrollPane5.getViewport().addChangeListener(this);
+        tuesdayScrollPane.getViewport().addChangeListener(this);
+        wednesdayScrollPane.getViewport().addChangeListener(this);
+        thursdayScrollPane.getViewport().addChangeListener(this);
+        fridayScrollPane.getViewport().addChangeListener(this);
 
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -158,15 +177,15 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mondayScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tuesdayScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(wednesdayScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(thursdayScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(fridayScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
@@ -198,11 +217,11 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
                         .addComponent(jLabel6)))
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)))
+                    .addComponent(mondayScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(tuesdayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(thursdayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(wednesdayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(fridayScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)))
         );
         
         
@@ -219,12 +238,13 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JList onsdag_list;
     private javax.swing.JList torsdag_list;
     private javax.swing.JList fredag_list;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane mondayScrollPane;
+    private javax.swing.JScrollPane tuesdayScrollPane;
+    private javax.swing.JScrollPane wednesdayScrollPane;
+    private javax.swing.JScrollPane thursdayScrollPane;
+    private javax.swing.JScrollPane fridayScrollPane;
     // End of variables declaration//GEN-END:variables
+    private DefaultListModel<Meeting> monday_model;
 	
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub

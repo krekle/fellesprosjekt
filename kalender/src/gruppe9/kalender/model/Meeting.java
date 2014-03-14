@@ -148,7 +148,7 @@ public class Meeting implements Comparable<Meeting>{
 			if ((i+1) == this.participants.size()){
 				idStr += participants.get(i).getId();
 			} else {
-				idStr += participants.get(i).getId() + ", ";				
+				idStr += participants.get(i).getId() + ",";				
 			}
 		}
 		return idStr;

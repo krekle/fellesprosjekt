@@ -16,7 +16,7 @@ import java.awt.Point;
 import java.util.Collections;
 
 import javax.swing.DefaultListModel;
-import javax.swing.ListCellRenderer;
+import javax.swing.JScrollBar;
 import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -29,7 +29,8 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
 {
     
     /** Creates new form Panel */
-    public Panel() {
+    public Panel(JScrollBar scroller) 
+    {
         initComponents();
     }
 

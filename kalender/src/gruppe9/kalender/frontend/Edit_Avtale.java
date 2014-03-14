@@ -9,19 +9,40 @@
  * Created on Mar 11, 2014, 12:46:47 PM
  */
 package gruppe9.kalender.frontend;
+
+import java.util.Date;
+
+import org.jdesktop.swingx.plaf.MonthViewUI;
+
+import gruppe9.kalender.model.Meeting;
+
 /**
  *
  * @author krake
  */
 public class Edit_Avtale extends javax.swing.JFrame {
     private Main_Window main;
-    /** Creates new form Main_Window */
-    public Edit_Avtale(Main_Window main) 
+    /** Creates new form Main_Window 
+     * @param meeting */
+    Meeting meeting;
+    public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
+    	setMeeting(meeting);
         this.main = main;
         initComponents();
     }
-
+    private void setMeeting(Meeting meeting)
+    {
+    	if(meeting != null)
+    	{
+    		this.meeting = meeting; 
+    		return;
+    	}
+    	else
+    	{
+    	}
+    	
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -71,6 +92,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
 
         jPanelAvtale.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
+        this.jXMonthViewDatovelger.setDaysOfTheWeek(new String[]{"S","M","Ti","O","To","F","L"});
         jLabelAvtale.setText("Avtalenavn:");
 
         jTextFieldAvtale.addActionListener(new java.awt.event.ActionListener() {
@@ -122,7 +144,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         jLabelDeltakere.setText("Deltakere:");
 
         jComboBoxDeltakerSok.setEditable(true);
-        jComboBoxDeltakerSok.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButtonDeltakerLeggTil.setText("Legg til");
 
@@ -130,11 +151,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
 
         jScrollPaneDeltakere.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jListDeltakere.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPaneDeltakere.setViewportView(jListDeltakere);
 
         javax.swing.GroupLayout jPanelDeltakereLayout = new javax.swing.GroupLayout(jPanelDeltakere);
@@ -303,11 +319,13 @@ public class Edit_Avtale extends javax.swing.JFrame {
 
         jLabelVelgRom.setText("Velg fra liste:");
 
-        jListRom.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        //TODO - add rooms
+//        jListRom.setModel(new javax.swing.AbstractListModel() 
+//        	{
+//            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+//            public int getSize() { return strings.length; }
+//            public Object getElementAt(int i) { return strings[i]; }
+//        });
         jScrollPaneRom.setViewportView(jListRom);
 
         jRadioButtonRomAuto.setText("Velg automatisk");
@@ -393,9 +411,9 @@ public class Edit_Avtale extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButtonLagreAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLagreAction
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonLagreAction
+private void jButtonLagreAction(java.awt.event.ActionEvent evt) 
+{
+}
 
 private void JTextFieldAvtaleAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldAvtaleAction
 // TODO add your handling code here:
@@ -405,7 +423,8 @@ private void JTextFieldDatoAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 // TODO add your handling code here:
 }//GEN-LAST:event_JTextFieldDatoAction
 
-private void JTextFieldDatoStartAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldDatoStartAction
+private void JTextFieldDatoStartAction(java.awt.event.ActionEvent evt) 
+{//GEN-FIRST:event_JTextFieldDatoStartAction
 // TODO add your handling code here:
 }//GEN-LAST:event_JTextFieldDatoStartAction
 
@@ -417,9 +436,15 @@ private void jTextFieldVarighetAction(java.awt.event.ActionEvent evt) {//GEN-FIR
 // TODO add your handling code here:
 }//GEN-LAST:event_JTextFieldVarighetAction
 
-private void jButtonForrigeMndAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonForrigeMndAction
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonForrigeMndAction
+private void jButtonForrigeMndAction(java.awt.event.ActionEvent evt) 
+{
+	Date date = new Date();
+	date.setYear(2014);
+	date.setMonth(4);
+	date.setDate(14);
+	jXMonthViewDatovelger.setSelectionDate(date);
+	System.out.println(jXMonthViewDatovelger.getSelectionDate().getDate());
+}
 
 private void jTextFieldRomAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldRomAction
 // TODO add your handling code here:

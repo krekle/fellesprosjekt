@@ -1,13 +1,15 @@
 package gruppe9.kalender.frontend;
 
 import gruppe9.kalender.client.Client;
+import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
 
 public class Login_Window extends javax.swing.JFrame {
 
     /** Creates new form Login_Window */
-    public Login_Window() {
+    public Login_Window() 
+    {
         initComponents();
     }
 
@@ -21,8 +23,9 @@ public class Login_Window extends javax.swing.JFrame {
     	Client client = new Client();
     	if(client.logIn(user_field.getText(), pass_field.getText()))
     	{
-    		Bruker.setUsername(user_field.getText());
-    		Main_Window window = new Main_Window(this);
+    		Bruker.getInstance().setUser(new Person(1,"boop", 2, "beep", "baap"));
+    		Bruker.getInstance().getUser().setName(user_field.getText());
+    		Main_Window window = new Main_Window(this, client);
     		window.setVisible(true);
     		this.setVisible(false);
     	}

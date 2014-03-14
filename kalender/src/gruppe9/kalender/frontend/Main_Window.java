@@ -1,5 +1,6 @@
 package gruppe9.kalender.frontend;
 import gruppe9.kalender.client.Client;
+import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.user.Bruker;
 
 import java.awt.Image;
@@ -389,7 +390,7 @@ public class Main_Window extends javax.swing.JFrame {
         top_panel.setForeground(new java.awt.Color(-1118482,true));
 
         info_label.setFont(new java.awt.Font("SansSerif", 1, 12));
-        info_label.setText("Logget inn som " + Bruker.getUsername());
+        info_label.setText("Logget inn som " + Bruker.getInstance().getUser().getName());
 
         logout_button.setText("Logg ut");
         logout_button.addActionListener(new java.awt.event.ActionListener() {
@@ -429,8 +430,15 @@ public class Main_Window extends javax.swing.JFrame {
         );
 
         jSeparator1.setForeground(new java.awt.Color(-10197916,true));
-
         create_avtale_button.setText("Lag Avtale");
+        create_avtale_button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				create_avtale_buttonActionPerformed(e);
+			}
+		});
 
         felles_deltakere_box.setEditable(true);
         felles_deltakere_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -530,12 +538,18 @@ private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rediger_buttonActionPerformed
 // TODO add your handling code here:
     //REDIGER AVTALE
-    Edit_Avtale a = new Edit_Avtale(this);
+    Edit_Avtale a = new Edit_Avtale(this, getAvtale());
     a.setVisible(true);
     this.setVisible(false);
     a.setLocation(this.getLocation());
 }//GEN-LAST:event_rediger_buttonActionPerformed
 
+private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+	    Edit_Avtale a = new Edit_Avtale(this, null);
+	    a.setVisible(true);
+	    this.setVisible(false);
+	    a.setLocation(this.getLocation());
+	}
 private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {//GEN-FIRST:event_slett_buttonActionPerformed
 // TODO add your handling code here:
@@ -551,7 +565,19 @@ private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt)
 private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notification_buttonActionPerformed
 System.out.println(notification_button.getSize());// TODO add your handling code here:
 }//GEN-LAST:event_notification_buttonActionPerformed
-    
+
+
+
+private Meeting current_Avtale = null;
+public Meeting getAvtale()
+{
+	return null;
+}
+
+public void setMeeting(Meeting avtale)
+{
+	this.current_Avtale = avtale;
+}
     private boolean hasNewNotification() {
     	// TODO Auto-generated method stub
     	return true;

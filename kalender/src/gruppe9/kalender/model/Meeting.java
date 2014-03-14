@@ -38,7 +38,7 @@ public class Meeting implements Comparable<Meeting>{
 		soundAlert = null;
 	}
 
-	public String getDuritation(){
+	public String getDuration(){
 		int minutes = 0;
 		minutes += ((Integer.parseInt(this.getEndTime().substring(0,2))*60) + Integer.parseInt(this.getEndTime().substring(3)));
 		System.out.println(minutes);

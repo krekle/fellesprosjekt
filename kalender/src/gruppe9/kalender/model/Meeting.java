@@ -141,6 +141,17 @@ public class Meeting implements Comparable<Meeting>{
 	public void setParticipants(ArrayList<Person> participants) {
 		this.participants = participants;
 	}
+	public String getStringParticipants(){ // Returns string of participants IDs
+		String idStr = "";
+		for (int i = 0; i < this.participants.size(); i++) {
+			if ((i+1) == this.participants.size()){
+				idStr += participants.get(i).getId();
+			} else {
+				idStr += participants.get(i).getId() + ", ";				
+			}
+		}
+		return idStr;
+	}
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}

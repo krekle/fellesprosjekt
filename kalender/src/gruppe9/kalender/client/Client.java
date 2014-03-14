@@ -22,9 +22,9 @@ import org.apache.http.message.BasicNameValuePair;
  
 @SuppressWarnings("deprecation")
 
-public class Client {
+public class Client 
+{
  
-	//private String url = "http://192.168.132.173:8081/";
 	private String url = "http://dev.krekle.net:4242/";
 	private Type request;
 	private String[] dict;
@@ -111,12 +111,14 @@ public class Client {
  
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
+		System.out.println(url);
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		
 		for (int i = 0; i < strings.length; i = i+2) {
 			urlParameters.add(new BasicNameValuePair(strings[i], strings[i+1]));
 		}
-
+		System.out.println(urlParameters.toString());
+		
 		post.setEntity(new UrlEncodedFormEntity(urlParameters));
  
 		HttpResponse response = client.execute(post);
@@ -138,5 +140,9 @@ public class Client {
 	{
 		//hash(password);
 		return true;
+	}
+	public void logOut()
+	{
+		
 	}
 }

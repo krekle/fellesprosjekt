@@ -17,6 +17,8 @@ def add_to_avtale(avtaleid, personid):
 #Tested and works
 def update_person(d):
   try:
+    d = dict(d)
+    print(d)
     db['Person'].update(d,['Ansattnummer'])
     print("Success")
     return True

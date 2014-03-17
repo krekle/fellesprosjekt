@@ -13,6 +13,7 @@ package gruppe9.kalender.frontend;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -59,48 +60,7 @@ public class Notification_Window extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
-    	this.addWindowListener(new WindowListener() {
-			
-			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowClosing(WindowEvent e) {
-				THIS.setVisible(false);
-			}
-			
-			@Override
-			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+    	this.setDefaultCloseOperation(HIDE_ON_CLOSE);
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -127,7 +87,6 @@ public class Notification_Window extends javax.swing.JFrame {
         jList1.setCellRenderer(new NotificationRenderer());
         jScrollPane3.setViewportView(jTextPane1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -195,14 +154,32 @@ public class Notification_Window extends javax.swing.JFrame {
     
     private class NotificationRenderer extends JLabel implements ListCellRenderer
     {
+    	public NotificationRenderer(){this.setOpaque(true);}
 
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) 
 		{
 			Notification curNote = (Notification) value;
-			this.setText((curNote.hasBeenRead ? "SETT":"IKKE SETT")+ "  -   Avtale " + curNote.getMeetingId() + "  -  " + curNote.getTime());
-			curNote.hasBeenRead = true;
+			if(isSelected)
+			{
+				System.out.println();
+				this.setBackground(Color.CYAN);
+				this.setText("SETT" + "  -   Avtale " + curNote.getMeetingId() + "  -  " + curNote.getTime());
+				curNote.hasBeenRead = true;
+			}
+			else
+			{
+				if(curNote.hasBeenRead)
+				{
+					this.setBackground(Color.GRAY);
+				}
+				else
+				{
+					this.setBackground(Color.WHITE);
+				}
+				this.setText((curNote.hasBeenRead ? "SETT":"IKKE SETT")+ "  -   Avtale " + curNote.getMeetingId() + "  -  " + curNote.getTime());
+			}
 			return this;
 		}
     	

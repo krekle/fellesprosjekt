@@ -31,6 +31,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 	Login_Window login;
 	Client client;
 	private int current_week = 0;
+	private int current_year = 2014;
 	static boolean popupExists = false;
 	private Notification_Window notifications;
     /** Creates new form Main_Window */
@@ -45,7 +46,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         initComponents();
         tabWindow.addTab("Me", new Panel(week_list_scroller, this));
         tabWindow.addTab("Felles", new Panel(week_list_scroller, this));
-        for (int x = 1; x<4; x++){
+        for (int x = 1; x<4; x++)
+        {
             tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
         }
         notifications = new Notification_Window();
@@ -151,8 +153,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 			public void windowClosing(WindowEvent e) 
 			{
 //				client.logOut();
+				login = new Login_Window();
 				System.out.println("Closing!");
-				System.exit(0);
 			}
 			
 			@Override
@@ -201,7 +203,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         jSeparator1 = new javax.swing.JSeparator();
         create_avtale_button = new javax.swing.JButton();
         felles_deltakere_box = new javax.swing.JComboBox();
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setResizable(false);
 
         kom_møte_list.setModel(new javax.swing.AbstractListModel() {
@@ -222,9 +224,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 			{
 				String in = uke_search.getText();
 				if(in.matches("[0-9]*") && Integer.parseInt(in) >= 0 && Integer.parseInt(in)<=52)
-				{	
-					uke_label.setText("Uke: "+uke_search.getText());
+				{
 					current_week = Integer.parseInt(uke_search.getText());
+					uke_label.setText(current_week+"/"+current_year);
 				}
 				
 			}
@@ -232,7 +234,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
         prev_button.setFont(new java.awt.Font("Dialog", 1, 18));
         prev_button.setText("<");
-
+        prev_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prev_buttonActionPerformed(evt);
+            }
+        });
         next_button.setFont(new java.awt.Font("Dialog", 1, 18));
         next_button.setText(">");
         next_button.addActionListener(new java.awt.event.ActionListener() {
@@ -463,7 +469,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         );
 
         current_week = (Calendar.getInstance()).get(Calendar.getInstance().WEEK_OF_YEAR);
-        uke_label.setText("UKE "+current_week);
+        current_year = (Calendar.getInstance()).get(Calendar.getInstance().YEAR);
+        uke_label.setText(current_week+"/"+current_year);
         System.out.println(current_week);
         uke_label.setToolTipText("");
         uke_label.setAlignmentY(0.0F);
@@ -608,7 +615,24 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
 private void next_buttonActionPerformed(java.awt.event.ActionEvent evt) 
 {
-	
+	current_week++;
+	if(current_week == 53){current_week = 1; current_year++;}
+	uke_label.setText(current_week+"/"+current_year);
+	for(Object o : tabWindow.getComponents())
+	{
+		((Panel) o).refresh();
+	}
+	System.out.println("Current year: " +current_year);
+}
+private void prev_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	current_week--;
+	if(current_week == 0){current_week = 52; current_year--;}
+	uke_label.setText(current_week+"/"+current_year);
+	for(Object o : tabWindow.getComponents())
+	{
+		((Panel) o).refresh();
+	}
 }
 
 private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
@@ -675,6 +699,10 @@ public Meeting getAvtale()
 		return current_week;
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
+	public int getYear() {
+		// TODO Auto-generated method stub
+		return current_year;
+	}
     private javax.swing.JButton prev_button;
     private javax.swing.JButton next_button;
     private javax.swing.JButton rediger_button;

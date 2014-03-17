@@ -11,17 +11,20 @@
 package gruppe9.kalender.frontend;
 
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.user.Bruker;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -30,12 +33,46 @@ import javax.swing.event.ChangeListener;
 public class Panel extends javax.swing.JPanel implements ChangeListener
 {
     
-    /** Creates new form Panel */
-    public Panel(JScrollBar scroller) 
+    /** Creates new form Panel 
+     * @param main */
+	Main_Window main;
+	ArrayList<Meeting> meetings;
+    public Panel(JScrollBar scroller, Main_Window main) 
     {
+    	this.main = main;
         initComponents();
-    }
+        meetings = Bruker.getInstance().getAvtaler();
+        for(int x = 0; x<5; x++)
+        {
+        	DefaultListModel<Meeting> avtaler = new DefaultListModel<Meeting>();
+        	for(Meeting meeting : meetings)
+        	{
+        		if(x==meeting.getDayOfWeek()) //&& meeting.getWeek() == main.getWeek())
+        		{
+        			avtaler.addElement(meeting);
+        		}
+        	}
+        	switch(x)
+			{
+			case 0:
+				mandag_list.setModel(avtaler);
+				break;
+			case 1:
+				tirsdag_list.setModel(avtaler);
+				break;
+			case 2:
+				onsdag_list.setModel(avtaler);
+				break;
+			case 3:
+				torsdag_list.setModel(avtaler);
+				break;
+			case 4:
+				fredag_list.setModel(avtaler);
+				break;
+			}
+        }
 
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -90,9 +127,8 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     	return newModel;
     }
     
-    private void initComponents() {
-
-        mondayScrollPane = new javax.swing.JScrollPane();
+    private void initComponents() 
+    {   mondayScrollPane = new javax.swing.JScrollPane();
         mandag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
         tuesdayScrollPane = new javax.swing.JScrollPane();
         tirsdag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
@@ -109,7 +145,15 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         jLabel6 = new javax.swing.JLabel("Fredag");
 
         setMaximumSize(null);
-
+        ListSelectionListener listener = new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) 
+			{
+				JList X = ((JList) e.getSource());
+				setSelected(Integer.parseInt(((JList) e.getSource()).getName()));
+			}
+		};
         Avtale_renderer renderer = new Avtale_renderer();
         mandag_list.setAutoscrolls(false);
         mondayScrollPane.setViewportView(mandag_list);
@@ -118,12 +162,9 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         System.out.println(renderer.toString());
         mandag_list.setCellRenderer(renderer);
         DefaultListModel X = new DefaultListModel();
-        X.addElement("BOKPOK");
-        X.addElement("asdasdBOKPOK");
-        X.addElement("BOKPOK");
-        X.addElement("asdasdBOKPOK");
-        X.addElement("BOKPOK");
         mandag_list.setModel(X);
+        mandag_list.setName("0");
+        mandag_list.addListSelectionListener(listener);
        
         
         tirsdag_list.setAutoscrolls(false);
@@ -131,12 +172,16 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         tuesdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         tuesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         tirsdag_list.setCellRenderer(renderer);
-
+        tirsdag_list.setName("1");
+        tirsdag_list.addListSelectionListener(listener);
+        
         onsdag_list.setAutoscrolls(false);
         wednesdayScrollPane.setViewportView(onsdag_list);
         wednesdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         wednesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         onsdag_list.setCellRenderer(renderer);
+        onsdag_list.setName("2");
+        onsdag_list.addListSelectionListener(listener);
         
         torsdag_list.setAutoscrolls(false);
         thursdayScrollPane.setViewportView(torsdag_list);
@@ -144,16 +189,18 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         thursdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         torsdag_list.setCellRenderer(renderer);
         DefaultListModel Y = new DefaultListModel();
-        Y.addElement("BOKPOK");
-        Y.addElement("asdasdBOKPOK");
         torsdag_list.setModel(Y);
+        torsdag_list.setName("3");
+        torsdag_list.addListSelectionListener(listener);
         
         fredag_list.setAutoscrolls(false);
         fridayScrollPane.setViewportView(fredag_list);
         fridayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         fridayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         fredag_list.setCellRenderer(renderer);
-
+        fredag_list.setName("4");
+        fredag_list.addListSelectionListener(listener);
+        
         mondayScrollPane.getViewport().addChangeListener(new ChangeListener() {
 
 			@Override
@@ -246,6 +293,47 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     private javax.swing.JScrollPane fridayScrollPane;
     // End of variables declaration//GEN-END:variables
     private DefaultListModel<Meeting> monday_model;
+	public void setSelected(int day)
+	{
+		switch(day)
+		{
+		case 0:
+			tirsdag_list.clearSelection();
+			onsdag_list.clearSelection();
+			torsdag_list.clearSelection();
+			fredag_list.clearSelection();
+			main.setMeeting((Meeting) mandag_list.getModel().getElementAt(mandag_list.getSelectedIndex()));
+			break;
+		case 1:
+			mandag_list.clearSelection();
+			onsdag_list.clearSelection();
+			torsdag_list.clearSelection();
+			fredag_list.clearSelection();
+			main.setMeeting((Meeting) tirsdag_list.getModel().getElementAt(tirsdag_list.getSelectedIndex()));
+			break;
+		case 2:
+			mandag_list.clearSelection();
+			tirsdag_list.clearSelection();
+			torsdag_list.clearSelection();
+			fredag_list.clearSelection();
+			main.setMeeting((Meeting) onsdag_list.getModel().getElementAt(onsdag_list.getSelectedIndex()));
+			break;
+		case 3:
+			mandag_list.clearSelection();
+			tirsdag_list.clearSelection();
+			onsdag_list.clearSelection();
+			fredag_list.clearSelection();
+			main.setMeeting((Meeting) torsdag_list.getModel().getElementAt(torsdag_list.getSelectedIndex()));
+			break;
+		case 4:
+			mandag_list.clearSelection();
+			tirsdag_list.clearSelection();
+			onsdag_list.clearSelection();
+			torsdag_list.clearSelection();
+			main.setMeeting((Meeting) fredag_list.getModel().getElementAt(fredag_list.getSelectedIndex())); 
+			break;		
+		}
+	}
 	
     public JScrollPane getMondayScrollPane()
     {

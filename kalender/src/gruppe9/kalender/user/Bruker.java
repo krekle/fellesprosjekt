@@ -20,7 +20,8 @@ public class Bruker {
 	}
 
 	public static Bruker getInstance() {
-		if (instance == null) {
+		if (instance == null) 
+		{
 			instance = new Bruker();
 		}
 		return instance;

@@ -42,7 +42,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     	this.main = main;
         initComponents();
         meetings = Bruker.getInstance().getAvtaler();
-        System.out.println(meetings.size());
+        Collections.sort(meetings);
         for(int x = 0; x<5; x++)
         {
         	DefaultListModel<Meeting> avtaler = new DefaultListModel<Meeting>();

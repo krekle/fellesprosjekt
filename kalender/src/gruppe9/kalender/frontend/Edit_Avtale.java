@@ -53,7 +53,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         deltaker_combo.setRenderer(new combo_box_person_renderer());
 //        deltaker_combo.setEditable(true);
     }
-
     private void setMeetingFields(){
     	System.out.println(meeting.getName());
     	System.out.println(meeting.getDescription());
@@ -64,12 +63,12 @@ public class Edit_Avtale extends javax.swing.JFrame {
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		varighet_textfield.setText(meeting.getDuration());
-
 	}
 	private void setMeeting(Meeting meeting)
     {
     	this.edit = ((meeting != null) ? true:false);
     	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null));
+
     	
     }
     /** This method is called from within the constructor to
@@ -170,17 +169,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
         deltaker_label.setText("Deltakere:");
-        Person Lars = new Person(0,"Lars", 97133287,"Johannesburgveien 38, Oslo, Norge", "Lajohanburg@gmail.com");
-        deltaker_combo.addItem(Lars);
-        Person Arne = new Person(1,"Arne nilsen", 88370299,"Fredrikshavn, Zimbabwe", "AniZimb@zimbambwe.gov");
-        deltaker_combo.addItem(Arne);
-        Lars = new Person(2,"Kjell", 93201839,"Nordpolen", "santa@clause.sexy");
-        deltaker_combo.addItem(Lars);
-        Group g = new Group("The League");
-        g.setID(10);
-        g.setDescription("Kjekke karer som liker å spise pai.");
-        g.addPerson(Lars); g.addPerson(Arne);
-        deltaker_combo.addItem(g);
 
         add_button.setText("Legg til");
         add_button.addActionListener(new ActionListener() {

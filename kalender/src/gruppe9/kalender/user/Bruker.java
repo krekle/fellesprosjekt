@@ -10,10 +10,14 @@ import gruppe9.kalender.model.Person;
 
 public class Bruker {
 	
-	private ArrayList<Meeting> avtaler;
 	private Person bruker;
+	
+	private ArrayList<Meeting> avtaler;
+	
 	private ArrayList<Alert> varsler;
 	private ArrayList<Notification> notifications;
+
+	private ArrayList<Person> allPeople;
 
 	private static Bruker instance = null;
 	
@@ -27,6 +31,14 @@ public class Bruker {
 			instance = new Bruker();
 		}
 		return instance;
+	}
+
+	public ArrayList<Person> getAllPeople() {
+		return allPeople;
+	}
+
+	public void setAllPeople(ArrayList<Person> allPeople) {
+		this.allPeople = allPeople;
 	}
 	
 	public ArrayList<Alert> getVarsler() {

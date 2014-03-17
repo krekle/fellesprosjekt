@@ -5,6 +5,7 @@ import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
+import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class CalResponse {
 	private String msg;
 	private JSONObject objectResponse;
 	private JSONArray arrayResponse;
-	
+
 	private String var;
 
 	public boolean getAvtaler(){
@@ -64,7 +65,7 @@ public class CalResponse {
 		}
 		return deltakerList;
 	}
-	
+
 	public boolean getAlerts(){
 		if(!var.equals("alarm")){
 			return false;
@@ -103,27 +104,47 @@ public class CalResponse {
 		Bruker.getInstance().setNotifications(notifytList);
 		return true;
 	}
-	
-	public ArrayList<String> getRoms(){
+
+	public ArrayList<Room> getRoms(){
 		if(!var.equals("Room")){
 			return null;
 		}
-		ArrayList<String> roomList = new ArrayList<String>();
-		for (int i = 0; i < arrayResponse.length(); i++) {
+		ArrayList<Room> roomList = new ArrayList<Room>();
+		try {
 			JSONObject jo;
-			try {
+			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
-				roomList.add(jo.toString());
+				roomList.add(new Room(jo.getInt("ID"), jo.getString("Bygg"), jo.getInt("Etasje"), jo.getString("Beskrivelse"), jo.getInt("Stoerrelse")));
 				System.out.println("notification added!");
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return roomList;
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return null;
+
+		return roomList;
 	}
-	
-	
+
+	public boolean getAllPeople(){
+		if(!var.equals("people")){
+			return false;
+		}
+		ArrayList<Person> personList = new ArrayList<Person>();
+		try {
+			for (int i = 0; i < arrayResponse.length(); i++) {
+				JSONObject jo;
+
+				jo = arrayResponse.getJSONObject(i);
+				personList.add(new Person(jo.getInt("Ansattnummer"), jo.getString("Navn"), jo.getInt("Telefonnummer"), jo.getString("adresse"), jo.getString("Epost")));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return false;
+		}
+		Bruker.getInstance().setAllPeople(personList);
+		return true;
+	}
+
 	public boolean confirmLogin(){
 		try {
 			if(objectResponse != null){

@@ -168,16 +168,14 @@ public class Database {
 		caller.callBack(new CalResponse(result, "rom"));
 	}
 	
-	public static void main(String args[]){
-		//		CalResponse cal = login("eposten3@min.com", "passordet");
-		//		Person me = cal.confirmLogin();
-		//		System.out.println(me.getName() + me.getTelephonenumber());
-		//		
-		//		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
-		//		CalResponse cal = addMeeting(meet);
-		//		System.out.println(cal.getCode() + " " + cal.getMsg());
-		//		System.out.println("Getting meetings");
-		//		CalResponse c = getParticipants(meet);
-		//		System.out.println(c.getDeltakere().get(1).getPersonID());
+	public static void getAllPeople(ApiCaller caller){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("get/person/all", Type.GET).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "people"));
 	}
 }

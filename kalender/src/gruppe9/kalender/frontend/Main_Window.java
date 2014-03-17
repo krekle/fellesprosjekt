@@ -37,8 +37,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     public Main_Window(Login_Window login) 
     {
     	Database.getMeetings(this);
-    	Bruker.getInstance().getUser().setId(3);
     	Database.getAlerts(this);
+    	Database.getNotifications(this);
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
     	this.login = login;
@@ -74,9 +74,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	}
     	else if(response.getNotifications())
     	{
-    		if(Bruker.getInstance().getUser().getAlerts()!= null)
+    		if(Bruker.getInstance().getNotifications() != null)
     		{
-    			System.out.println("List size: " + Bruker.getInstance().getUser().getAlerts().size());
+    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
     		}
     		else{
     			System.out.println("No new notifications..");

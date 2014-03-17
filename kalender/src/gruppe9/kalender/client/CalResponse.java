@@ -94,6 +94,7 @@ public class CalResponse {
 			try {
 				jo = arrayResponse.getJSONObject(i);
 				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				System.out.println("notification added!");
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return false;
@@ -102,6 +103,27 @@ public class CalResponse {
 		Bruker.getInstance().setNotifications(notifytList);
 		return true;
 	}
+	
+	public boolean getRoms(){
+		if(!var.equals("Room")){
+			return false;
+		}
+		ArrayList<Notification> notifytList = new ArrayList<Notification>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				System.out.println("notification added!");
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		Bruker.getInstance().setNotifications(notifytList);
+		return true;
+	}
+	
 	
 	public boolean confirmLogin(){
 		try {

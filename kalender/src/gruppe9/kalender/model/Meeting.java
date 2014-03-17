@@ -16,6 +16,7 @@ public class Meeting implements Comparable<Meeting>{
 	private String description;
 	private int roomId;
 	private String title;
+	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
 	private Alert emailAlert,soundAlert;
@@ -160,6 +161,15 @@ public class Meeting implements Comparable<Meeting>{
 	public void setParticipants(ArrayList<Person> participants) {
 		this.participants = participants;
 	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
 	public String getStringParticipants(){ // Returns string of participants IDs
 		String idStr = "";
 		for (int i = 0; i < this.participants.size(); i++) {

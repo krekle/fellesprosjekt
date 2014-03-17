@@ -68,14 +68,15 @@ public class Database {
 					"Tittel", m.getTitle(),
 					"Starttidspunkt", m.getStart(),	
 					"Sluttidspunkt", m.getEnd(),
-					"Beskrivelse", m.getDescription(),
-					"varighet", m.getDuration(),
-					"sted", m.getRoom() +""
+					"Beskrivelse", m.getDescription().replace(" ", "[space]"),
+					"varighet", m.getDuration()
 					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){
+			caller.callBack(new CalResponse(result, null));
+		}
 	}
 
 	public static void addParticipants(ApiCaller caller, String avtale_id, String csvPeople, String csvStatus){

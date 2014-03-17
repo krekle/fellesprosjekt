@@ -56,12 +56,14 @@ public class Edit_Avtale extends javax.swing.JFrame {
     private void setMeetingFields() 
     {
     	this.avtalenavn_textfield.setText(meeting.getName());
-    	this.deltaker_combo = new JComboBox(meeting.getParticipants().toArray());
+    	for(Person item : meeting.getParticipants()){
+    		deltaker_combo.addItem(item);    		
+    	}
 	}
 	private void setMeeting(Meeting meeting)
     {
     	this.edit = ((meeting != null) ? true:false);
-    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0));
+    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, ""));
     	
     }
     /** This method is called from within the constructor to
@@ -162,17 +164,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
         deltaker_label.setText("Deltakere:");
-        Person Lars = new Person(0,"Lars", 97133287,"Johannesburgveien 38, Oslo, Norge", "Lajohanburg@gmail.com");
-        deltaker_combo.addItem(Lars);
-        Person Arne = new Person(1,"Arne nilsen", 88370299,"Fredrikshavn, Zimbabwe", "AniZimb@zimbambwe.gov");
-        deltaker_combo.addItem(Arne);
-        Lars = new Person(2,"Kjell", 93201839,"Nordpolen", "santa@clause.sexy");
-        deltaker_combo.addItem(Lars);
-        Group g = new Group("The League");
-        g.setID(10);
-        g.setDescription("Kjekke karer som liker å spise pai.");
-        g.addPerson(Lars); g.addPerson(Arne);
-        deltaker_combo.addItem(g);
 
         add_button.setText("Legg til");
         add_button.addActionListener(new ActionListener() {

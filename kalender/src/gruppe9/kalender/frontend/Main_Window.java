@@ -4,10 +4,10 @@ import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
 import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
@@ -39,7 +40,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	Database.getAlerts(this);
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
-    	
     	this.login = login;
         initComponents();
         tabWindow.addTab("Me", new Panel(week_list_scroller, this));
@@ -56,10 +56,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     		
     		//Her kan man nå kjøre f.eks:
     		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();
-    	}else if(response.getAlerts()){
+    	}else if(response.getAlerts())
+    	{
     		//Alarmene ble hentet fra serveren og ligger nå i
-    		// Bruker.getInstance().getAlerts() <--returnerer en ArrayList med Alert
-    		
+    		// Bruker.getInstance().getUser().getAlerts() <--returnerer en ArrayList med Alert
+    		System.out.println("List size: " + Bruker.getInstance().getUser().getAlerts().size());
     	}
     	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
     	// response.getVarsler() her
@@ -223,18 +224,15 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
         tidspkt_label.setText("Tidspunkt:");
 
-        deltaker_list.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Johanne", "Pedro", "Jesus", "McCain", "Fritz" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(deltaker_list);
 
         eier_label.setText("Eier:");
 
         decline_choice.setText("Avslå ");
-        decline_choice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        decline_choice.addActionListener(new java.awt.event.ActionListener() 
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt) 
+            {
                 decline_choiceActionPerformed(evt);
             }
         });
@@ -253,7 +251,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
         dato_label.setText("Dato:");
 
-        varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Snail-Mail", "Trompet", "Alarm" }));
+        varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Alarm" }));
         varsling_box.addActionListener(new ActionListener() 
         {
 			@Override
@@ -599,37 +597,45 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         notification_button.setContentAreaFilled(false);
     }// </editor-fold>//GEN-END:initComponents
 
-private void next_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_next_buttonActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_next_buttonActionPerformed
+private void next_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	
+}
 
-private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decline_choiceActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_decline_choiceActionPerformed
+private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	if(current_Avtale.getParticipants().contains(Bruker.getInstance().getUser()))
+	{
+		ArrayList<Person> participates = current_Avtale.getParticipants();
+		participates.remove(Bruker.getInstance().getUser());
+		current_Avtale.setParticipants(participates);
+	}
+}
 
-private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accept_choiceActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_accept_choiceActionPerformed
+private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	current_Avtale.addPerson(Bruker.getInstance().getUser());
+}
 
-private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rediger_buttonActionPerformed
-// TODO add your handling code here:
-    //REDIGER AVTALE
+private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
     Edit_Avtale a = new Edit_Avtale(this, getAvtale());
     a.setVisible(true);
     this.setVisible(false);
     a.setLocation(this.getLocation());
-}//GEN-LAST:event_rediger_buttonActionPerformed
+}
 
-private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
 	    Edit_Avtale a = new Edit_Avtale(this, null);
 	    a.setVisible(true);
 	    this.setVisible(false);
 	    a.setLocation(this.getLocation());
-	}
+}
 private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
-{//GEN-FIRST:event_slett_buttonActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_slett_buttonActionPerformed
+{
+	
+}
 
 private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 
 {
@@ -637,15 +643,17 @@ private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	login.setVisible(true);
 }
 
-private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notification_buttonActionPerformed
-}//GEN-LAST:event_notification_buttonActionPerformed
+private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	
+}
 
 
 
 private Meeting current_Avtale = null;
 public Meeting getAvtale()
 {
-	return null;
+	return current_Avtale;
 }
     private boolean hasNewNotification() {
     	// TODO Auto-generated method stub

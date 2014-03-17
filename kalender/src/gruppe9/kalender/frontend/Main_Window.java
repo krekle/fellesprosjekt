@@ -52,7 +52,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         String path = "resources/images/no_notification.png";
         if(hasNewNotification())
         {
-        	path = "resources/images/no_notification.png";
+        	path = "resources/images/notification.png";
         }
         Image icon =new ImageIcon(path).getImage();
         ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));

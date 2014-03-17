@@ -63,8 +63,10 @@ public class Database {
 	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
-			result = new Client("update/avtale" + m.getId(), Type.GET,
-					"avtale_id", m.getId()+"").execute();
+			//TODO:
+			result = new Client("update/avtale/" + m.getId(), Type.GET,
+					"avtale_id", m.getId()+""
+					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -146,6 +148,16 @@ public class Database {
 		caller.callBack(new CalResponse(result, "melding"));
 	}
 
+//	public static void getAvaliableRooms(String start, String end, int size){
+//		String result = "";
+//		//TODO: check status and people length
+//		try {
+//			result = new Client("get/person/meldinger/"+ Bruker.getInstance().getUser().getId(), Type.GET).execute();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		caller.callBack(new CalResponse(result, "melding"));
+//	}
 	
 	public static void main(String args[]){
 		//		CalResponse cal = login("eposten3@min.com", "passordet");

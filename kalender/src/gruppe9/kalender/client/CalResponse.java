@@ -93,7 +93,7 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return false;
@@ -102,7 +102,6 @@ public class CalResponse {
 		Bruker.getInstance().setNotifications(notifytList);
 		return true;
 	}
-	
 	
 	public boolean confirmLogin(){
 		try {
@@ -115,7 +114,6 @@ public class CalResponse {
 		}
 		return false;
 	}
-
 
 	public CalResponse(String resp, String var){
 		try {

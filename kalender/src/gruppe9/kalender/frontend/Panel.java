@@ -42,12 +42,14 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     	this.main = main;
         initComponents();
         meetings = Bruker.getInstance().getAvtaler();
+        System.out.println(meetings.size());
         for(int x = 0; x<5; x++)
         {
         	DefaultListModel<Meeting> avtaler = new DefaultListModel<Meeting>();
         	for(Meeting meeting : meetings)
         	{
-        		if(x==meeting.getDayOfWeek()) //&& meeting.getWeek() == main.getWeek())
+        		System.out.println("Day " + x + " - Week "+ meeting.getWeekOfYear());
+        		if(x==meeting.getDayOfWeek() && meeting.getWeekOfYear() == main.getWeek()-1) //remove "-1" when done.
         		{
         			avtaler.addElement(meeting);
         		}
@@ -170,7 +172,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         tirsdag_list.setAutoscrolls(false);
         tuesdayScrollPane.setViewportView(tirsdag_list);
         tuesdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        tuesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        tuesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         tirsdag_list.setCellRenderer(renderer);
         tirsdag_list.setName("1");
         tirsdag_list.addListSelectionListener(listener);
@@ -178,7 +180,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         onsdag_list.setAutoscrolls(false);
         wednesdayScrollPane.setViewportView(onsdag_list);
         wednesdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        wednesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        wednesdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         onsdag_list.setCellRenderer(renderer);
         onsdag_list.setName("2");
         onsdag_list.addListSelectionListener(listener);
@@ -186,7 +188,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         torsdag_list.setAutoscrolls(false);
         thursdayScrollPane.setViewportView(torsdag_list);
         thursdayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        thursdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        thursdayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         torsdag_list.setCellRenderer(renderer);
         DefaultListModel Y = new DefaultListModel();
         torsdag_list.setModel(Y);
@@ -196,28 +198,11 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         fredag_list.setAutoscrolls(false);
         fridayScrollPane.setViewportView(fredag_list);
         fridayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        fridayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        fridayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         fredag_list.setCellRenderer(renderer);
         fredag_list.setName("4");
         fredag_list.addListSelectionListener(listener);
         
-        mondayScrollPane.getViewport().addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				// TODO Auto-generated method stub
-				Point p = mondayScrollPane.getViewport().getViewPosition();
-				tuesdayScrollPane.getViewport().setViewPosition(p);
-				wednesdayScrollPane.getViewport().setViewPosition(p);
-				thursdayScrollPane.getViewport().setViewPosition(p);
-				fridayScrollPane.getViewport().setViewPosition(p);
-			}
-        	
-        });
-        tuesdayScrollPane.getViewport().addChangeListener(this);
-        wednesdayScrollPane.getViewport().addChangeListener(this);
-        thursdayScrollPane.getViewport().addChangeListener(this);
-        fridayScrollPane.getViewport().addChangeListener(this);
 
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

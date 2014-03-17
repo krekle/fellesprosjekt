@@ -63,9 +63,14 @@ public class Database {
 	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
-			//TODO:
 			result = new Client("update/avtale/" + m.getId(), Type.GET,
-					"avtale_id", m.getId()+""
+					"avtale_id", m.getId()+"",
+					"Tittel", m.getTitle(),
+					"Starttidspunkt", m.getStart(),	
+					"Sluttidspunkt", m.getEnd(),
+					"Beskrivelse", m.getDescription(),
+					"varighet", m.getDuration(),
+					"sted", m.getRoom() +""
 					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -148,16 +153,19 @@ public class Database {
 		caller.callBack(new CalResponse(result, "melding"));
 	}
 
-//	public static void getAvaliableRooms(String start, String end, int size){
-//		String result = "";
-//		//TODO: check status and people length
-//		try {
-//			result = new Client("get/person/meldinger/"+ Bruker.getInstance().getUser().getId(), Type.GET).execute();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		caller.callBack(new CalResponse(result, "melding"));
-//	}
+	public static void getAvaliableRooms(ApiCaller caller,String start, String end){
+		//Størrelse??
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("get/ledigerom", Type.GET,
+					"Starttidspunkt", start,
+					"Sluttidspunkt", end).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "rom"));
+	}
 	
 	public static void main(String args[]){
 		//		CalResponse cal = login("eposten3@min.com", "passordet");

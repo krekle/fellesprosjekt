@@ -56,8 +56,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         populate_personlist();
     }
     private void setMeetingFields(){
-    	System.out.println(meeting.getName());
-    	System.out.println(meeting.getDescription());
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
@@ -113,7 +111,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
         rom_label = new javax.swing.JLabel();
         rom_textfield = new javax.swing.JTextField();
         velg_label = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        romScrollPane = new javax.swing.JScrollPane();
         rom_list = new javax.swing.JList();
         auto_select_choice = new javax.swing.JRadioButton();
 
@@ -365,7 +363,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(rom_list);
+        romScrollPane.setViewportView(rom_list);
 
         auto_select_choice.setText("Velg automatisk");
         auto_select_choice.addActionListener(new java.awt.event.ActionListener() {
@@ -381,7 +379,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                    .addComponent(romScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addComponent(rom_label)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -404,7 +402,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
                     .addComponent(velg_label)
                     .addComponent(auto_select_choice))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addComponent(romScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
         );
         
@@ -513,13 +511,28 @@ public void editDate(Integer increment)
 	else{date.setYear(dateChooser.getSelectionDate().getYear());}
 	date.setDate(1);
 	dateChooser.setSelectionDate(date);
-	System.out.println(dateChooser.getSelectionDate().getYear() +":"+dateChooser.getSelectionDate().getMonth());
 	dateChooser.ensureDateVisible(date);
 	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
 }
 private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
-	if (edit) Database.updateMeeting(null, meeting);
-	else Database.addMeeting(null, meeting);
+	meeting.setCreator(Bruker.getInstance().getUser().getId());
+	meeting.setDescription(beskrivelse_textfield.getText());
+	meeting.setName(avtalenavn_textfield.getText());
+	meeting.setStartTime(start_textfield.getText());
+	meeting.setEndTime(slutt_textfield.getText());
+	//meeting.setRoom()
+	ArrayList<Person> list = new ArrayList<Person>();
+	Component[] participants = person_list.getComponents();
+	for participant in participants:
+		list.add(participant);
+	meeting.setParticipants(participants);
+	if (edit) {
+		Database.updateMeeting(null, meeting);
+	}
+	
+	else {
+		Database.addMeeting(null, meeting);
+	}
 }
 
 private void avtalenavn_textfieldActionPerformed(java.awt.event.ActionEvent evt)
@@ -558,7 +571,7 @@ private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
 }
 private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt) 
 {
-	System.out.println("textfield3!");
+
 }
 private ArrayList<Person> populate_personlist() {
 	ArrayList<Person> personlist = new ArrayList<Person>();
@@ -594,7 +607,7 @@ private ArrayList<Room> populate_roomlist() {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JRadioButton auto_select_choice;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane romScrollPane;
     private javax.swing.JScrollPane beskrivelse_scrollpane;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea beskrivelse_textfield;

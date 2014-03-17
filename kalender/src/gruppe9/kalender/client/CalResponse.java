@@ -38,7 +38,7 @@ public class CalResponse {
 				for (int i = 0; i < arrayResponse.length(); i++) {
 					JSONObject jo;
 					jo = arrayResponse.getJSONObject(i);
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse"), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
 				}}
 			Bruker.getInstance().setAvtaler(meetList);
 			return true;
@@ -104,24 +104,23 @@ public class CalResponse {
 		return true;
 	}
 	
-	public boolean getRoms(){
+	public ArrayList<String> getRoms(){
 		if(!var.equals("Room")){
-			return false;
+			return null;
 		}
-		ArrayList<Notification> notifytList = new ArrayList<Notification>();
+		ArrayList<String> roomList = new ArrayList<String>();
 		for (int i = 0; i < arrayResponse.length(); i++) {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				roomList.add(jo.toString());
 				System.out.println("notification added!");
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return roomList;
 			}
 		}
-		Bruker.getInstance().setNotifications(notifytList);
-		return true;
+		return null;
 	}
 	
 	

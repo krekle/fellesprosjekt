@@ -1,6 +1,9 @@
 package gruppe9.kalender.client;
 
+import gruppe9.kalender.model.Alert;
+import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
@@ -21,39 +24,123 @@ public class CalResponse {
 	private String msg;
 	private JSONObject objectResponse;
 	private JSONArray arrayResponse;
+	
+	private String var;
 
-	public ArrayList<Meeting> getMyMeetings(){
+	public boolean getAvtaler(){
+		if(!var.equals("avtaler")){
+			return false;
+		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
+		try 
+		{
+			if(arrayResponse != null){
+				for (int i = 0; i < arrayResponse.length(); i++) {
+					JSONObject jo;
+					jo = arrayResponse.getJSONObject(i);
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+				}}
+			Bruker.getInstance().setAvtaler(meetList);
+			return true;
+		}catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public ArrayList<Deltaker> getDeltakere(){
+		if(!var.equals("deltakere")){
+			return null;
+		}
+		ArrayList<Deltaker> deltakerList = new ArrayList<Deltaker>();
 		for (int i = 0; i < arrayResponse.length(); i++) {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse"), Integer.parseInt(jo.getString("rom"))));
+				deltakerList.add(new Deltaker(jo.getInt("Person_Ansattnummer"), jo.getInt("Avtale_AvtaleID"), jo.getString("Status"), jo.getString("SistSett")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
 		}
-		return meetList;
+		return deltakerList;
 	}
 	
-	public Person confirmLogin(){
-		try {
-			if(objectResponse != null){
-			Bruker.getInstance().setUser(new Person(Integer.parseInt(objectResponse.getString("Ansattnummer")), objectResponse.getString("Navn"), Integer.parseInt(objectResponse.getString("Telefonnummer")), objectResponse.getString("adresse"), objectResponse.getString("Epost")));
-			return Bruker.getInstance().getUser();
+	public boolean getAlerts(){
+		if(!var.equals("alarm")){
+			return false;
+		}
+		ArrayList<Alert> alertList = new ArrayList<Alert>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				alertList.add(new Alert(jo.getString("Tidspunkt"), null, jo.getString("Varselstekst"), jo.getInt("Avtale_AvtaleID"), jo.getString("lydspor")));
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
 			}
-		} catch (NumberFormatException | JSONException e) {
-			e.printStackTrace();
+		}
+		Bruker.getInstance().setVarsler(alertList);
+		return true;
+	}
+
+	public boolean getNotifications(){
+		if(!var.equals("melding")){
+			return false;
+		}
+		ArrayList<Notification> notifytList = new ArrayList<Notification>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				System.out.println("notification added!");
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		Bruker.getInstance().setNotifications(notifytList);
+		return true;
+	}
+	
+	public ArrayList<String> getRoms(){
+		if(!var.equals("Room")){
+			return null;
+		}
+		ArrayList<String> roomList = new ArrayList<String>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				roomList.add(jo.toString());
+				System.out.println("notification added!");
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return roomList;
+			}
 		}
 		return null;
 	}
 	
 	
+	public boolean confirmLogin(){
+		try {
+			if(objectResponse != null){
+				Bruker.getInstance().setUser(new Person(Integer.parseInt(objectResponse.getString("Ansattnummer")), objectResponse.getString("Navn"), Integer.parseInt(objectResponse.getString("Telefonnummer")), objectResponse.getString("adresse"), objectResponse.getString("Epost")));
+				return true;
+			}
+		} catch (NumberFormatException | JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	public CalResponse(String resp, String var){
 		try {
 			JSONObject data = new JSONObject(resp);
 			//Parsing out response, code and message
+			if(var != null){this.var = var;}
 			code = data.getString("code");
 			msg = data.getString("msg");
 			try {

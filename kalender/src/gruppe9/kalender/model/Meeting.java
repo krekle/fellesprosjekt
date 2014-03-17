@@ -3,7 +3,11 @@ package gruppe9.kalender.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.swing.DefaultListModel;
+
 public class Meeting implements Comparable<Meeting>{
+	
+	private String name;
 	private int meetingId;
 	private int creatorId;
 	//private String creatorName;
@@ -11,22 +15,25 @@ public class Meeting implements Comparable<Meeting>{
 	private String end;
 	private String description;
 	private int roomId;
+	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
 	private Alert emailAlert,soundAlert;
 
+	
 	public String toString(){
 		String str = "";
 		str += "meetingId: " + String.valueOf(meetingId);
 		str += " creatorId: " + String.valueOf(creatorId);
 		str += " start" + start + " end" + end;
-		str += "NrOfparticipants; " + participants.size();
+		str += " NrOfparticipants: " + participants.size();
 		return str;
 	}
 
 	public Meeting(int meetingId, int creatorId, String start, String end,
-			String description, int roomId) {
+			String description, int roomId, String title) {
 		super();
+		this.meetingId = meetingId;
 		this.creatorId = creatorId;
 		this.start = start;
 		this.end = end;
@@ -38,7 +45,7 @@ public class Meeting implements Comparable<Meeting>{
 		soundAlert = null;
 	}
 
-	public String getDuritation(){
+	public String getDuration(){
 		int minutes = 0;
 		minutes += ((Integer.parseInt(this.getEndTime().substring(0,2))*60) + Integer.parseInt(this.getEndTime().substring(3)));
 		System.out.println(minutes);
@@ -57,13 +64,13 @@ public class Meeting implements Comparable<Meeting>{
 		
 	}
 	
-	private int getYear(){
+	public int getYear(){
 		return Integer.parseInt(start.substring(0,4));
 	}
-	private int getMonth(){//1-12
+	public int getMonth(){
 		return Integer.parseInt(start.substring(5,7));
 	}
-	private int getDayOfMonth(){
+	public int getDayOfMonth(){
 		return Integer.parseInt(start.substring(8,10));
 	}
 	
@@ -85,11 +92,22 @@ public class Meeting implements Comparable<Meeting>{
 	public int getDayOfWeek(){
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR,getYear());
-		calendar.set(Calendar.MONTH,getMonth() - 1);//0-12
+		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
-		System.out.println(calendar.getTime());
+//		System.out.println(calendar.getTime());
 
-		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);//sun-sat
+		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);
+	}
+	
+	public int getWeekOfYear(){
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR,getYear());
+		calendar.set(Calendar.MONTH,getMonth() - 1);
+		calendar.set(Calendar.DATE,getDayOfMonth());
+		
+//		System.out.println(calendar.getTime());
+
+		return (calendar.get(Calendar.WEEK_OF_YEAR));
 	}
 	
 	public void addPerson(Person person){
@@ -141,6 +159,28 @@ public class Meeting implements Comparable<Meeting>{
 	public void setParticipants(ArrayList<Person> participants) {
 		this.participants = participants;
 	}
+	
+	public String getStringParticipants(){ // Returns string of participants IDs
+		String idStr = "";
+		for (int i = 0; i < this.participants.size(); i++) {
+			if ((i+1) == this.participants.size()){
+				idStr += participants.get(i).getId();
+			} else {
+				idStr += participants.get(i).getId() + ",";				
+			}
+		}
+		return idStr;
+	}
+	
+	public DefaultListModel<Person> getParticipantListModel(){
+		DefaultListModel<Person> participantListModel = null;
+		for (int i = 0; i < this.participants.size(); i++){
+			participantListModel.addElement(participants.get(i));
+		}
+		return participantListModel;
+			
+	}
+	
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}
@@ -150,7 +190,7 @@ public class Meeting implements Comparable<Meeting>{
 
 	@Override
 	public int compareTo(Meeting o) {
-		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace(":", ""));
+		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace("-", ""));
 		if (dateDiff !=0){
 			return dateDiff;
 		}
@@ -163,5 +203,13 @@ public class Meeting implements Comparable<Meeting>{
 			return endDiff;
 		}
 		return 0;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

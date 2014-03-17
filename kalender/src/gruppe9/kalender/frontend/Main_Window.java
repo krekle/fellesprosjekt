@@ -1,44 +1,118 @@
 package gruppe9.kalender.frontend;
+import gruppe9.kalender.client.ApiCaller;
+import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
+import gruppe9.kalender.client.Database;
+import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 
 /**
  *
- * @author krake
+ * @author krake, Berg
  */
-public class Main_Window extends javax.swing.JFrame {
+public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
 	Login_Window login;
 	Client client;
+	private int current_week = 0;
+	private int current_year = 2014;
 	static boolean popupExists = false;
+	private Notification_Window notifications;
     /** Creates new form Main_Window */
-    public Main_Window(Login_Window login, Client client) 
+    public Main_Window(Login_Window login) 
     {
-    	this.client = client;
+    	Database.getMeetings(this);
+    	Database.getAlerts(this);
+    	Database.getNotifications(this);
+    	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
+    	// Resultatet kommer til callBack() metoden.
     	this.login = login;
         initComponents();
-        tabWindow.addTab("Me", new Panel(week_list_scroller));
-        tabWindow.addTab("Felles", new Panel(week_list_scroller));
-        for (int x = 1; x<4; x++){
-            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller));
+        tabWindow.addTab("Me", new Panel(week_list_scroller, this));
+        tabWindow.addTab("Felles", new Panel(week_list_scroller, this));
+        for (int x = 1; x<4; x++)
+        {
+            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
         }
-        //System.out.println(this.avtale_panel.getSize());
-        //Avtale a = new Avtale();
-        //avtale_panel = a;
-        //a.setVisible(true);
+        notifications = new Notification_Window();
+        String path = "resources/images/no_notification.png";
+        if(hasNewNotification())
+        {
+        	path = "resources/images/notification.png";
+        }
+        Image icon =new ImageIcon(path).getImage();
+        ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
+        notification_button.setIcon(notify_icon);
     }
 
+    public void callBack(CalResponse response){
+    	try {
+    		if(response.getAvtaler()) {
+    		//Avtalene ble hentet fra serveren og ligger nå i
+    		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
+    		
+    		//Her kan man nå kjøre f.eks:
+    		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();
+    		}
+    		else if (response.getAlerts()) {
+    		//Alarmene ble hentet fra serveren og ligger nå i
+    		// Bruker.getInstance().getUser().getAlerts() <--returnerer en ArrayList med Alert
+    	}
+    	else if(response.getNotifications())
+    	{
+    		if(Bruker.getInstance().getNotifications() != null)
+    		{
+    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
+    		}
+    		else{
+    			System.out.println("No new notifications..");
+    		}
+    	}}
+    	catch (Exception e)
+    	{
+    		System.out.println("TODO: ... ");
+    	}
+
+    	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
+    	// response.getVarsler() her
+    }
+    public void setMeeting(Meeting meeting)
+    {
+    	beskrivelse_area.setText(meeting.getDescription());
+    	avtale_label.setText("Avtale: "+meeting.getId());
+    	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth()+1)+"."+meeting.getYear());
+    	tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
+    	eier_label.setText("Eier: "+meeting.getCreator());
+    	if(meeting.getParticipantListModel() != null)
+    	{
+    		deltaker_list.setModel(meeting.getParticipantListModel());
+    	}
+    	if(Bruker.getInstance().getUser().getId() == meeting.getId())
+    	{
+    		rediger_button.setEnabled(false);
+    	}
+    	else
+    	{
+    		rediger_button.setEnabled(true);
+    	}
+    	this.current_Avtale = meeting;
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -78,9 +152,9 @@ public class Main_Window extends javax.swing.JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) 
 			{
-				client.logOut();
+//				client.logOut();
+				login = new Login_Window();
 				System.out.println("Closing!");
-				System.exit(0);
 			}
 			
 			@Override
@@ -129,8 +203,7 @@ public class Main_Window extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         create_avtale_button = new javax.swing.JButton();
         felles_deltakere_box = new javax.swing.JComboBox();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setResizable(false);
 
         kom_møte_list.setModel(new javax.swing.AbstractListModel() {
@@ -143,10 +216,29 @@ public class Main_Window extends javax.swing.JFrame {
         kom_møte_label.setText("Kommende Møter:");
 
         uke_search.setText("Uke...");
+        uke_search.addActionListener(new ActionListener() 
+        {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				String in = uke_search.getText();
+				if(in.matches("[0-9]*") && Integer.parseInt(in) >= 0 && Integer.parseInt(in)<=52)
+				{
+					current_week = Integer.parseInt(uke_search.getText());
+					uke_label.setText(current_week+"/"+current_year);
+				}
+				
+			}
+		});
 
         prev_button.setFont(new java.awt.Font("Dialog", 1, 18));
         prev_button.setText("<");
-
+        prev_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prev_buttonActionPerformed(evt);
+            }
+        });
         next_button.setFont(new java.awt.Font("Dialog", 1, 18));
         next_button.setText(">");
         next_button.addActionListener(new java.awt.event.ActionListener() {
@@ -159,22 +251,19 @@ public class Main_Window extends javax.swing.JFrame {
 
         beskr_label.setText("Beskrivelse:");
 
-        deltaker_label.setText("Deltakere");
+        deltaker_label.setText("Deltakere:");
 
         tidspkt_label.setText("Tidspunkt:");
 
-        deltaker_list.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Johanne", "Pedro", "Jesus", "McCain", "Fritz" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(deltaker_list);
 
         eier_label.setText("Eier:");
 
         decline_choice.setText("Avslå ");
-        decline_choice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        decline_choice.addActionListener(new java.awt.event.ActionListener() 
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt) 
+            {
                 decline_choiceActionPerformed(evt);
             }
         });
@@ -193,7 +282,7 @@ public class Main_Window extends javax.swing.JFrame {
 
         dato_label.setText("Dato:");
 
-        varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Snail-Mail", "Trompet", "Alarm" }));
+        varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Alarm" }));
         varsling_box.addActionListener(new ActionListener() 
         {
 			@Override
@@ -242,11 +331,6 @@ public class Main_Window extends javax.swing.JFrame {
         jScrollPane3.setViewportView(beskrivelse_area);
 
         
-        Image icon =new ImageIcon("resources/images/notification.png").getImage();
-        ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
-        notification_button.setIcon(notify_icon);
-
-        
         //Listener som tar seg av endring av ikon for notifikasjonsknapp 
         notification_button.addMouseListener(new MouseListener() {
 			private boolean isHovering = false;
@@ -283,6 +367,8 @@ public class Main_Window extends javax.swing.JFrame {
 					{
 						setImage("resources/images/no_notification_clicked.png");
 					}
+					notifications.setLocation(notification_button.getLocation());
+					notifications.setVisible(true);
 				}
 			}
 			@Override
@@ -382,14 +468,17 @@ public class Main_Window extends javax.swing.JFrame {
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        uke_label.setText("UKE X  ");
+        current_week = (Calendar.getInstance()).get(Calendar.getInstance().WEEK_OF_YEAR);
+        current_year = (Calendar.getInstance()).get(Calendar.getInstance().YEAR);
+        uke_label.setText(current_week+"/"+current_year);
+        System.out.println(current_week);
         uke_label.setToolTipText("");
         uke_label.setAlignmentY(0.0F);
 
         top_panel.setForeground(new java.awt.Color(-1118482,true));
 
         info_label.setFont(new java.awt.Font("SansSerif", 1, 12));
-        info_label.setText("Logget inn som " + Bruker.getUsername());
+        info_label.setText("Logget inn som " + Bruker.getInstance().getUser().getName());
 
         logout_button.setText("Logg ut");
         logout_button.addActionListener(new java.awt.event.ActionListener() {
@@ -429,8 +518,15 @@ public class Main_Window extends javax.swing.JFrame {
         );
 
         jSeparator1.setForeground(new java.awt.Color(-10197916,true));
-
         create_avtale_button.setText("Lag Avtale");
+        create_avtale_button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				create_avtale_buttonActionPerformed(e);
+			}
+		});
 
         felles_deltakere_box.setEditable(true);
         felles_deltakere_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -507,6 +603,8 @@ public class Main_Window extends javax.swing.JFrame {
                     .addComponent(avtale_panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        
+        
 
         pack();
         
@@ -515,48 +613,96 @@ public class Main_Window extends javax.swing.JFrame {
         notification_button.setContentAreaFilled(false);
     }// </editor-fold>//GEN-END:initComponents
 
-private void next_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_next_buttonActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_next_buttonActionPerformed
+private void next_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	current_week++;
+	if(current_week == 53){current_week = 1; current_year++;}
+	uke_label.setText(current_week+"/"+current_year);
+	for(Object o : tabWindow.getComponents())
+	{
+		((Panel) o).refresh();
+	}
+	System.out.println("Current year: " +current_year);
+}
+private void prev_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	current_week--;
+	if(current_week == 0){current_week = 52; current_year--;}
+	uke_label.setText(current_week+"/"+current_year);
+	for(Object o : tabWindow.getComponents())
+	{
+		((Panel) o).refresh();
+	}
+}
 
-private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decline_choiceActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_decline_choiceActionPerformed
+private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
+	if(current_Avtale.getParticipants().contains(Bruker.getInstance().getUser())) {
+		
+		ArrayList<Person> participates = current_Avtale.getParticipants();
+		participates.remove(Bruker.getInstance().getUser());
+		current_Avtale.setParticipants(participates);
+		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
+	}
+}
 
-private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accept_choiceActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_accept_choiceActionPerformed
+private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	current_Avtale.addPerson(Bruker.getInstance().getUser());
+	Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
+}
 
-private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rediger_buttonActionPerformed
-// TODO add your handling code here:
-    //REDIGER AVTALE
-    Edit_Avtale a = new Edit_Avtale(this);
+private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+    Edit_Avtale a = new Edit_Avtale(this, getAvtale());
     a.setVisible(true);
     this.setVisible(false);
     a.setLocation(this.getLocation());
-}//GEN-LAST:event_rediger_buttonActionPerformed
+}
 
+private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	    Edit_Avtale a = new Edit_Avtale(this, null);
+	    a.setVisible(true);
+	    this.setVisible(false);
+	    a.setLocation(this.getLocation());
+}
 private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
-{//GEN-FIRST:event_slett_buttonActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_slett_buttonActionPerformed
+{
+	
+}
 
 private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 
 {
-	client.logOut();
 	this.setVisible(false);
 	login.setVisible(true);
 }
 
-private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notification_buttonActionPerformed
-System.out.println(notification_button.getSize());// TODO add your handling code here:
-}//GEN-LAST:event_notification_buttonActionPerformed
-    
-    private boolean hasNewNotification() {
-    	// TODO Auto-generated method stub
-    	return true;
+private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	
+}
+
+
+
+private Meeting current_Avtale = null;
+
+public Meeting getAvtale()
+{
+	return current_Avtale;
+}
+    private boolean hasNewNotification() 
+    {
+    	return this.notifications.hasUnread();
     }
+	public int getWeek() 
+	{
+		return current_week;
+	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
+	public int getYear() {
+		// TODO Auto-generated method stub
+		return current_year;
+	}
     private javax.swing.JButton prev_button;
     private javax.swing.JButton next_button;
     private javax.swing.JButton rediger_button;
@@ -592,4 +738,5 @@ System.out.println(notification_button.getSize());// TODO add your handling code
     private javax.swing.JTextField uke_search;
     private javax.swing.JTabbedPane tabWindow;
     // End of variables declaration//GEN-END:variables
+
 }

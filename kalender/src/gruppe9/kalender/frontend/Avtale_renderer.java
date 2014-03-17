@@ -1,5 +1,8 @@
 package gruppe9.kalender.frontend;
 
+import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.user.Bruker;
+
 import java.awt.Color;
 import java.awt.Component;
 
@@ -15,24 +18,24 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
 		
-		//Avtale avtale = (Avtale) Object;
-//		switch(avtale.kanDelta())
-//		{
-//		case "deltar":
-//			this.setBackground(Color.GREEN);
-//			break;
-//		case "deltar_ikke":
-//			this.setBackground(Color.RED);
-//			break;
-//		case "ikke_svart":
-//			this.setBackground(Color.GRAY);
-//			break;
-//		}
-		String start = "11:00";//avtale.getStartTime();
-		String name = "Bursdag hos hans";//avtale.getName();
-		String slutt = "16:00";//avtale.getEndTime();
+		Meeting meeting = (Meeting) value;
+		switch("deltar")
+		{
+		case "deltar":
+			this.setBackground(Color.GREEN);
+			break;
+		case "deltar_ikke":
+			this.setBackground(Color.RED);
+			break;
+		case "ikke_svart":
+			this.setBackground(Color.GRAY);
+			break;
+		}
+		String start = meeting.getStartTime();
+		String name = meeting.getName();
+		String slutt = meeting.getEndTime();
 		this.setText(start + "\n"+name+"\n"+slutt);
 		return this;
 	}
-
+	
 }

@@ -1,15 +1,15 @@
 package gruppe9.kalender.model;
 
-public class Notification {
+public class Notification 
+{
 	private String description;
-	private Person personCausing;
+	private int meetingId;
 	private String time;
-	
-	
-	public Notification(String description, Person personCausing, String time) {
+	public boolean hasBeenRead = false;
+	public Notification(String description, int meetingId, String time) {
 		super();
 		this.description = description;
-		this.personCausing = personCausing;
+		this.meetingId = meetingId;
 		this.time = time;
 	}
 	
@@ -19,11 +19,11 @@ public class Notification {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Person getPersonCausing() {
-		return personCausing;
+	public int getMeetingId() {
+		return meetingId;
 	}
-	public void setPersonCausing(Person personCausing) {
-		this.personCausing = personCausing;
+	public void setMeetingId(int meetingid) {
+		this.meetingId = meetingid;
 	}
 	public String getTime() {
 		return time;

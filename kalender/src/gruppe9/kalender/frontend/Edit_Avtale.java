@@ -9,19 +9,70 @@
  * Created on Mar 11, 2014, 12:46:47 PM
  */
 package gruppe9.kalender.frontend;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+import gruppe9.kalender.client.Database;
+import gruppe9.kalender.model.Group;
+import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Person;
+import gruppe9.kalender.model.Room;
+import gruppe9.kalender.user.Bruker;
+
 /**
  *
- * @author krake
+ * @author krake, Berg
  */
 public class Edit_Avtale extends javax.swing.JFrame {
     private Main_Window main;
-    /** Creates new form Main_Window */
-    public Edit_Avtale(Main_Window main) 
+    private Meeting meeting;
+    private boolean edit;
+    
+    public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
+    	initComponents();
+    	setMeeting(meeting);
+    	if (edit) 
+    	{
+    		setMeetingFields();
+    	}
         this.main = main;
-        initComponents();
+        person_list.setCellRenderer(new list_person_renderer());
+        deltaker_combo.setRenderer(new combo_box_person_renderer());
+        populate_personlist();
     }
+    private void setMeetingFields(){
+		avtalenavn_textfield.setText(meeting.getName());
+		beskrivelse_textfield.setText(meeting.getDescription());
+		//person_list.setListData(meeting.getParticipants().toArray());
+		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
+		start_textfield.setText(meeting.getStartTime());
+		slutt_textfield.setText(meeting.getEndTime());
+		varighet_textfield.setText(meeting.getDuration());
+	}
+	private void setMeeting(Meeting meeting)
+    {
+    	this.edit = ((meeting != null) ? true:false);
+    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null));
 
+    	
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -31,326 +82,354 @@ public class Edit_Avtale extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelAvtale = new javax.swing.JPanel();
-        jLabelAvtale = new javax.swing.JLabel();
-        jTextFieldAvtale = new javax.swing.JTextField();
-        jLabelAvtaleBeskrivelse = new javax.swing.JLabel();
-        jScrollPaneAvtale = new javax.swing.JScrollPane();
-        jTextAreaAvtale = new javax.swing.JTextArea();
-        jPanelDeltakere = new javax.swing.JPanel();
-        jLabelDeltakere = new javax.swing.JLabel();
-        jComboBoxDeltakerSok = new javax.swing.JComboBox();
-        jButtonDeltakerLeggTil = new javax.swing.JButton();
-        jButtonDeltakerFjern = new javax.swing.JButton();
-        jScrollPaneDeltakere = new javax.swing.JScrollPane();
-        jListDeltakere = new javax.swing.JList();
-        jPanelDato = new javax.swing.JPanel();
-        jXMonthViewDatovelger = new org.jdesktop.swingx.JXMonthView();
-        jLabelDato = new javax.swing.JLabel();
-        jTextFieldDato = new javax.swing.JTextField();
-        jLabelDatoStart = new javax.swing.JLabel();
-        jLabelDatoSlutt = new javax.swing.JLabel();
-        jTextFieldDatoStart = new javax.swing.JTextField();
-        jTextFieldDatoSlutt = new javax.swing.JTextField();
-        jLabelVarighet = new javax.swing.JLabel();
-        jTextFieldVarighet = new javax.swing.JTextField();
-        jButtonNesteMnd = new javax.swing.JButton();
-        jButtonForrigeMnd = new javax.swing.JButton();
-        jButtonLagre = new javax.swing.JButton();
-        jButtonAvbryt = new javax.swing.JButton();
-        jPanelRom = new javax.swing.JPanel();
-        jLabelRom = new javax.swing.JLabel();
-        jTextFieldRom = new javax.swing.JTextField();
-        jLabelVelgRom = new javax.swing.JLabel();
-        jScrollPaneRom = new javax.swing.JScrollPane();
-        jListRom = new javax.swing.JList();
-        jRadioButtonRomAuto = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
+        avtale_label = new javax.swing.JLabel();
+        avtalenavn_textfield = new javax.swing.JTextField();
+        beskrivelse_label = new javax.swing.JLabel();
+        beskrivelse_scrollpane = new javax.swing.JScrollPane();
+        beskrivelse_textfield = new javax.swing.JTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        deltaker_label = new javax.swing.JLabel();
+        deltaker_combo = new javax.swing.JComboBox();
+        add_button = new javax.swing.JButton();
+        fjern_button = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        person_list = new javax.swing.JList();
+        jPanel5 = new javax.swing.JPanel();
+        dateChooser = new org.jdesktop.swingx.JXMonthView();
+        dato_label = new javax.swing.JLabel();
+        date_textfield = new javax.swing.JTextField();
+        start_label = new javax.swing.JLabel();
+        slutt_label = new javax.swing.JLabel();
+        start_textfield = new javax.swing.JTextField();
+        slutt_textfield = new javax.swing.JTextField();
+        varighet_label = new javax.swing.JLabel();
+        varighet_textfield = new javax.swing.JTextField();
+        forrige_button = new javax.swing.JButton();
+        next_button = new javax.swing.JButton();
+        lagre_button = new javax.swing.JButton();
+        avbryt_button = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        rom_label = new javax.swing.JLabel();
+        rom_textfield = new javax.swing.JTextField();
+        velg_label = new javax.swing.JLabel();
+        romScrollPane = new javax.swing.JScrollPane();
+        rom_list = new javax.swing.JList();
+        auto_select_choice = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) 
+			{
+				main.setVisible(true);
+				
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+			System.out.println("K!O#K");
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
         setResizable(false);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
-        jPanelAvtale.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
+        avtale_label.setText("Avtalenavn:");
+        beskrivelse_label.setText("Beskrivelse:");
 
-        jLabelAvtale.setText("Avtalenavn:");
+        beskrivelse_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        beskrivelse_scrollpane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jTextFieldAvtale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JTextFieldAvtaleAction(evt);
-            }
-        });
+        beskrivelse_textfield.setColumns(20);
+        beskrivelse_textfield.setRows(5);
+        beskrivelse_scrollpane.setViewportView(beskrivelse_textfield);
 
-        jLabelAvtaleBeskrivelse.setText("Beskrivelse:");
-
-        jScrollPaneAvtale.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPaneAvtale.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        jTextAreaAvtale.setColumns(20);
-        jTextAreaAvtale.setRows(5);
-        jScrollPaneAvtale.setViewportView(jTextAreaAvtale);
-
-        javax.swing.GroupLayout jPanelAvtaleLayout = new javax.swing.GroupLayout(jPanelAvtale);
-        jPanelAvtale.setLayout(jPanelAvtaleLayout);
-        jPanelAvtaleLayout.setHorizontalGroup(
-            jPanelAvtaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelAvtaleLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelAvtaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneAvtale, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
-                    .addGroup(jPanelAvtaleLayout.createSequentialGroup()
-                        .addComponent(jLabelAvtale)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(beskrivelse_scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(avtale_label)
                         .addGap(4, 4, 4)
-                        .addComponent(jTextFieldAvtale, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabelAvtaleBeskrivelse))
+                        .addComponent(avtalenavn_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(beskrivelse_label))
                 .addContainerGap())
         );
-        jPanelAvtaleLayout.setVerticalGroup(
-            jPanelAvtaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelAvtaleLayout.createSequentialGroup()
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelAvtaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelAvtale)
-                    .addComponent(jTextFieldAvtale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(avtale_label)
+                    .addComponent(avtalenavn_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelAvtaleBeskrivelse)
+                .addComponent(beskrivelse_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneAvtale, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addComponent(beskrivelse_scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jPanelDeltakere.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
-        jLabelDeltakere.setText("Deltakere:");
+        deltaker_label.setText("Deltakere:");
 
-        jComboBoxDeltakerSok.setEditable(true);
-        jComboBoxDeltakerSok.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        add_button.setText("Legg til");
+        add_button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				add_buttonActionPerformed(e);	
+			}
+		});
 
-        jButtonDeltakerLeggTil.setText("Legg til");
+        fjern_button.setText("Fjern");
+        fjern_button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				fjern_buttonActionPerformed(e);	
+			}
+		});
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jButtonDeltakerFjern.setText("Fjern");
+        person_list.setModel(new DefaultListModel());
+        jScrollPane3.setViewportView(person_list);
 
-        jScrollPaneDeltakere.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        jListDeltakere.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPaneDeltakere.setViewportView(jListDeltakere);
-
-        javax.swing.GroupLayout jPanelDeltakereLayout = new javax.swing.GroupLayout(jPanelDeltakere);
-        jPanelDeltakere.setLayout(jPanelDeltakereLayout);
-        jPanelDeltakereLayout.setHorizontalGroup(
-            jPanelDeltakereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDeltakereLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelDeltakereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPaneDeltakere, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
-                    .addGroup(jPanelDeltakereLayout.createSequentialGroup()
-                        .addComponent(jLabelDeltakere)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(deltaker_label)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxDeltakerSok, 0, 0, Short.MAX_VALUE)
+                        .addComponent(deltaker_combo, 0, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDeltakerLeggTil)
+                        .addComponent(add_button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDeltakerFjern)))
+                        .addComponent(fjern_button)))
                 .addContainerGap())
         );
-        jPanelDeltakereLayout.setVerticalGroup(
-            jPanelDeltakereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDeltakereLayout.createSequentialGroup()
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelDeltakereLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelDeltakere)
-                    .addComponent(jComboBoxDeltakerSok, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonDeltakerFjern)
-                    .addComponent(jButtonDeltakerLeggTil))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deltaker_label)
+                    .addComponent(deltaker_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fjern_button)
+                    .addComponent(add_button))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPaneDeltakere, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jPanelDato.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
-        jLabelDato.setText("Dato: ");
-
-        jTextFieldDato.addActionListener(new java.awt.event.ActionListener() {
+        dateChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JTextFieldDatoAction(evt);
+                dateChooserActionPerformed(evt);
             }
         });
 
-        jLabelDatoStart.setText("Start:");
+        dato_label.setText("Dato: ");
 
-        jLabelDatoSlutt.setText("Slutt:");
-
-        jTextFieldDatoStart.addActionListener(new java.awt.event.ActionListener() {
+        date_textfield.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JTextFieldDatoStartAction(evt);
+                date_textfieldActionPerformed(evt);
             }
         });
 
-        jTextFieldDatoSlutt.addActionListener(new java.awt.event.ActionListener() {
+        start_label.setText("Start:");
+        slutt_label.setText("Slutt:");
+        varighet_label.setText("Varighet:");
+
+        forrige_button.setText("<");
+        forrige_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JTextFieldDatoSluttAction(evt);
+                forrige_buttonActionPerformed(evt);
             }
         });
 
-        jLabelVarighet.setText("Varighet:");
-
-        jTextFieldVarighet.addActionListener(new java.awt.event.ActionListener() {
+        next_button.setText(">");
+        next_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldVarighetAction(evt);
+                next_buttonActionPerformed(evt);
             }
         });
 
-        jButtonNesteMnd.setText("<");
-
-        jButtonForrigeMnd.setText(">");
-        jButtonForrigeMnd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonForrigeMndAction(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelDatoLayout = new javax.swing.GroupLayout(jPanelDato);
-        jPanelDato.setLayout(jPanelDatoLayout);
-        jPanelDatoLayout.setHorizontalGroup(
-            jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDatoLayout.createSequentialGroup()
-                .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelDatoLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelDatoLayout.createSequentialGroup()
-                                .addComponent(jLabelDatoSlutt)
-                                .addGap(6, 6, 6)
-                                .addComponent(jTextFieldDatoSlutt, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))
-                            .addGroup(jPanelDatoLayout.createSequentialGroup()
-                                .addComponent(jLabelDatoStart)
-                                .addGap(4, 4, 4)
-                                .addComponent(jTextFieldDatoStart, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))
-                            .addGroup(jPanelDatoLayout.createSequentialGroup()
-                                .addComponent(jLabelDato)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(dato_label)
                                 .addGap(2, 2, 2)
-                                .addComponent(jTextFieldDato, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)))
+                                .addComponent(date_textfield))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(start_label)
+                                .addGap(4, 4, 4)
+                                .addComponent(start_textfield))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(slutt_label)
+                                .addGap(6, 6, 6)
+                                .addComponent(slutt_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanelDatoLayout.createSequentialGroup()
-                                .addComponent(jButtonNesteMnd)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonForrigeMnd))
-                            .addComponent(jXMonthViewDatovelger, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelDatoLayout.createSequentialGroup()
+                        .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(190, 190, 190)
-                        .addComponent(jLabelVarighet)
+                        .addComponent(varighet_label)
                         .addGap(2, 2, 2)
-                        .addComponent(jTextFieldVarighet, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)))
+                        .addComponent(varighet_textfield, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(190, 190, 190)
+                        .addComponent(forrige_button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
+                        .addComponent(next_button)))
                 .addContainerGap())
         );
-        jPanelDatoLayout.setVerticalGroup(
-            jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDatoLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelDatoLayout.createSequentialGroup()
-                        .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelDato)
-                            .addComponent(jTextFieldDato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(dato_label)
+                            .addComponent(date_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelDatoStart)
-                            .addComponent(jTextFieldDatoStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(start_label)
+                            .addComponent(start_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelDatoSlutt)
-                            .addComponent(jTextFieldDatoSlutt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelDatoLayout.createSequentialGroup()
-                        .addComponent(jXMonthViewDatovelger, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonNesteMnd)
-                            .addComponent(jButtonForrigeMnd))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
-                .addGroup(jPanelDatoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldVarighet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelVarighet))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(slutt_label)
+                            .addComponent(slutt_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(forrige_button)
+                    .addComponent(next_button))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(varighet_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(varighet_label))
                 .addContainerGap())
         );
 
-        jButtonLagre.setText("Lagre");
-        jButtonLagre.addActionListener(new java.awt.event.ActionListener() {
+        lagre_button.setText("Lagre");
+        lagre_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLagreAction(evt);
+                lagre_buttonActionPerformed(evt);
             }
         });
 
-        jButtonAvbryt.setText("Avbryt");
-        jButtonAvbryt.addActionListener(new java.awt.event.ActionListener() {
+        avbryt_button.setText("Avbryt");
+        avbryt_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAvbrytAction(evt);
+                avbryt_buttonActionPerformed(evt);
             }
         });
 
-        jPanelRom.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
-        jLabelRom.setText("Rom:");
+        rom_label.setText("Rom:");
+        velg_label.setText("Velg fra liste:");
 
-        jTextFieldRom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldRomAction(evt);
-            }
-        });
-
-        jLabelVelgRom.setText("Velg fra liste:");
-
-        jListRom.setModel(new javax.swing.AbstractListModel() {
+        rom_list.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPaneRom.setViewportView(jListRom);
+        romScrollPane.setViewportView(rom_list);
 
-        jRadioButtonRomAuto.setText("Velg automatisk");
-        jRadioButtonRomAuto.addActionListener(new java.awt.event.ActionListener() {
+        auto_select_choice.setText("Velg automatisk");
+        auto_select_choice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonRomAutoAction(evt);
+                auto_select_choiceActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanelRomLayout = new javax.swing.GroupLayout(jPanelRom);
-        jPanelRom.setLayout(jPanelRomLayout);
-        jPanelRomLayout.setHorizontalGroup(
-            jPanelRomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelRomLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelRomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPaneRom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelRomLayout.createSequentialGroup()
-                        .addComponent(jLabelRom)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(romScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(rom_label)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldRom, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelRomLayout.createSequentialGroup()
-                        .addComponent(jLabelVelgRom)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 220, Short.MAX_VALUE)
-                        .addComponent(jRadioButtonRomAuto)))
+                        .addComponent(rom_textfield, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(velg_label)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+                        .addComponent(auto_select_choice)))
                 .addContainerGap())
         );
-        jPanelRomLayout.setVerticalGroup(
-            jPanelRomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelRomLayout.createSequentialGroup()
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelRomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelRom)
-                    .addComponent(jTextFieldRom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rom_label)
+                    .addComponent(rom_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelVelgRom)
-                    .addComponent(jRadioButtonRomAuto))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(velg_label)
+                    .addComponent(auto_select_choice))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneRom, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                .addComponent(romScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -358,121 +437,278 @@ public class Edit_Avtale extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButtonAvbryt)
+                        .addComponent(avbryt_button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonLagre))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanelDeltakere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelAvtale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanelRom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelDato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(lagre_button)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanelAvtale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelDato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanelDeltakere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelRom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonLagre)
-                    .addComponent(jButtonAvbryt))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lagre_button)
+                    .addComponent(avbryt_button))
+                .addContainerGap())
         );
 
         pack();
+        dateChooser.setDaysOfTheWeek(new String[]{"S","M","Ti","O","To","F","L"});
+        Date date = new Date();
+        dateChooser.setSelectionDate(date);
+        date_textfield.setEditable(false);
+    	start_textfield.setToolTipText("Starttidspunkt i formatet HH:MM, f.eks 12:00");
+    	start_textfield.setColumns(5);
+    	
+    	slutt_textfield.setToolTipText("Sluttidspunkt i formatet HH:MM, f.eks 12:00");
+    	slutt_textfield.setColumns(5);
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButtonLagreAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLagreAction
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonLagreAction
+protected void fjern_buttonActionPerformed(ActionEvent e) 
+{
+	if(person_list.getModel().getSize() >0)
+	{
+		Object obj = person_list.getModel().getElementAt(person_list.getSelectedIndex());
+		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
+		newModel.remove(person_list.getSelectedIndex());
+		if(obj instanceof Person)
+		{
+			person_list.setModel(newModel);
+			deltaker_combo.addItem((Person) obj);
+		}
+		else
+		{
+			person_list.setModel(newModel);
+			deltaker_combo.addItem((Group) obj);
+		}
+	}
+	
+}
+protected void add_buttonActionPerformed(ActionEvent e) 
+{
+	if(deltaker_combo.getModel().getSize()>0)
+	{
+		Object obj = deltaker_combo.getSelectedItem();
+		deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
+		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
+		if(obj instanceof Person)
+		{
+			newModel.addElement((Person) obj);
+			person_list.setModel(newModel);
+		}
+		else
+		{
+			newModel.addElement((Group) obj);
+			person_list.setModel(newModel);
+		}
+	}
+}
+protected void forrige_buttonActionPerformed(ActionEvent evt) 
+{
+	editDate(-1);
+}
+public void editDate(Integer increment)
+{
+	Date date = new Date();
+	date.setMonth(dateChooser.getSelectionDate().getMonth()+increment);
+	if(date.getMonth()== 11)
+	{
+		date.setYear(dateChooser.getSelectionDate().getYear()+increment);
+	}
+	else{date.setYear(dateChooser.getSelectionDate().getYear());}
+	date.setDate(1);
+	dateChooser.setSelectionDate(date);
+	dateChooser.ensureDateVisible(date);
+	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
+}
+private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+	meeting.setCreator(Bruker.getInstance().getUser().getId());
+	meeting.setDescription(beskrivelse_textfield.getText());
+	meeting.setName(avtalenavn_textfield.getText());
+	meeting.setStart(start_textfield.getText());
+	meeting.setEnd(slutt_textfield.getText());
+	//meeting.setRoom()
+	ArrayList list = new ArrayList();
+	Component[] participants = person_list.getComponents();
+	for (Component person : participants) {
+		list.add(person);
+	}
+	meeting.setParticipants(list);
 
-private void JTextFieldAvtaleAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldAvtaleAction
-// TODO add your handling code here:
-}//GEN-LAST:event_JTextFieldAvtaleAction
+	if (edit) {
+		System.out.println("update");
+		Database.updateMeeting(null, meeting);
+	}
+	else {
+		System.out.println("new");
+		Database.addMeeting(null, meeting);
+	}
+}
 
-private void JTextFieldDatoAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldDatoAction
-// TODO add your handling code here:
-}//GEN-LAST:event_JTextFieldDatoAction
-
-private void JTextFieldDatoStartAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldDatoStartAction
-// TODO add your handling code here:
-}//GEN-LAST:event_JTextFieldDatoStartAction
-
-private void JTextFieldDatoSluttAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldDatoSluttAction
-// TODO add your handling code here:
-}//GEN-LAST:event_JTextFieldDatoSluttAction
-
-private void jTextFieldVarighetAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldVarighetAction
-// TODO add your handling code here:
-}//GEN-LAST:event_JTextFieldVarighetAction
-
-private void jButtonForrigeMndAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonForrigeMndAction
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonForrigeMndAction
-
-private void jTextFieldRomAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTextFieldRomAction
-// TODO add your handling code here:
-}//GEN-LAST:event_JTextFieldRomAction
-
-private void jButtonAvbrytAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAvbrytAction
-main.setVisible(true);// TODO add your handling code here:
+private void avbryt_buttonActionPerformed(java.awt.event.ActionEvent evt){
+main.setVisible(true);
 this.setVisible(false);
 
-}//GEN-LAST:event_jButtonAvbrytAction
+}
 
-private void jRadioButtonRomAutoAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonRomAutoAction
-// TODO add your handling code here:
-}//GEN-LAST:event_jRadioButtonRomAutoAction
+private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
+	//Kode for å velge det enkleste rommet her
+}
 
-    /**
-     * @param args the command line arguments
-     */
-   
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonLagre;
-    private javax.swing.JButton jButtonAvbryt;
-    private javax.swing.JButton jButtonNesteMnd;
-    private javax.swing.JButton jButtonForrigeMnd;
-    private javax.swing.JButton jButtonDeltakerLeggTil;
-    private javax.swing.JButton jButtonDeltakerFjern;
-    private javax.swing.JComboBox jComboBoxDeltakerSok;
-    private javax.swing.JLabel jLabelAvtale;
-    private javax.swing.JLabel jLabelAvtaleBeskrivelse;
-    private javax.swing.JLabel jLabelRom;
-    private javax.swing.JLabel jLabelVelgRom;
-    private javax.swing.JLabel jLabelDato;
-    private javax.swing.JLabel jLabelDatoStart;
-    private javax.swing.JLabel jLabelDatoSlutt;
-    private javax.swing.JLabel jLabelVarighet;
-    private javax.swing.JLabel jLabelDeltakere;
-    private javax.swing.JList jListRom;
-    private javax.swing.JList jListDeltakere;
-    private javax.swing.JPanel jPanelAvtale;
-    private javax.swing.JPanel jPanelRom;
-    private javax.swing.JPanel jPanelDeltakere;
-    private javax.swing.JPanel jPanelDato;
-    private javax.swing.JRadioButton jRadioButtonRomAuto;
-    private javax.swing.JScrollPane jScrollPaneRom;
-    private javax.swing.JScrollPane jScrollPaneAvtale;
-    private javax.swing.JScrollPane jScrollPaneDeltakere;
-    private javax.swing.JTextArea jTextAreaAvtale;
-    private javax.swing.JTextField jTextFieldAvtale;
-    private javax.swing.JTextField jTextFieldRom;
-    private javax.swing.JTextField jTextFieldDato;
-    private javax.swing.JTextField jTextFieldDatoStart;
-    private javax.swing.JTextField jTextFieldDatoSlutt;
-    private javax.swing.JTextField jTextFieldVarighet;
-    private org.jdesktop.swingx.JXMonthView jXMonthViewDatovelger;
-    // End of variables declaration//GEN-END:variables
+private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) 
+{
+	date_textfield.setText(
+					 dateChooser.getSelectionDate().getDate()+":"
+					+(dateChooser.getSelectionDate().getMonth()+1)+":"
+					+(dateChooser.getSelectionDate().getYear()+1900));
+}
+
+private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
+{
+	editDate(1);
+}
+private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt) 
+{
+
+}
+private ArrayList<Person> populate_personlist() {
+	ArrayList<Person> personlist = new ArrayList<Person>();
+	// ADD ALLE PERSOENER I DATABASEN; VENTER PÅ SUPPORT FOR DET
+	return personlist;
+}
+private ArrayList<Room> populate_roomlist() {
+	ArrayList<Room> roomlist = new ArrayList<Room>();
+	// ADD ALL ROM I DATABASEN; VENTER PÅ SUPPORT FOR DET
+	return roomlist;
+}
+
+    private javax.swing.JButton lagre_button;
+    private javax.swing.JButton avbryt_button;
+    private javax.swing.JButton forrige_button;
+    private javax.swing.JButton next_button;
+    private javax.swing.JButton add_button;
+    private javax.swing.JButton fjern_button;
+    private javax.swing.JComboBox deltaker_combo;
+    private javax.swing.JLabel avtale_label;
+    private javax.swing.JLabel beskrivelse_label;
+    private javax.swing.JLabel rom_label;
+    private javax.swing.JLabel velg_label;
+    private javax.swing.JLabel dato_label;
+    private javax.swing.JLabel start_label;
+    private javax.swing.JLabel slutt_label;
+    private javax.swing.JLabel varighet_label;
+    private javax.swing.JLabel deltaker_label;
+    private javax.swing.JList rom_list;
+    private javax.swing.JList person_list;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JRadioButton auto_select_choice;
+    private javax.swing.JScrollPane romScrollPane;
+    private javax.swing.JScrollPane beskrivelse_scrollpane;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea beskrivelse_textfield;
+    private javax.swing.JTextField avtalenavn_textfield;
+    private javax.swing.JTextField rom_textfield;
+    private javax.swing.JTextField date_textfield;
+    private javax.swing.JTextField start_textfield;
+    private javax.swing.JTextField slutt_textfield;
+    private javax.swing.JTextField varighet_textfield;
+    private org.jdesktop.swingx.JXMonthView dateChooser;
+    
+    private class combo_box_person_renderer extends JLabel implements ListCellRenderer
+    {
+
+		@Override
+		public JLabel getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) 
+		{
+			this.setBackground(Color.WHITE);
+			if(value == null)
+			{
+				return null;
+			}
+			if(value instanceof Person)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/person.png");
+				this.setIcon(icon);
+				Person person = (Person) value;
+				String name = person.getName();
+				String ID = Integer.toString(person.getId());
+				this.setText(name + " - " + ID);
+			}
+			else
+			{
+				ImageIcon icon = new ImageIcon("resources/images/group.png");
+				this.setIcon(icon);
+				Group group = (Group) value;
+				String name = group.getName();
+				String ID = Integer.toString(group.getID());
+				this.setText("Gruppe "+ID+": " +name);
+			}
+			System.out.println(" ");
+			return this;
+		}
+    	
+    }
+    private class list_person_renderer extends JLabel implements ListCellRenderer
+    {
+
+    	public list_person_renderer()
+    	{
+    		this.setOpaque(true);
+    	}
+		@Override
+		public JLabel getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) 
+		{
+			if(isSelected)
+			{
+				this.setBackground(Color.GRAY);
+			}
+			else
+			{
+				this.setBackground(Color.WHITE);
+			}
+			if(value instanceof Person)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/person.png");
+				this.setIcon(icon);
+				Person person = (Person) value;
+				String name = person.getName();
+				String ID = Integer.toString(person.getId());
+				String email = ((Person) value).getEmail(); 
+				this.setText(name + " - " + ID + " - " + email);
+			}
+			else
+			{
+				ImageIcon icon = new ImageIcon("resources/images/group.png");
+				this.setIcon(icon);
+				Group group = (Group) value;
+				String name = group.getName();
+				String ID = Integer.toString(group.getID());
+				this.setText("Gruppe "+ID+": " +name);
+			}
+			return this;
+		}
+    	
+    }
 }

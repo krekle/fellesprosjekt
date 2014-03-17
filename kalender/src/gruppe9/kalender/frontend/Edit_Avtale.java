@@ -17,8 +17,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.util.Date;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -42,7 +44,8 @@ public class Edit_Avtale extends javax.swing.JFrame {
     {
     	initComponents();
     	setMeeting(meeting);
-    	if (edit) {
+    	if (edit) 
+    	{
     		setMeetingFields();
     	}
         this.main = main;
@@ -50,6 +53,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
         deltaker_combo.setRenderer(new combo_box_person_renderer());
 //        deltaker_combo.setEditable(true);
     }
+
     private void setMeetingFields(){
     	System.out.println(meeting.getName());
     	System.out.println(meeting.getDescription());
@@ -60,7 +64,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		varighet_textfield.setText(meeting.getDuration());
-		
+
 	}
 	private void setMeeting(Meeting meeting)
     {

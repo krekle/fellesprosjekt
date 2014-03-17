@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -28,6 +29,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
 	Login_Window login;
 	Client client;
+	private int current_week = 0;
 	static boolean popupExists = false;
     /** Creates new form Main_Window */
     public Main_Window(Login_Window login) 
@@ -69,6 +71,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth()+1)+"."+meeting.getYear());
     	tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
     	eier_label.setText("Eier: "+meeting.getCreator());
+    	if(meeting.getParticipantListModel() != null)
+    	{
+    		deltaker_list.setModel(meeting.getParticipantListModel());
+    	}
     	if(Bruker.getInstance().getUser().getId() == meeting.getId())
     	{
     		rediger_button.setEnabled(false);
@@ -169,7 +175,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         jSeparator1 = new javax.swing.JSeparator();
         create_avtale_button = new javax.swing.JButton();
         felles_deltakere_box = new javax.swing.JComboBox();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -192,7 +197,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 				String in = uke_search.getText();
 				if(in.matches("[0-9]*") && Integer.parseInt(in) >= 0 && Integer.parseInt(in)<=52)
 				{	
-					uke_label.setText(uke_search.getText());
+					uke_label.setText("Uke: "+uke_search.getText());
+					current_week = Integer.parseInt(uke_search.getText());
 				}
 				
 			}
@@ -436,7 +442,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        uke_label.setText("UKE X  ");
+        current_week = (Calendar.getInstance()).get(Calendar.getInstance().WEEK_OF_YEAR);
+        uke_label.setText("UKE "+current_week);
+        System.out.println(current_week);
         uke_label.setToolTipText("");
         uke_label.setAlignmentY(0.0F);
 
@@ -570,19 +578,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         );
         
         
-        week_list_scroller.addAdjustmentListener(new AdjustmentListener() {
-			
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				// TODO Auto-generated method stub
-//				Point p = week_list_scroller.getLocation();
-//				Panel.getMondayScrollPane().getViewport().setViewPosition(p);
-//				Panel.gettuesdayScrollPane.getViewport().setViewPosition(p);
-//				Panel.getwednesdayScrollPane.getViewport().setViewPosition(p);
-//				Panel.getthursdayScrollPane.getViewport().setViewPosition(p);
-//				Panel.getfridayScrollPane.getViewport().setViewPosition(p);	
-			}
-		});
 
         pack();
         
@@ -639,19 +634,14 @@ public Meeting getAvtale()
 {
 	return null;
 }
-
-public void setMeetingFields(Meeting meeting)
-{
-	dato_label.setText("dato: " + meeting.getDayOfMonth()+"."+meeting.getMonth());
-	tidspkt_label.setText("Tidspunkt: " + meeting.getStartTime() + " - " + meeting.getEndTime());
-	beskrivelse_area.setText(meeting.getDescription());
-	deltaker_list.setModel(meeting.getParticipantListModel());	
-}
-
     private boolean hasNewNotification() {
     	// TODO Auto-generated method stub
     	return true;
     }
+	public int getWeek() 
+	{
+		return current_week;
+	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton prev_button;
     private javax.swing.JButton next_button;
@@ -688,4 +678,5 @@ public void setMeetingFields(Meeting meeting)
     private javax.swing.JTextField uke_search;
     private javax.swing.JTabbedPane tabWindow;
     // End of variables declaration//GEN-END:variables
+
 }

@@ -1,7 +1,9 @@
 package gruppe9.kalender.frontend;
 
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.user.Bruker;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JList;
@@ -17,20 +19,20 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 	{
 		
 		Meeting meeting = (Meeting) value;
-//		switch(meeting.get)
-//		{
-//		case "deltar":
-//			this.setBackground(Color.GREEN);
-//			break;
-//		case "deltar_ikke":
-//			this.setBackground(Color.RED);
-//			break;
-//		case "ikke_svart":
-//			this.setBackground(Color.GRAY);
-//			break;
-//		}
+		switch("deltar")
+		{
+		case "deltar":
+			this.setBackground(Color.GREEN);
+			break;
+		case "deltar_ikke":
+			this.setBackground(Color.RED);
+			break;
+		case "ikke_svart":
+			this.setBackground(Color.GRAY);
+			break;
+		}
 		String start = meeting.getStartTime();
-		String name = "";
+		String name = meeting.getName();
 		String slutt = meeting.getEndTime();
 		this.setText(start + "\n"+name+"\n"+slutt);
 		return this;

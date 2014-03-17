@@ -25,7 +25,7 @@ def get_avtale(id):
   else:
     return respond(132, 'Error: Input format', None)
   if(avtaler):
-    return respond(200, 'ok', dict(avtaler))
+    return respond(200, 'ok', avtaler)
   else:
     return respond(131, 'Error: Ingen avtaler funnet', None)
 
@@ -84,7 +84,7 @@ def get_person_notifications(id):
   else:
     return respond(132, 'Error: Input format', None) 
   if(notifications):
-    return respond(200, 'ok', dict(notifications))
+    return respond(200, 'ok', notifications)
   else:
     return respond(131, 'Error: Ingen varsler funnet', None)
 

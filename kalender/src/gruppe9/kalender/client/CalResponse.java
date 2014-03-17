@@ -1,5 +1,6 @@
 package gruppe9.kalender.client;
 
+import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
@@ -29,7 +30,7 @@ public class CalResponse {
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				JSONObject jo;
 				jo = arrayResponse.getJSONObject(i);
-				meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse"), Integer.parseInt(jo.getString("rom"))));
+				meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse"), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));
 			} 
 			Bruker.getInstance().setAvtaler(meetList);
 			return true;
@@ -52,8 +53,24 @@ public class CalResponse {
 		}
 		return deltakerList;
 	}
+	
+	public boolean getAlerts(){
+		ArrayList<Alert> alertList = new ArrayList<Alert>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				alertList.add(new Alert(jo.getString("Tidspunkt"), null, jo.getString("Varselstekst"), jo.getInt("Avtale_AvtaleID"), jo.getString("lydspor")));
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		Bruker.getInstance().setVarsler(alertList);
+		return true;
+	}
 
-
+	
 	public boolean confirmLogin(){
 		try {
 			if(objectResponse != null){

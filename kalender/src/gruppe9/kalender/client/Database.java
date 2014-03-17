@@ -2,8 +2,9 @@ package gruppe9.kalender.client;
 
 import gruppe9.kalender.client.Client.Type;
 import gruppe9.kalender.model.Meeting;
-import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
+
+import java.util.Calendar;
 
 
 public class Database {
@@ -18,7 +19,7 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, null));
 	}
-	
+
 	public static void getMeetings(ApiCaller caller){
 		String result = "";
 		try {
@@ -28,7 +29,7 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, "avtaler"));
 	}
-	
+
 	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
@@ -40,14 +41,14 @@ public class Database {
 					"sted", "sad",
 					"skaper", m.getCreator() + "",
 					"romid", m.getRoom()+"")
-					.execute();
-			
+			.execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		caller.callBack(new CalResponse(result, null));
 	}
-	
+
 	public static void deleteMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
@@ -58,7 +59,7 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, null));
 	}
- 	
+
 	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
@@ -69,7 +70,7 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, null));
 	}
-	
+
 	public static void addParticipants(ApiCaller caller, String avtale_id, String csvPeople, String csvStatus){
 		String result = "";
 		//TODO: check status and people length
@@ -84,7 +85,7 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, null));
 	}
-	
+
 	public static void getParticipants(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
@@ -94,7 +95,7 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, "deltakere"));
 	}
-	
+
 	public static void deleteParticipant(ApiCaller caller, String avtale_id, String person_id){
 		String result = "";
 		//TODO: check status and people length
@@ -121,17 +122,28 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
+	public static void getAlerts(ApiCaller caller){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("get/person/varsler/"+ Bruker.getInstance().getUser().getId(), Type.GET).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "alarm"));
+	}
+
+
 	public static void main(String args[]){
-//		CalResponse cal = login("eposten3@min.com", "passordet");
-//		Person me = cal.confirmLogin();
-//		System.out.println(me.getName() + me.getTelephonenumber());
-//		
-//		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
-//		CalResponse cal = addMeeting(meet);
-//		System.out.println(cal.getCode() + " " + cal.getMsg());
-//		System.out.println("Getting meetings");
-//		CalResponse c = getParticipants(meet);
-//		System.out.println(c.getDeltakere().get(1).getPersonID());
-		
+		//		CalResponse cal = login("eposten3@min.com", "passordet");
+		//		Person me = cal.confirmLogin();
+		//		System.out.println(me.getName() + me.getTelephonenumber());
+		//		
+		//		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
+		//		CalResponse cal = addMeeting(meet);
+		//		System.out.println(cal.getCode() + " " + cal.getMsg());
+		//		System.out.println("Getting meetings");
+		//		CalResponse c = getParticipants(meet);
+		//		System.out.println(c.getDeltakere().get(1).getPersonID());
 	}
 }

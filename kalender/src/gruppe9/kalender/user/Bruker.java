@@ -2,6 +2,7 @@ package gruppe9.kalender.user;
 
 import java.util.ArrayList;
 
+import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 
@@ -10,8 +11,8 @@ public class Bruker {
 	
 	private ArrayList<Meeting> avtaler;
 	private Person bruker;
-	
-	
+	private ArrayList<Alert> varsler;
+
 	private static Bruker instance = null;
 	
 	private Bruker() {
@@ -24,7 +25,15 @@ public class Bruker {
 		}
 		return instance;
 	}
+	
+	public ArrayList<Alert> getVarsler() {
+		return varsler;
+	}
 
+	public void setVarsler(ArrayList<Alert> varsler) {
+		this.varsler = varsler;
+	}
+	
 	public void setUser(Person p){
 		this.bruker = p;
 	}

@@ -8,6 +8,14 @@ public class Alert {
 	private int meetingID;
 	private String sound;
 	
+	public Alert(String time, String type, String desc, int meetingId, String sound){
+		this.time = time;
+		this.type = type;
+		this.desciption = desc;
+		this.meetingID = meetingId;
+		this.sound = sound;
+	}
+	
 	public String getTime() {
 		return time;
 	}

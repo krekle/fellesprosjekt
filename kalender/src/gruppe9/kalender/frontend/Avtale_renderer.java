@@ -1,6 +1,7 @@
 package gruppe9.kalender.frontend;
 
-import java.awt.Color;
+import gruppe9.kalender.model.Meeting;
+
 import java.awt.Component;
 
 import javax.swing.JList;
@@ -15,8 +16,8 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
 		
-		//Avtale avtale = (Avtale) Object;
-//		switch(avtale.kanDelta())
+//		Meeting meeting = (Meeting) value;
+//		switch(meeting.get)
 //		{
 //		case "deltar":
 //			this.setBackground(Color.GREEN);

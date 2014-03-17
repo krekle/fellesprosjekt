@@ -5,8 +5,13 @@ import java.util.ArrayList;
 public class Group {
 	private String name;
 	private String description;
-	private ArrayList<Person> people;
+	private ArrayList<Person> people = new ArrayList<Person>();
+	private int ID;
 	
+	public String toString()
+	{
+		return "Gruppe " + this.ID+": " + this.name;
+	}
 	public Group(String name) {
 		super();
 		this.name = name;
@@ -21,6 +26,14 @@ public class Group {
 	}
 	public String getDescription() {
 		return description;
+	}
+	public void setID(int ID)
+	{
+		this.ID = ID;
+	}
+	public int getID()
+	{
+		return ID;
 	}
 	public void setDescription(String description) {
 		this.description = description;

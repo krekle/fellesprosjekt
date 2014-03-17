@@ -13,6 +13,7 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 	/** Creates new form Login_Window */
 	public Login_Window() 
 	{
+		this.setVisible(true);
 		initComponents();
 	}
 

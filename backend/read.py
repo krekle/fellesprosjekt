@@ -1,4 +1,6 @@
 import dataset
+import datetime
+import traceback
 
 db = dataset.connect('mysql://bruker:passord@localhost/db2_gr9')
 
@@ -62,12 +64,15 @@ def get_avtale(avtale_id):
 def get_personvarsler(id):
   alarm = db['Alarm']
   varsler = alarm.find(Person_Ansattnummer=id)
+  result = {}
   mine_varsler = []
   if(varsler):
     for varsel in varsler:
+      varsel['Tidspunkt'] = str(varsel['Tidspunkt'])
       mine_varsler.append(varsel)
   if (mine_varsler):
-    return mine_varsler
+    result['alarm'] = mine_varsler
+    return result
   return False
 
 #Tested and works
@@ -86,12 +91,15 @@ def get_gruppevarsler(gruppeid):
 def get_personmeldinger(personid):
   melding = db['Melding']
   varsler = melding.find(Person_Ansattnummer = personid)
+  result = {}
   personvarsler = []
   if (varsler):
     for varsel in varsler:
+      varsel['Tidspunkt'] = str(varsel['Tidspunkt'])
       personvarsler.append(varsel)
   if (personvarsler):
-    return personvarsler
+    result['melding'] = personvarsler
+    return result
   return False
 
 #Tested and works
@@ -113,4 +121,50 @@ def get_gruppe(gruppeid):
   if (gruppe):
     return gruppe
   return False
+
+def get_deltakere(aid):
+  try:
+    aid = str(aid)
+    deltakereData = db['DeltagendeI']
+    deltakere = deltakereData.find(Avtale_AvtaleID=aid)
+    res = []
+    for d in deltakere:
+      d = dict([(str(k),str(v)) for k, v in d.items()])
+      res.append(d)
+    return res
+  except:
+    traceback.print_exc()
+    return False
+
+def get_ledige_rom(starttidspunkt, sluttidspunkt):
+  st = datetime.datetime.strptime(starttidspunkt, "%Y-%m-%d %H:%M:%S")
+  et = datetime.datetime.strptime(sluttidspunkt, "%Y-%m-%d %H:%M:%S")
+  TarPlassI = db['TarPlassI']
+  Rom = db['Rom']
+  romListe = []
+  for rom in Rom:
+    romListe.append(rom['ID'])
+  romDictionary = dict(Room = romListe)
+
+  #Sjekker hvorvidt rom er ledig i tidsperiode, rotekode uten sidestykke, sorry...
+  if (et < st):
+    return
+  for rom in TarPlassI:
+    start = datetime.datetime.strptime(str(rom['Start']), '%Y-%m-%d %H:%M:%S')
+    slutt = None
+    if(rom['Slutt']):
+      slutt = datetime.datetime.strptime(str(rom['Slutt']), '%Y-%m-%d %H:%M:%S')
+    if (not(start or slutt)):
+      continue
+    if (st >= start and st < slutt):
+      romDictionary['Room'].remove(rom['ID'])
+      continue
+    if (et > start and et <= slutt):
+      romDictionary['Room'].remove(rom['ID'])
+      continue
+    if (st <= start and et >= slutt):
+      romDictionary['Room'].remove(rom['ID'])
+      continue
+  return romDictionary
+
 

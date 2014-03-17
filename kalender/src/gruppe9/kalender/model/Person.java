@@ -13,8 +13,11 @@ public class Person {
 	private ArrayList<Notification> notifications;
 	
 	
-	
-	
+	@Override
+	public String toString()
+	{
+		return this.name + " - " + this.id;
+	}
 	public Person(int id, String name, int telephonenumber, String adress,
 			String email) {
 		super();

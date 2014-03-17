@@ -42,12 +42,18 @@ public class Edit_Avtale extends javax.swing.JFrame {
     {
     	initComponents();
     	setMeeting(meeting);
+    	if (edit) {
+    		setMeetingFields();
+    	}
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
         deltaker_combo.setRenderer(new combo_box_person_renderer());
 //        deltaker_combo.setEditable(true);
     }
-    private void setMeeting(Meeting meeting)
+    private void setMeetingFields() {
+		
+	}
+	private void setMeeting(Meeting meeting)
     {
     	this.edit = ((meeting != null) ? true:false);
     	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0));

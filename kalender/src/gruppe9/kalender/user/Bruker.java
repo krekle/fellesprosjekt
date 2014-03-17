@@ -1,14 +1,17 @@
 package gruppe9.kalender.user;
 
+import java.util.ArrayList;
+
+import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 
 
 public class Bruker {
 	
-	//Her vil vi typisk ha ArrayList<Avtaler>, ArrayList<Varsler> osv, osv
-	
+	private ArrayList<Meeting> avtaler;
 	private Person bruker;
-	//field for å holde styr på instansen av Bruker:
+	
+	
 	private static Bruker instance = null;
 	
 	private Bruker() {
@@ -30,6 +33,15 @@ public class Bruker {
 	public Person getUser(){
 		return this.bruker;
 	}
+	
+	public ArrayList<Meeting> getAvtaler() {
+		return avtaler;
+	}
+
+	public void setAvtaler(ArrayList<Meeting> avtaler) {
+		this.avtaler = avtaler;
+	}
+
 	//For å bruke metoder fra bruker kall Bruker.getInstance().*
 	//* = any method, med dette pattern så kan instansen av denne klassen nåes fra hvor som helst.
 }

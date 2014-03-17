@@ -15,6 +15,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ComboBoxModel;
@@ -29,11 +30,12 @@ import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
+import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
 
 /**
  *
- * @author krake
+ * @author krake, Berg
  */
 public class Edit_Avtale extends javax.swing.JFrame {
     private Main_Window main;
@@ -51,14 +53,14 @@ public class Edit_Avtale extends javax.swing.JFrame {
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
         deltaker_combo.setRenderer(new combo_box_person_renderer());
-//        deltaker_combo.setEditable(true);
+        populate_personlist();
     }
     private void setMeetingFields(){
     	System.out.println(meeting.getName());
     	System.out.println(meeting.getDescription());
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
-		person_list.setListData(meeting.getParticipants().toArray());
+		//person_list.setListData(meeting.getParticipants().toArray());
 		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
@@ -515,10 +517,10 @@ public void editDate(Integer increment)
 	dateChooser.ensureDateVisible(date);
 	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
 }
-private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lagre_buttonActionPerformed
-	//TODO: generate checkAvtale in Meeting
-	//Lagre med Database.addMeeting(null, this.meeting);
-}//GEN-LAST:event_lagre_buttonActionPerformed
+private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+	if (edit) Database.updateMeeting(null, meeting);
+	else Database.addMeeting(null, meeting);
+}
 
 private void avtalenavn_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 {//GEN-FIRST:event_avtalenavn_textfieldActionPerformed
@@ -557,6 +559,16 @@ private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
 private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt) 
 {
 	System.out.println("textfield3!");
+}
+private ArrayList<Person> populate_personlist() {
+	ArrayList<Person> personlist = new ArrayList<Person>();
+	// ADD ALLE PERSOENER I DATABASEN; VENTER PÅ SUPPORT FOR DET
+	return personlist;
+}
+private ArrayList<Room> populate_roomlist() {
+	ArrayList<Room> roomlist = new ArrayList<Room>();
+	// ADD ALL ROM I DATABASEN; VENTER PÅ SUPPORT FOR DET
+	return roomlist;
 }
 
     private javax.swing.JButton lagre_button;

@@ -65,7 +65,7 @@ public class Database {
 		try {
 			result = new Client("update/avtale/" + m.getId(), Type.GET,
 					"avtale_id", m.getId()+"",
-					"Tittel", m.getTitle(),
+					"Tittel", m.getName(),
 					"Starttidspunkt", m.getStart(),	
 					"Sluttidspunkt", m.getEnd(),
 					"Beskrivelse", m.getDescription().replace(" ", "[space]"),

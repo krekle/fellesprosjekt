@@ -564,19 +564,21 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	meeting.setCreator(Bruker.getInstance().getUser().getId());
 	meeting.setDescription(beskrivelse_textfield.getText());
 	meeting.setName(avtalenavn_textfield.getText());
-	meeting.setStartTime(start_textfield.getText());
-	meeting.setEndTime(slutt_textfield.getText());
+	meeting.setStart(start_textfield.getText());
+	meeting.setEnd(slutt_textfield.getText());
 	//meeting.setRoom()
-	ArrayList<Person> list = new ArrayList<Person>();
+	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();
-	for participant in participants:
-		list.add(participant);
-	meeting.setParticipants(participants);
+	for (Component person : participants) {
+		list.add(person);
+	}
+	meeting.setParticipants(list);
 	if (edit) {
+		System.out.println("update");
 		Database.updateMeeting(null, meeting);
 	}
-	
 	else {
+		System.out.println("new");
 		Database.addMeeting(null, meeting);
 	}
 }

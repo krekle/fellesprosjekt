@@ -60,7 +60,12 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	{
     		//Alarmene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getUser().getAlerts() <--returnerer en ArrayList med Alert
-    		System.out.println("List size: " + Bruker.getInstance().getUser().getAlerts().size());
+    		if(Bruker.getInstance().getUser().getAlerts()!= null){
+    			System.out.println("List size: " + Bruker.getInstance().getUser().getAlerts().size());
+    		}
+    		else{
+    			System.out.println("No new notifications..");
+    		}
     	}
     	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
     	// response.getVarsler() her

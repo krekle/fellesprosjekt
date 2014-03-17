@@ -38,10 +38,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	
     	this.login = login;
         initComponents();
-        tabWindow.addTab("Me", new Panel(week_list_scroller));
-        tabWindow.addTab("Felles", new Panel(week_list_scroller));
+        tabWindow.addTab("Me", new Panel(week_list_scroller, this));
+        tabWindow.addTab("Felles", new Panel(week_list_scroller, this));
         for (int x = 1; x<4; x++){
-            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller));
+            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
         }
     }
 
@@ -56,7 +56,23 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
     	// response.getVarsler() her
     }
-    
+    public void setMeeting(Meeting meeting)
+    {
+    	beskrivelse_area.setText(meeting.getDescription());
+    	avtale_label.setText("Avtale: "+meeting.getId());
+    	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth()+1)+"."+meeting.getYear());
+    	tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
+    	eier_label.setText("Eier: "+meeting.getCreator());
+    	if(Bruker.getInstance().getUser().getId() == meeting.getId())
+    	{
+    		rediger_button.setEnabled(false);
+    	}
+    	else
+    	{
+    		rediger_button.setEnabled(true);
+    	}
+    	this.current_Avtale = meeting;
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -191,7 +207,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
         beskr_label.setText("Beskrivelse:");
 
-        deltaker_label.setText("Deltakere");
+        deltaker_label.setText("Deltakere:");
 
         tidspkt_label.setText("Tidspunkt:");
 
@@ -618,21 +634,12 @@ public Meeting getAvtale()
 	return null;
 }
 
-public void setMeeting(Meeting avtale)
+public void setMeetingFields(Meeting meeting)
 {
-	this.current_Avtale = avtale;
-	
-}
-
-public void setMeetingFields(Meeting meeting){
 	dato_label.setText("dato: " + meeting.getDayOfMonth()+"."+meeting.getMonth());
 	tidspkt_label.setText("Tidspunkt: " + meeting.getStartTime() + " - " + meeting.getEndTime());
 	beskrivelse_area.setText(meeting.getDescription());
-	deltaker_list.setModel(meeting.getParticipantListModel());
-	
-	
-	
-	
+	deltaker_list.setModel(meeting.getParticipantListModel());	
 }
 
     private boolean hasNewNotification() {

@@ -16,7 +16,7 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
 		
-//		Meeting meeting = (Meeting) value;
+		Meeting meeting = (Meeting) value;
 //		switch(meeting.get)
 //		{
 //		case "deltar":
@@ -29,9 +29,9 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 //			this.setBackground(Color.GRAY);
 //			break;
 //		}
-		String start = "11:00";//avtale.getStartTime();
-		String name = "Bursdag hos hans";//avtale.getName();
-		String slutt = "16:00";//avtale.getEndTime();
+		String start = meeting.getStartTime();
+		String name = "";
+		String slutt = meeting.getEndTime();
 		this.setText(start + "\n"+name+"\n"+slutt);
 		return this;
 	}

@@ -7,6 +7,7 @@ import javax.swing.DefaultListModel;
 
 public class Meeting implements Comparable<Meeting>{
 	
+	private String name;
 	private int meetingId;
 	private int creatorId;
 	//private String creatorName;
@@ -189,5 +190,13 @@ public class Meeting implements Comparable<Meeting>{
 			return endDiff;
 		}
 		return 0;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

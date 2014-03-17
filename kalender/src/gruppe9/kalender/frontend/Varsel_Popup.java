@@ -11,6 +11,7 @@
 package gruppe9.kalender.frontend;
 
 import gruppe9.kalender.model.Alert;
+import gruppe9.kalender.model.Meeting;
 
 import javax.swing.JFileChooser;
 
@@ -23,7 +24,7 @@ public class Varsel_Popup extends javax.swing.JFrame {
     /** Creates new form Varsel_Popup */
     Alert alert;
     @SuppressWarnings("unused")
-	public Varsel_Popup(String type, Avtale avtale) 
+	public Varsel_Popup(String type, Meeting avtale) 
     {
         initComponents();
         Alert A = null;

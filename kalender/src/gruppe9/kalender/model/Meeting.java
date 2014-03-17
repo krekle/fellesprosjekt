@@ -15,6 +15,7 @@ public class Meeting implements Comparable<Meeting>{
 	private String end;
 	private String description;
 	private int roomId;
+	private String title;
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
 	private Alert emailAlert,soundAlert;
@@ -30,7 +31,7 @@ public class Meeting implements Comparable<Meeting>{
 	}
 
 	public Meeting(int meetingId, int creatorId, String start, String end,
-			String description, int roomId) {
+			String description, int roomId, String title) {
 		super();
 		this.meetingId = meetingId;
 		this.creatorId = creatorId;
@@ -38,6 +39,7 @@ public class Meeting implements Comparable<Meeting>{
 		this.end = end;
 		this.description = description;
 		this.roomId = roomId;
+		this.title = title;
 		participants = new ArrayList<Person>();
 		notifications = new ArrayList<Notification>();
 		emailAlert = null;

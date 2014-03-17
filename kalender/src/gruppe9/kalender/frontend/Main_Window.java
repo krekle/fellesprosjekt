@@ -35,6 +35,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     public Main_Window(Login_Window login) 
     {
     	Database.getMeetings(this);
+    	Bruker.getInstance().getUser().setId(3);
+    	Database.getAlerts(this);
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
     	
@@ -54,6 +56,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     		
     		//Her kan man nå kjøre f.eks:
     		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();
+    	}else if(response.getAlerts()){
+    		//Alarmene ble hentet fra serveren og ligger nå i
+    		// Bruker.getInstance().getAlerts() <--returnerer en ArrayList med Alert
+    		
     	}
     	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
     	// response.getVarsler() her

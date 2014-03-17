@@ -42,12 +42,14 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
     	this.main = main;
         initComponents();
         meetings = Bruker.getInstance().getAvtaler();
+        System.out.println(meetings.size());
         for(int x = 0; x<5; x++)
         {
         	DefaultListModel<Meeting> avtaler = new DefaultListModel<Meeting>();
         	for(Meeting meeting : meetings)
         	{
-        		if(x==meeting.getDayOfWeek()) //&& meeting.getWeek() == main.getWeek())
+        		System.out.println("Day " + x + " - Week "+ meeting.getWeekOfYear());
+        		if(x==meeting.getDayOfWeek() && meeting.getWeekOfYear() == main.getWeek()-1) //remove "-1" when done.
         		{
         			avtaler.addElement(meeting);
         		}

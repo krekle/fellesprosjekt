@@ -53,21 +53,30 @@ def create_Person(d):
     print("False")
     return False
 
-### TODO ###
-def create_gruppevarsel(d):
-  varselData = db['Alarm']
-  return
+def create_varsel(d):
+  varsel = db['Alarm']
+  try:
+    varsel.insert(d)
+    return True
+  except:
+    return False
+  
+def create_melding(d):
+  varsel = db['Alarm']
+  try:
+    varsel.insert(d)
+    return True
+  except:
+    return False
 
-def create_personvarsel(d):
-  return
+## Deletes: ##
 
-def create_gruppemelding(d):
-  return
-
-def create_personmelding(d):
-  return
-
-### END TODO ###
+def delete_deltaker(aid, pid):
+  try:
+    db['DeltagendeI'].delete(Avtale_AvtaleID=aid, Person_Ansattnummer=pid)
+    return True
+  except:
+    return False
 
 def delete_avtale(avtale_id):
   try:

@@ -20,12 +20,12 @@ def get_avtale(id):
   avtaler = None
   if(id):
     avtaler = {}
-    avtaler["avtaler"] = read.get_avtale(id)
+    avtaler = read.get_avtale(id)
     #TODO: lag avtale i read
   else:
     return respond(132, 'Error: Input format', None)
   if(avtaler):
-    return respond(200, 'ok', dict(avtaler))
+    return respond(200, 'ok', avtaler)
   else:
     return respond(131, 'Error: Ingen avtaler funnet', None)
 
@@ -51,13 +51,13 @@ def get_gruppeavtale(gruppeid):
 
 @route('/get/mineavtaler/<personid>', method = 'GET')
 def get_mine_avtaler(personid):
-  mine_avtaler = None
+  mine_avtaler = {}
   if (personid):
-    mine_avtaler = read.get_mine_avtaler(personid)
+    mine_avtaler['avtaler'] = read.get_mine_avtaler(personid)
   else:
     return respond(132, 'Error: Input format', None)
   if (mine_avtaler):
-    return respond(200, 'ok', dict(mine_avtaler))
+    return respond(200, 'ok', mine_avtaler)
   else:
     return respond(131, 'Error, Ingen avtaler funner', None)
 
@@ -67,24 +67,49 @@ def get_mine_avtaler(personid):
 @route('/add/avtale', method ='GET')
 def add_avtale():
   avtale = request.query.decode()
+  if(avtale):
+    avtale['beskrivelse'] = avtale['beskrivelse'].replace('[space]', ' ')
   print(avtale)
   if(insert.create_avtale(avtale)):
     return respond(200, 'Avtale lagret', None)
   else:
     return respond(133, 'Error: avtale ikke lagret', None)
 
-### Get Varsler ###
+@route('/add/deltakere/<avtale_id>', method = 'GET')
+def add_detakere(avtale_id):
+  d = request.query.decode()
+  ids = list(str(d['people']).split(','))
+  status = list(str(d['status']).split(','))
+  print(ids)
+  if(avtale_id and ids):
+    if(update.add_deltakere_to_avtale(avtale_id, ids, status)):
+      return respond(200, 'Deltakere lagt til', None)
+    else:
+      return respond(133, 'Error: deltakere ikke lagt til', None)
+  else:
+    return respond(134, 'Error: input format', None)
 
-#Returnere varsler for person med id
+
+#Tested and works
+def get_avtale(avtale_id):
+  avtaleData = db['Avtale']
+  avtale = avtaleData.find_one(AvtaleID = avtale_id)
+  avtale['Starttidspunkt'] = str(avtale['Starttidspunkt'])
+  avtale['Sluttidspunkt'] = str(avtale['Sluttidspunkt'])
+  avtale['SistEndret'] = str(avtale['SistEndret'])
+  avtale['Opprettet'] = str(avtale['Opprettet'])
+  avtale['varighet'] = str(avtale['varighet'])
+
 @route('/get/person/varsler/<id>', method = 'GET')
 def get_person_notifications(id):
   notifications = None
   if(id):
     notifications = read.get_personvarsler(id)
+    print(notifications)
   else:
     return respond(132, 'Error: Input format', None) 
   if(notifications):
-    return respond(200, 'ok', dict(notifications))
+    return respond(200, 'ok', notifications)
   else:
     return respond(131, 'Error: Ingen varsler funnet', None)
 
@@ -127,11 +152,21 @@ def get_person_messages(personid):
   else:
     return respond(131, 'Error: Ingen meldinger funnet', None)
 
+@route('/get/deltakere/<aid>', method = 'GET')
+def get_deltakere(aid):
+  if(aid):
+    d = {}
+    d['deltakere'] = read.get_deltakere(aid)
+    if(d):
+      return respond(200, 'Ok', d)
+    else:
+      return respond(131, 'Deltakere ikke funnet', None)
+  else:
+    return respond(134, 'Error: input format', None)
+
 
 ### Get Personer ###
-#Hent ledige personer i tidsrom?
-# moar?
-@route('/get/person/<personid>', method = 'Get')
+@route('/get/person/<personid>', method = 'GET')
 def get_person(personid):
   person = None
   if (personid):
@@ -159,6 +194,16 @@ def get_login():
     
 
 ### Methods for updates ###
+@route('/update/avtale/<aid>', method = 'GET')
+def update_avtale(aid):
+  avtale = request.query.decode()
+  avtale['AvtaleID'] = aid
+  avtale = dict(avtale)
+  print(avtale)
+  if(update.update_avtale(avtale)):
+    return respond(200, 'Avtale endret', None)
+  else:
+    return respond(131, 'Error: Avtale ikke endret', None)
 
 @route('/update/person/<personid>', method = 'GET')
 def update_person(personid):
@@ -183,18 +228,18 @@ def update_avtale(avtaleid):
       return respond(132, 'Error: Input format', None)
   else:
     return respond(131, 'Error: No avtale found', None)
-
-@route('/add/toavtale/', method = 'GET')
-def add_to_avtale():
-  person = request.forms.get('personid')
-  avtale = request.forms.get('avtaleid')
-  if (person and avtale):
-    if(update.add_to_avtale(avtale, person)):
-      return True
+@route('/update/avtalestatus/<pid>', method = 'GET')
+def update_status(pid):
+  d = request.query.decode()
+  status = d['status']
+  avtale_id = d['avtale_id']
+  if(pid and status and avtale_id):
+    if(update.update_person_status(pid, avtale_id, status)):
+      return respond(200, 'status endret', None)
     else:
-      return respond(132, 'Error: Input format', None)
+      return respond(132, 'status ikke endret', None)
   else:
-    return respond(131, 'Error: Wrong information', None)
+    return respond(134, 'Error: input format', None)
 
 ### Methods for creating ###
 
@@ -203,25 +248,72 @@ def create_person():
   person = request.forms.decode()
   if (person):
     if (insert.create_person(person)):
-      return (200, 'ok', None)
+      return respond(200, 'ok', None)
     else:
       return respond(132, 'Error: Input format', None)
   else:
     return respond(131, 'Error: No person found', None)
 
-@route('/create/avtale/', method = 'GET')
-def create_avtale():
-  avtale = request.forms.decode()
-  if (avtale):
-    if (insert.create_avtale(avtale)):
-      return (200, 'ok', None)
+@route('/create/varsel/', method = 'GET')
+def create_varsel():
+  varsel = request.forms.decode()
+  if (varsel):
+    if (insert.create_varsel(varsel)):
+      return respond (200, 'ok', None)
+    else:
+      return respond(132, 'Error: Input format', None)
+  else:
+    return respond(131, 'Error: Noe person found', None)
+
+def create_melding():
+  melding = request.forms.decode()
+  if (melding):
+    if (insert.create_melding(melding)):
+      return respond(200, 'ok', None)
     else:
       return respond(132, 'Error: Input format', None)
   else:
     return respond(131, 'Error: No person found', None)
+
+### Methods for deletion ###
+@route('/delete/avtale', method = 'GET')
+def delete_avtale():
+  d = request.query.decode()
+  avtaleid = str(d['avtale_id'])
+  if (avtaleid):
+    if (insert.delete_avtale(avtaleid)):
+      return respond(200, 'ok', None)
+    else:
+      return respond (131, 'Error: No avtale found', None)
+  else:
+    return respond(132, 'Error: Input format', None)
+
+@route('/delete/deltaker', method = 'GET')
+def delete_deltaker():
+  d = request.query.decode()
+  if(d):
+    aid = d['avtale_id']
+    pid = d['person_id']
+    if(insert.delete_deltaker(aid, pid)):
+      return respond (200, 'Deltaker fjernet', None)
+    else: 
+      return respond (131, 'Error: deltaker ikke fjernet', None)
+  else:
+    return respond(134, 'Error: input format', None)
+
 
 ### Get Rom ###
-#Hent ledige rom i tidsrom?
+
+@route('/get/ledigerom', method = 'GET')
+def get_ledige_rom():
+  d = request.query.decode()
+  starttidspunkt = d['Starttidspunkt'].replace('[space]', ' ')
+  sluttidspunkt = d['Sluttidspunkt'].replace('[space]', ' ')
+  if (starttidspunkt and sluttidspunkt):
+    rom = read.get_ledige_rom(starttidspunkt, sluttidspunkt)
+    return respond(200, 'ok', rom)
+  else:
+    return respond(132, 'Error: Input format', None)
 ##moar??
 
 if __name__ == '__main__':

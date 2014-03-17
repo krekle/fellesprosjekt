@@ -1,3 +1,6 @@
 import datetime
 
-print(datetime.datetime.now())
+now = datetime.datetime.now()
+utc = datetime.datetime.utcnow()
+
+print (now > utc)

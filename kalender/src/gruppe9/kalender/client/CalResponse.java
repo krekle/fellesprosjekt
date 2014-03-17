@@ -86,18 +86,18 @@ public class CalResponse {
 		if(!var.equals("melding")){
 			return false;
 		}
-		ArrayList<Notification> alertList = new ArrayList<Notification>();
+		ArrayList<Notification> notifytList = new ArrayList<Notification>();
 		for (int i = 0; i < arrayResponse.length(); i++) {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				alertList.add(new Notification(jo.getString("aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				notifytList.add(new Notification(jo.getString("aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return false;
 			}
 		}
-		Bruker.getInstance().setVarsler(alertList);
+		Bruker.getInstance().setNotifications(notifytList);
 		return true;
 	}
 	

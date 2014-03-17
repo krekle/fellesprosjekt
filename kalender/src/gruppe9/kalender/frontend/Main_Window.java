@@ -576,19 +576,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         );
         
         
-        week_list_scroller.addAdjustmentListener(new AdjustmentListener() {
-			
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				// TODO Auto-generated method stub
-//				Point p = week_list_scroller.getLocation();
-//				Panel.getMondayScrollPane().getViewport().setViewPosition(p);
-//				Panel.gettuesdayScrollPane.getViewport().setViewPosition(p);
-//				Panel.getwednesdayScrollPane.getViewport().setViewPosition(p);
-//				Panel.getthursdayScrollPane.getViewport().setViewPosition(p);
-//				Panel.getfridayScrollPane.getViewport().setViewPosition(p);	
-			}
-		});
 
         pack();
         

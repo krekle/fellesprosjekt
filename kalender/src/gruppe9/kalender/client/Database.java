@@ -122,6 +122,7 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
+	//Alert er typsik: Møte med Kristian om 1 time! Obs Obs
 	public static void getAlerts(ApiCaller caller){
 		String result = "";
 		//TODO: check status and people length
@@ -133,7 +134,19 @@ public class Database {
 		caller.callBack(new CalResponse(result, "alarm"));
 	}
 
+	//Alert er typsik: Avtale slettet, avtale endret osv osv //TODO: Backend support
+	public static void getNotifications(ApiCaller caller){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("get/person/meldinger/"+ Bruker.getInstance().getUser().getId(), Type.GET).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "melding"));
+	}
 
+	
 	public static void main(String args[]){
 		//		CalResponse cal = login("eposten3@min.com", "passordet");
 		//		Person me = cal.confirmLogin();

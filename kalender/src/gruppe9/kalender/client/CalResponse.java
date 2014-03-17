@@ -3,6 +3,7 @@ package gruppe9.kalender.client;
 import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
@@ -23,8 +24,13 @@ public class CalResponse {
 	private String msg;
 	private JSONObject objectResponse;
 	private JSONArray arrayResponse;
+	
+	private String var;
 
 	public boolean getAvtaler(){
+		if(!var.equals("avtaler")){
+			return false;
+		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
 		try {
 			for (int i = 0; i < arrayResponse.length(); i++) {
@@ -41,6 +47,9 @@ public class CalResponse {
 	}
 
 	public ArrayList<Deltaker> getDeltakere(){
+		if(!var.equals("deltakere")){
+			return null;
+		}
 		ArrayList<Deltaker> deltakerList = new ArrayList<Deltaker>();
 		for (int i = 0; i < arrayResponse.length(); i++) {
 			JSONObject jo;
@@ -55,6 +64,9 @@ public class CalResponse {
 	}
 	
 	public boolean getAlerts(){
+		if(!var.equals("alarm")){
+			return false;
+		}
 		ArrayList<Alert> alertList = new ArrayList<Alert>();
 		for (int i = 0; i < arrayResponse.length(); i++) {
 			JSONObject jo;
@@ -70,6 +82,25 @@ public class CalResponse {
 		return true;
 	}
 
+	public boolean getNotifications(){
+		if(!var.equals("melding")){
+			return false;
+		}
+		ArrayList<Notification> notifytList = new ArrayList<Notification>();
+		for (int i = 0; i < arrayResponse.length(); i++) {
+			JSONObject jo;
+			try {
+				jo = arrayResponse.getJSONObject(i);
+				notifytList.add(new Notification(jo.getString("aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		Bruker.getInstance().setNotifications(notifytList);
+		return true;
+	}
+	
 	
 	public boolean confirmLogin(){
 		try {
@@ -88,6 +119,7 @@ public class CalResponse {
 		try {
 			JSONObject data = new JSONObject(resp);
 			//Parsing out response, code and message
+			if(var != null){this.var = var;}
 			code = data.getString("code");
 			msg = data.getString("msg");
 			try {

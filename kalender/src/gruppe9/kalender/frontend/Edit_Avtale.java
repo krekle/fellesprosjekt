@@ -53,17 +53,22 @@ public class Edit_Avtale extends javax.swing.JFrame {
         deltaker_combo.setRenderer(new combo_box_person_renderer());
 //        deltaker_combo.setEditable(true);
     }
-    private void setMeetingFields() 
-    {
-    	this.avtalenavn_textfield.setText(meeting.getName());
-    	for(Person item : meeting.getParticipants()){
-    		deltaker_combo.addItem(item);    		
-    	}
+    private void setMeetingFields(){
+    	System.out.println(meeting.getName());
+    	System.out.println(meeting.getDescription());
+		avtalenavn_textfield.setText(meeting.getName());
+		beskrivelse_textfield.setText(meeting.getDescription());
+		person_list.setListData(meeting.getParticipants().toArray());
+		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
+		start_textfield.setText(meeting.getStartTime());
+		slutt_textfield.setText(meeting.getEndTime());
+		varighet_textfield.setText(meeting.getDuration());
 	}
 	private void setMeeting(Meeting meeting)
     {
     	this.edit = ((meeting != null) ? true:false);
-    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, ""));
+    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null));
+
     	
     }
     /** This method is called from within the constructor to
@@ -79,8 +84,8 @@ public class Edit_Avtale extends javax.swing.JFrame {
         avtale_label = new javax.swing.JLabel();
         avtalenavn_textfield = new javax.swing.JTextField();
         beskrivelse_label = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        beskrivelse_scrollpane = new javax.swing.JScrollPane();
+        beskrivelse_textfield = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         deltaker_label = new javax.swing.JLabel();
         deltaker_combo = new javax.swing.JComboBox();
@@ -95,7 +100,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
         start_label = new javax.swing.JLabel();
         slutt_label = new javax.swing.JLabel();
         start_textfield = new javax.swing.JTextField();
-        stop_textfield = new javax.swing.JTextField();
+        slutt_textfield = new javax.swing.JTextField();
         varighet_label = new javax.swing.JLabel();
         varighet_textfield = new javax.swing.JTextField();
         forrige_button = new javax.swing.JButton();
@@ -125,12 +130,12 @@ public class Edit_Avtale extends javax.swing.JFrame {
 
         beskrivelse_label.setText("Beskrivelse:");
 
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        beskrivelse_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        beskrivelse_scrollpane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        beskrivelse_textfield.setColumns(20);
+        beskrivelse_textfield.setRows(5);
+        beskrivelse_scrollpane.setViewportView(beskrivelse_textfield);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -139,7 +144,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                    .addComponent(beskrivelse_scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(avtale_label)
                         .addGap(4, 4, 4)
@@ -157,7 +162,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(beskrivelse_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                .addComponent(beskrivelse_scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -283,7 +288,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(slutt_label)
                                 .addGap(6, 6, 6)
-                                .addComponent(stop_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(slutt_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -314,7 +319,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(slutt_label)
-                            .addComponent(stop_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(slutt_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -448,8 +453,8 @@ public class Edit_Avtale extends javax.swing.JFrame {
     	start_textfield.setToolTipText("Starttidspunkt i formatet HH:MM, f.eks 12:00");
     	start_textfield.setColumns(5);
     	
-    	stop_textfield.setToolTipText("Sluttidspunkt i formatet HH:MM, f.eks 12:00");
-    	stop_textfield.setColumns(5);
+    	slutt_textfield.setToolTipText("Sluttidspunkt i formatet HH:MM, f.eks 12:00");
+    	slutt_textfield.setColumns(5);
     }// </editor-fold>//GEN-END:initComponents
 
 protected void fjern_buttonActionPerformed(ActionEvent e) 
@@ -578,14 +583,14 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel jPanel5;
     private javax.swing.JRadioButton auto_select_choice;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane beskrivelse_scrollpane;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea beskrivelse_textfield;
     private javax.swing.JTextField avtalenavn_textfield;
     private javax.swing.JTextField rom_textfield;
     private javax.swing.JTextField date_textfield;
     private javax.swing.JTextField start_textfield;
-    private javax.swing.JTextField stop_textfield;
+    private javax.swing.JTextField slutt_textfield;
     private javax.swing.JTextField varighet_textfield;
     private org.jdesktop.swingx.JXMonthView dateChooser;
     

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
 
 
@@ -12,6 +13,7 @@ public class Bruker {
 	private ArrayList<Meeting> avtaler;
 	private Person bruker;
 	private ArrayList<Alert> varsler;
+	private ArrayList<Notification> notifications;
 
 	private static Bruker instance = null;
 	
@@ -51,6 +53,14 @@ public class Bruker {
 		this.avtaler = avtaler;
 	}
 
+	public void setNotifications(ArrayList<Notification> notificationList) {
+		this.notifications = notificationList;
+	}
+
+	public ArrayList<Notification> getNotifications() {
+		return notifications;
+	}
+	
 	//For å bruke metoder fra bruker kall Bruker.getInstance().*
 	//* = any method, med dette pattern så kan instansen av denne klassen nåes fra hvor som helst.
 }

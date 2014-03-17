@@ -7,6 +7,7 @@ import javax.swing.DefaultListModel;
 
 public class Meeting implements Comparable<Meeting>{
 	
+	private String name;
 	private int meetingId;
 	private int creatorId;
 	//private String creatorName;
@@ -92,9 +93,20 @@ public class Meeting implements Comparable<Meeting>{
 		calendar.set(Calendar.YEAR,getYear());
 		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
-		System.out.println(calendar.getTime());
+//		System.out.println(calendar.getTime());
 
 		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);
+	}
+	
+	public int getWeekOfYear(){
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR,getYear());
+		calendar.set(Calendar.MONTH,getMonth() - 1);
+		calendar.set(Calendar.DATE,getDayOfMonth());
+		
+//		System.out.println(calendar.getTime());
+
+		return (calendar.get(Calendar.WEEK_OF_YEAR));
 	}
 	
 	public void addPerson(Person person){
@@ -189,5 +201,13 @@ public class Meeting implements Comparable<Meeting>{
 			return endDiff;
 		}
 		return 0;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

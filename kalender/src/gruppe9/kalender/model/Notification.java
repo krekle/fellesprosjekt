@@ -1,11 +1,11 @@
 package gruppe9.kalender.model;
 
-public class Notification {
+public class Notification 
+{
 	private String description;
 	private int meetingId;
 	private String time;
-	
-	
+	public boolean hasBeenRead = false;
 	public Notification(String description, int meetingId, String time) {
 		super();
 		this.description = description;

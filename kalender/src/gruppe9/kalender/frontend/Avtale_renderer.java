@@ -37,5 +37,5 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 		this.setText(start + "\n"+name+"\n"+slutt);
 		return this;
 	}
-
+	
 }

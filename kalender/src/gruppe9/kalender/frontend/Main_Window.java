@@ -24,7 +24,7 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author krake
+ * @author krake, Berg
  */
 public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
@@ -32,6 +32,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 	Client client;
 	private int current_week = 0;
 	static boolean popupExists = false;
+	private Notification_Window notifications;
     /** Creates new form Main_Window */
     public Main_Window(Login_Window login) 
     {
@@ -47,26 +48,45 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         for (int x = 1; x<4; x++){
             tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
         }
+        notifications = new Notification_Window();
+        String path = "resources/images/no_notification.png";
+        if(hasNewNotification())
+        {
+        	path = "resources/images/no_notification.png";
+        }
+        Image icon =new ImageIcon(path).getImage();
+        ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
+        notification_button.setIcon(notify_icon);
     }
 
     public void callBack(CalResponse response){
-    	if(response.getAvtaler()){
+    	try {
+    		if(response.getAvtaler()) {
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
     		
     		//Her kan man nå kjøre f.eks:
     		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();
-    	}else if(response.getAlerts())
-    	{
+    		}
+    		else if (response.getAlerts()) {
     		//Alarmene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getUser().getAlerts() <--returnerer en ArrayList med Alert
-    		if(Bruker.getInstance().getUser().getAlerts()!= null){
+    	}
+    	else if(response.getNotifications())
+    	{
+    		if(Bruker.getInstance().getUser().getAlerts()!= null)
+    		{
     			System.out.println("List size: " + Bruker.getInstance().getUser().getAlerts().size());
     		}
     		else{
     			System.out.println("No new notifications..");
     		}
+    	}}
+    	catch (Exception e)
+    	{
+    		System.out.println("TODO: ... ");
     	}
+
     	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
     	// response.getVarsler() her
     }
@@ -305,11 +325,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         jScrollPane3.setViewportView(beskrivelse_area);
 
         
-        Image icon =new ImageIcon("resources/images/notification.png").getImage();
-        ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
-        notification_button.setIcon(notify_icon);
-
-        
         //Listener som tar seg av endring av ikon for notifikasjonsknapp 
         notification_button.addMouseListener(new MouseListener() {
 			private boolean isHovering = false;
@@ -346,6 +361,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 					{
 						setImage("resources/images/no_notification_clicked.png");
 					}
+					notifications.setLocation(notification_button.getLocation());
+					notifications.setVisible(true);
 				}
 			}
 			@Override
@@ -594,19 +611,20 @@ private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	
 }
 
-private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) 
-{
-	if(current_Avtale.getParticipants().contains(Bruker.getInstance().getUser()))
-	{
+private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
+	if(current_Avtale.getParticipants().contains(Bruker.getInstance().getUser())) {
+		
 		ArrayList<Person> participates = current_Avtale.getParticipants();
 		participates.remove(Bruker.getInstance().getUser());
 		current_Avtale.setParticipants(participates);
+		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
 	}
 }
 
 private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
 {
 	current_Avtale.addPerson(Bruker.getInstance().getUser());
+	Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
 }
 
 private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 
@@ -643,13 +661,14 @@ private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt)
 
 
 private Meeting current_Avtale = null;
+
 public Meeting getAvtale()
 {
 	return current_Avtale;
 }
-    private boolean hasNewNotification() {
-    	// TODO Auto-generated method stub
-    	return true;
+    private boolean hasNewNotification() 
+    {
+    	return this.notifications.hasUnread();
     }
 	public int getWeek() 
 	{

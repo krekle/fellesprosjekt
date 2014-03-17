@@ -167,13 +167,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
         avtale_label.setText("Avtalenavn:");
-
-        avtalenavn_textfield.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                avtalenavn_textfieldActionPerformed(evt);
-            }
-        });
-
         beskrivelse_label.setText("Beskrivelse:");
 
         beskrivelse_scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -289,16 +282,8 @@ public class Edit_Avtale extends javax.swing.JFrame {
         });
 
         start_label.setText("Start:");
-
         slutt_label.setText("Slutt:");
-        
         varighet_label.setText("Varighet:");
-
-        varighet_textfield.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                varighet_textfieldActionPerformed(evt);
-            }
-        });
 
         forrige_button.setText("<");
         forrige_button.addActionListener(new java.awt.event.ActionListener() {
@@ -395,13 +380,6 @@ public class Edit_Avtale extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(-16777216,true)));
 
         rom_label.setText("Rom:");
-
-        rom_textfield.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rom_textfieldActionPerformed(evt);
-            }
-        });
-
         velg_label.setText("Velg fra liste:");
 
         rom_list.setModel(new javax.swing.AbstractListModel() {
@@ -545,7 +523,7 @@ protected void add_buttonActionPerformed(ActionEvent e)
 protected void forrige_buttonActionPerformed(ActionEvent evt) 
 {
 	editDate(-1);
-	}
+}
 public void editDate(Integer increment)
 {
 	Date date = new Date();
@@ -573,6 +551,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		list.add(person);
 	}
 	meeting.setParticipants(list);
+
 	if (edit) {
 		System.out.println("update");
 		Database.updateMeeting(null, meeting);
@@ -583,19 +562,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 }
 
-private void avtalenavn_textfieldActionPerformed(java.awt.event.ActionEvent evt)
-{//GEN-FIRST:event_avtalenavn_textfieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_avtalenavn_textfieldActionPerformed
-
-private void varighet_textfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varighet_textfieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_varighet_textfieldActionPerformed
-
-private void rom_textfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rom_textfieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_rom_textfieldActionPerformed
-
 private void avbryt_buttonActionPerformed(java.awt.event.ActionEvent evt){
 main.setVisible(true);
 this.setVisible(false);
@@ -603,6 +569,7 @@ this.setVisible(false);
 }
 
 private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
+	//Kode for å velge det enkleste rommet her
 }
 
 private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) 

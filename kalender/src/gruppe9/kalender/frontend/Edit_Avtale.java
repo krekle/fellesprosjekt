@@ -590,7 +590,8 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 }
 private ArrayList<Person> populate_personlist() {
 	ArrayList<Person> personlist = new ArrayList<Person>();
-	// ADD ALLE PERSOENER I DATABASEN; VENTER PÅ SUPPORT FOR DET
+	personlist = Bruker.getInstance().getAllPeople();
+	System.out.println(personlist);
 	return personlist;
 }
 private ArrayList<Room> populate_roomlist() {

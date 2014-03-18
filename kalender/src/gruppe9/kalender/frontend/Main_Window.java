@@ -684,6 +684,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 	{
 		return current_week;
 	}
+	public int getYear() {
+		return Calendar.getInstance().YEAR;
+	}
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JButton prev_button;
 	private javax.swing.JButton next_button;

@@ -212,7 +212,7 @@ public class CalResponse {
 			code = data.getString("code");
 			msg = data.getString("msg");
 			try {
-				JSONObject temp = data.getJSONObject("response");
+				 JSONObject temp = data.getJSONObject("response");
 				arrayResponse = temp.getJSONArray(var);
 			} catch (Exception e) {
 				objectResponse = data.getJSONObject("response");

@@ -222,7 +222,8 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	@Override
 	public void callBack(CalResponse response) 
 	{
-		ArrayList<Deltaker> pe = response.getDeltakere();}		
+		ArrayList<Deltaker> pe = response.getDeltakere();
+	}		
 	public String getPlace() {
 		return place;
 	}

@@ -16,14 +16,14 @@ public class ServerPuller implements ApiCaller{
 	private static ArrayList<Notification> notif;
 	private static ArrayList<Alert> alerts;
 	
-	private final ScheduledExecutorService scheduler =
-			Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private final ApiCaller call = this;
 
-	public void pullFromSerber() {
+	public void pullFromServer() {
 		final Runnable pull = new Runnable() {
-			public void run() { Database.getAlerts(call);
-								Database.getNotifications(call); }
+			public void run() {
+				getNot();s
+				}
 		};
 		
 		final ScheduledFuture<?> pullHandle =

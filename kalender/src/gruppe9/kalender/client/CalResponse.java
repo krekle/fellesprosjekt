@@ -173,9 +173,9 @@ public class CalResponse {
 		return true;
 	}
 
-	public ArrayList<Group> getGroups(){
+	public boolean getGroups(){
 		if(!var.equals("groups")){
-			return null;
+			return false;
 		}
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try {
@@ -186,9 +186,10 @@ public class CalResponse {
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
-		return groups;
+		Bruker.getInstance().setGroups(groups);
+		return true;
 	}
 	
 	public boolean confirmLogin(){

@@ -54,6 +54,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getAlerts(this);
     	Database.getNotifications(this);
     	Database.getGroups(this);
+
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
@@ -182,6 +183,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    			newModel.addElement(d.getNavn() + " - " +d.getStatus() +" - " +d.getSistSett());
 	    		}
 	    		this.deltaker_list.setModel(newModel);
+	    	}
+	    	else if(response.getGroups())
+	    	{
+	    		System.out.println(Bruker.getInstance().getGroups());
+
 	    	}
     	}
     	catch (Exception e)

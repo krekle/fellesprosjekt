@@ -4,6 +4,7 @@ import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
 import gruppe9.kalender.client.Database;
+import gruppe9.kalender.client.ServerPuller;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
@@ -37,6 +38,9 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 	public void callBack(CalResponse response)
 	{
 		if(response.confirmLogin()){
+//			ServerPuller puller = new ServerPuller();
+//			
+			
 			Main_Window window = new Main_Window(this);
 			window.setVisible(true);
 			this.setVisible(false);

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -55,9 +56,10 @@ public class Edit_Avtale extends javax.swing.JFrame {
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
         deltaker_combo.setRenderer(new combo_box_person_renderer());
-        populate_personlist();
+
     }
-    private void setMeetingFields(){
+    
+	private void setMeetingFields(){
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
@@ -215,7 +217,7 @@ public class Edit_Avtale extends javax.swing.JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				add_buttonActionPerformed(e);	
+				add_buttonActionPerformed(e);
 			}
 		});
 
@@ -381,12 +383,10 @@ public class Edit_Avtale extends javax.swing.JFrame {
 
         rom_label.setText("Rom:");
         velg_label.setText("Velg fra liste:");
-
-        rom_list.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        
+        DefaultListModel defaultmodel = new DefaultListModel();
+        rom_list.setModel(defaultmodel);
+        
         romScrollPane.setViewportView(rom_list);
 
         auto_select_choice.setText("Velg automatisk");
@@ -479,6 +479,13 @@ public class Edit_Avtale extends javax.swing.JFrame {
     	
     	slutt_textfield.setToolTipText("Sluttidspunkt i formatet HH:MM, f.eks 12:00");
     	slutt_textfield.setColumns(5);
+    	
+    	DefaultComboBoxModel d = new DefaultComboBoxModel();
+    	for (Person p : Bruker.getInstance().getAllPeople()) {
+    		d.addElement(p);
+    	}
+    	deltaker_combo.setModel(d);
+    	
     }// </editor-fold>//GEN-END:initComponents
 
 protected void fjern_buttonActionPerformed(ActionEvent e) 
@@ -588,12 +595,7 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 {
 
 }
-private ArrayList<Person> populate_personlist() {
-	ArrayList<Person> personlist = new ArrayList<Person>();
-	personlist = Bruker.getInstance().getAllPeople();
-	System.out.println(personlist);
-	return personlist;
-}
+
 private ArrayList<Room> populate_roomlist() {
 	ArrayList<Room> roomlist = new ArrayList<Room>();
 	// ADD ALL ROM I DATABASEN; VENTER PÅ SUPPORT FOR DET
@@ -617,7 +619,7 @@ private ArrayList<Room> populate_roomlist() {
     private javax.swing.JLabel varighet_label;
     private javax.swing.JLabel deltaker_label;
     private javax.swing.JList rom_list;
-    private javax.swing.JList person_list;
+    private javax.swing.JList <Person>person_list;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

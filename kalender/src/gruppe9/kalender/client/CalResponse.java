@@ -48,6 +48,26 @@ public class CalResponse {
 		}
 		return false;
 	}
+	public ArrayList<Meeting> getOtherMeetings(){
+//		if(!var.equals("avtaler"))
+//		{
+//			return null;
+//		}
+		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
+		try 
+		{
+			if(arrayResponse != null){
+				for (int i = 0; i < arrayResponse.length(); i++) {
+					JSONObject jo;
+					jo = arrayResponse.getJSONObject(i);
+					System.out.println("jo: " + jo.toString());
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+				}}
+		}catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return meetList;
+	}
 
 	public ArrayList<Deltaker> getDeltakere(){
 		if(!var.equals("deltakere")){

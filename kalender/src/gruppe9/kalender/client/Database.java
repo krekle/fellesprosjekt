@@ -20,10 +20,10 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
-	public static void getMeetings(ApiCaller caller){
+	public static void getMeetings(ApiCaller caller, int ID){
 		String result = "";
 		try {
-			result = new Client("get/mineavtaler/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+			result = new Client("get/mineavtaler/" + ID, Type.GET).execute();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

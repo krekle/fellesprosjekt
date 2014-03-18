@@ -510,7 +510,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	for (Person p : per) {
     		d.addElement(p);
     	}
-    	deltaker_combo.setModel(d);
     	
     }// </editor-fold>//GEN-END:initComponents
 

@@ -7,11 +7,11 @@ import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -21,6 +21,9 @@ import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -47,6 +50,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	}
     	Database.getAlerts(this);
     	Database.getNotifications(this);
+    	System.out.println(Bruker.getInstance().getAvtaler().size());
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
     	this.login = login;
@@ -79,6 +83,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 		});
         felles_deltakere_box.setEditable(false);
         felles_deltakere_box.setVisible(false);
+        felles_deltakere_box.setRenderer(new PersonRenderer());
         for(Person p : Bruker.getInstance().getAllPeople())
         {
         	felles_deltakere_box.addItem(p);
@@ -88,9 +93,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());
-				Felles.refresh();
-				felles_deltakere_box.removeItemAt(felles_deltakere_box.getSelectedIndex());
+				if(!Felles.getPeople().contains((Person) felles_deltakere_box.getSelectedItem()))
+				{
+					Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());					
+				}
+//				felles_deltakere_box.removeItemAt(felles_deltakere_box.getSelectedIndex());
 			}
 		});
         notifications = new Notification_Window();
@@ -787,7 +794,36 @@ public Meeting getAvtale()
     private javax.swing.JTextArea beskrivelse_area;
     private javax.swing.JTextField uke_search;
     private javax.swing.JTabbedPane tabWindow;
-
     // End of variables declaration//GEN-END:variables
+    
+    
+    private class PersonRenderer extends JLabel implements ListCellRenderer
+    {
 
+    	public PersonRenderer(){this.setOpaque(false);}
+    	boolean added = false;
+		@Override
+		public Component getListCellRendererComponent
+		(
+				JList list, Object value,
+				int index, boolean isSelected, 
+				boolean cellHasFocus		)
+		{
+			if(isSelected)
+			{
+				if(added)
+				{
+					added = false;
+				}
+				else
+				{
+					this.setBackground(Color.GRAY);
+					added=true;
+				}
+			}
+			this.setText(value.toString());
+			return this;
+		}
+    	
+    }
 }

@@ -74,7 +74,7 @@ public class Bruker {
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}
-	
+
 	public void setGroups(ArrayList<Group> groups){
 		this.groups = groups;
 	}

@@ -12,7 +12,7 @@ def create_avtale(d):
   maker = db['SkaperAv']
   room = db['TarPlassI']
   try:
-    meet = {'Starttidspunkt':d['start'],'Sluttidspunkt': d['slutt'],'Beskrivelse': d['beskrivelse'],'varighet': d['varighet'],'sted': d['sted'], 'SistEndret':now.strftime(f), 'Opprettet': now.strftime(f)}
+    meet = {'Tittel':d['tittel'],'Starttidspunkt':d['start'],'Sluttidspunkt': d['slutt'],'Beskrivelse': d['beskrivelse'],'varighet': d['varighet'],'sted': d['sted'], 'SistEndret':now.strftime(f), 'Opprettet': now.strftime(f)}
     print(meet)
     meeting.insert(meet)
     print("Avtale: Success")
@@ -27,11 +27,14 @@ def create_avtale(d):
     maker.insert(person_maker)
     print("Skaper: Success")
 
-    in_room = {'Rom_ID':d['romid'],'Start': d['start'],'Slutt': d['slutt'], 'Avtale_AvtaleID': avtale_id} # + avtale_id
-    room.insert(in_room)
-    print('Rom: Success')
+    if(d['sted'] == 'NA'):
+      in_room = {'Rom_ID':d['romid'],'Start': d['start'],'Slutt': d['slutt'], 'Avtale_AvtaleID': avtale_id} # + avtale_id
+      room.insert(in_room)
+      print('Rom: Success')
+    else:
+      print('Secret Room')
 
-    return True
+    return avtale_id
   except:
     traceback.print_exc()
     print("Error")
@@ -60,14 +63,22 @@ def create_varsel(d):
     return True
   except:
     return False
-  
+
 def create_melding(d):
-  varsel = db['Alarm']
+  varsel = db['Melding']
   try:
+    print(d)
     varsel.insert(d)
     return True
   except:
     return False
+
+def multiple_melding(person_list, avtale_id, melding):
+  for person in person_list:
+    d = {}
+    d['Aarsak'] = melding
+    d['Person_Ansattnummer'] = str(person)
+    create_melding(d)
 
 ## Deletes: ##
 
@@ -80,8 +91,29 @@ def delete_deltaker(aid, pid):
 
 def delete_avtale(avtale_id):
   try:
+    persons = db['DeltagendeI']
+    p = persons.find(Avtale_AvtaleID = avtale_id)
+    people = []
+    for peo in p:
+      people.append(str(peo['Person_Ansattnummer']))
     db['Avtale'].delete(AvtaleID = avtale_id)
+    multiple_melding(people, avtale_id, ("Avtale " + str(avtale_id) + " slettet"))
     return True
   except:
-    print("Error")
+    print("Error: delete avtale")
     return False
+
+def delete_varsel(pid, aid):
+  try:
+    db['Melding'].delete(Avtale_AvtaleID = aid, Person_Ansattnummer = pid)
+    return True;
+  except:
+    print("Error: delete varsel")
+    return False
+
+def delete_alarm(pid, aid):
+  try:
+    db['Alarm'].delete(Avtale_AvtaleID = aid, Person_Ansattnummer = pid)
+    return True;
+  except:
+    print("Error: delete varsel")

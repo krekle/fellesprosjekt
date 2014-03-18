@@ -59,7 +59,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     	if(!people.contains(p))
     	{
     		people.add(p);
-//    		System.out.println("People: "+people.size());
     		Database.getMeetings(this, p.getId());
     	}
     }
@@ -67,13 +66,12 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     	if(people.contains(p))
     	{
     		people.remove(p);
-    		for(Meeting m:meetings)
+    		meetings = new ArrayList<Meeting>();
+    		for(Person pe: people)
     		{
-    			if(m.getCreator()==p.getId())
-    			{
-    				meetings.remove(m);
-    			}
+    			Database.getMeetings(this, pe.getId());
     		}
+    		refresh();
     	}
     }
     public void refresh()
@@ -89,21 +87,15 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
         	ArrayList<String> boop = new ArrayList<String>();
         	for(Meeting meeting : meetings)
         	{
-        		System.out.println(meeting.getId() + " - " + x + " - " + avtaler.contains(meeting));
-        		System.out.println(x + " : "+meeting.getWeekOfYear());
-        		
 				if(
-        				x==meeting.getDayOfWeek() 
-        				&& meeting.getWeekOfYear() == main.getWeek()
-        				&& meeting.getYear() == main.getYear()
-        				&& !boop.contains(meeting.toString())
+    				x==meeting.getDayOfWeek() 
+    				&& meeting.getWeekOfYear() == main.getWeek()
+    				&& meeting.getYear() == main.getYear()
+    				&& !boop.contains(meeting.toString())
         		  )
-
         		{
         			avtaler.addElement(meeting);
         			boop.add(meeting.toString());
-        			System.out.println("adding meeting with ID " +meeting.getId() + "to avtaler.. Current size = " + boop.size());
-        			System.out.println("Current contents of avtaler are: ");
         			for(Object m : avtaler.toArray())
         			{
         				System.out.println("           "+meeting.toString());

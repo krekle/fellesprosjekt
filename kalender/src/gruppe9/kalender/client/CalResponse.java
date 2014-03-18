@@ -40,9 +40,16 @@ public class CalResponse {
 				for (int i = 0; i < arrayResponse.length(); i++) {
 					JSONObject jo;
 					jo = arrayResponse.getJSONObject(i);
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+					int rom;
+					try {
+						rom = Integer.parseInt(jo.getString("rom"));
+					} catch (Exception e) {
+						rom = 0;
+					}
+					Integer.parseInt(jo.getString("rom"));
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel")));				
 				}}
-			Bruker.getInstance().setAvtaler(meetList);
+			Bruker.getInstance().getUser().setMeetings(meetList);
 			return true;
 		}catch (JSONException e) {
 			e.printStackTrace();

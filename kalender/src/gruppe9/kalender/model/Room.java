@@ -49,6 +49,8 @@ public class Room {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	
+	public String toString() {
+		return ("Rom: " +  id + "        " + "Størrelse: " + size);
+	}
 	
 }

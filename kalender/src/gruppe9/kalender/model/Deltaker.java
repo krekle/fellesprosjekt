@@ -2,13 +2,14 @@ package gruppe9.kalender.model;
 
 public class Deltaker {
 	private int personID, avtaleID;
-	private String status, sistSett;
+	private String status, sistSett, navn;
 	
-	public Deltaker(int personId, int avtaleId, String status, String sistSett){
+	public Deltaker(String name, int personId, int avtaleId, String status, String sistSett){
 		this.personID = personId;
 		this.avtaleID = avtaleId;
 		this.status = status;
 		this.sistSett = sistSett;
+		this.navn = navn;
 	}
 
 	public int getPersonID() {

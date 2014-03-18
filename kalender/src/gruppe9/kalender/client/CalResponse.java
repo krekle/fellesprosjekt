@@ -2,6 +2,7 @@ package gruppe9.kalender.client;
 
 import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Deltaker;
+import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
@@ -165,6 +166,24 @@ public class CalResponse {
 		return true;
 	}
 
+	public ArrayList<Group> getGroups(){
+		if(!var.equals("groups")){
+			return null;
+		}
+		ArrayList<Group> groups = new ArrayList<Group>();
+		try {
+			JSONObject jo;
+			for (int i = 0; i < arrayResponse.length(); i++) {
+				jo = arrayResponse.getJSONObject(i);
+				groups.add(new Group(jo.getString("Gruppenavn"), jo.getString("Beskrivelse"), jo.getInt("GruppeID")));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return groups;
+	}
+	
 	public boolean confirmLogin(){
 		try {
 			if(objectResponse != null){

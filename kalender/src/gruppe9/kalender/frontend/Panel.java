@@ -98,6 +98,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
         				&& meeting.getYear() == main.getYear()
         				&& !boop.contains(meeting.toString())
         		  )
+
         		{
         			avtaler.addElement(meeting);
         			boop.add(meeting.toString());

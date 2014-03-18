@@ -40,7 +40,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 	private int current_year = 2014;
 	static boolean popupExists = false;
 	private Notification_Window notifications;
-    /** Creates new form Main_Window */
+	/** Creates new form Main_Window */
     public Main_Window(Login_Window login) 
     {
     	Database.getAllPeople(this);

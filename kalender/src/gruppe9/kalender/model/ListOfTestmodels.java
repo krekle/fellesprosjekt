@@ -30,6 +30,7 @@ public class ListOfTestmodels {
 		Meeting meeting3 = new Meeting(0, 0, "2014-03-16 20:51:45", "2014-03-15 22:54:45", "lorem ipsum dolor", 0,"");
 		Meeting meeting4 = new Meeting(0, 0, "2014-03-17 20:51:45", "2014-03-14 22:54:45", "lorem ipsum dolor", 0,"");
 
+
 		System.out.println("uke " + meeting1.getWeekOfYear() +"for " + meeting1);
 		System.out.println("uke " + meeting2.getWeekOfYear() + "for " + meeting2);
 		System.out.println("uke " + meeting3.getWeekOfYear() + "for " + meeting3);

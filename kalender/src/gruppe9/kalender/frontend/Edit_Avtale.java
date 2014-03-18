@@ -28,7 +28,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.xml.bind.DataBindingException;
+import javax.xml.crypto.Data;
 
+import gruppe9.kalender.client.ApiCaller;
+import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
@@ -40,7 +44,7 @@ import gruppe9.kalender.user.Bruker;
  *
  * @author krake, Berg
  */
-public class Edit_Avtale extends javax.swing.JFrame {
+public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private Main_Window main;
     private Meeting meeting;
     private boolean edit;
@@ -56,8 +60,16 @@ public class Edit_Avtale extends javax.swing.JFrame {
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
         deltaker_combo.setRenderer(new combo_box_person_renderer());
-
+        
     }
+    
+    @Override
+	public void callBack(CalResponse response) {
+		if(response.getRoms() != null){
+			ArrayList<Room> rooms = response.getRoms();
+			
+		}
+	}
     
 	private void setMeetingFields(){
 		avtalenavn_textfield.setText(meeting.getName());

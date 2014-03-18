@@ -142,6 +142,18 @@ public class Database {
 		caller.callBack(new CalResponse(result, "alarm"));
 	}
 
+	public static void deleteAlert(ApiCaller caller, int personId, int avtaleId){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("delete/alarm", Type.GET,
+					"avtale_id", avtaleId +"",
+					"person_id", personId + "").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, null));
+	}
 	//Alert er typsik: Avtale slettet, avtale endret osv osv //TODO: Backend support
 	public static void getNotifications(ApiCaller caller){
 		String result = "";
@@ -154,6 +166,19 @@ public class Database {
 		caller.callBack(new CalResponse(result, "melding"));
 	}
 
+	public static void deleteNotification(ApiCaller caller, int personId, int avtaleId){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("delete/varsel", Type.GET,
+					"avtale_id", avtaleId +"",
+					"person_id", personId + "").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, null));
+	}
+	
 	public static void getAvaliableRooms(ApiCaller caller,String start, String end){
 		//Størrelse??
 		String result = "";

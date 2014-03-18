@@ -49,7 +49,7 @@ public class Varsel_Popup extends javax.swing.JFrame {
         }
         else
         {
-        	this.alert = new Alert();
+        	this.alert = new Alert("","","",1,"");
         }
         
         

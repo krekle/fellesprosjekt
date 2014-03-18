@@ -25,10 +25,11 @@ public class ListOfTestmodels {
 	
 	//mainmethod to test
 	public static void main(String[] args) {
-		Meeting meeting1 = new Meeting(0, 0, "2014-03-23 20:51:45", "2014-03-17 22:54:45", "lorem ipsum dolor", 0, "title");
-		Meeting meeting2 = new Meeting(0, 0, "2014-03-24 28:51:45", "2014-03-16 22:51:45", "lorem ipsum dolor", 0, "tittel");
-		Meeting meeting3 = new Meeting(0, 0, "2014-03-16 20:51:45", "2014-03-15 22:54:45", "lorem ipsum dolor", 0, "ei");
-		Meeting meeting4 = new Meeting(0, 0, "2014-03-17 20:51:45", "2014-03-14 22:54:45", "lorem ipsum dolor", 0, "nei");
+		Meeting meeting1 = new Meeting(0, 0, "2014-03-23 20:51:45", "2014-03-17 22:54:45", "lorem ipsum dolor", 0,"");
+		Meeting meeting2 = new Meeting(0, 0, "2014-03-24 28:51:45", "2014-03-16 22:51:45", "lorem ipsum dolor", 0,"");
+		Meeting meeting3 = new Meeting(0, 0, "2014-03-16 20:51:45", "2014-03-15 22:54:45", "lorem ipsum dolor", 0,"");
+		Meeting meeting4 = new Meeting(0, 0, "2014-03-17 20:51:45", "2014-03-14 22:54:45", "lorem ipsum dolor", 0,"");
+
 
 		System.out.println("uke " + meeting1.getWeekOfYear() +"for " + meeting1);
 		System.out.println("uke " + meeting2.getWeekOfYear() + "for " + meeting2);

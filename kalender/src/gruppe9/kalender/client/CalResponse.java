@@ -2,6 +2,7 @@ package gruppe9.kalender.client;
 
 import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Deltaker;
+import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
@@ -55,6 +56,26 @@ public class CalResponse {
 		}
 		return false;
 	}
+	public ArrayList<Meeting> getOtherMeetings(){
+//		if(!var.equals("avtaler"))
+//		{
+//			return null;
+//		}
+		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
+		try 
+		{
+			if(arrayResponse != null){
+				for (int i = 0; i < arrayResponse.length(); i++) {
+					JSONObject jo;
+					jo = arrayResponse.getJSONObject(i);
+					System.out.println("jo: " + jo.toString());
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+				}}
+		}catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return meetList;
+	}
 
 	public ArrayList<Deltaker> getDeltakere(){
 		if(!var.equals("deltakere")){
@@ -101,7 +122,7 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				notifytList.add(new Notification(jo.getString("Aarsak"), Integer.parseInt(jo.getString("Avtale_AvtaleID")), jo.getString("Tidspunkt")));
 				System.out.println("notification added!");
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -152,6 +173,24 @@ public class CalResponse {
 		return true;
 	}
 
+	public ArrayList<Group> getGroups(){
+		if(!var.equals("groups")){
+			return null;
+		}
+		ArrayList<Group> groups = new ArrayList<Group>();
+		try {
+			JSONObject jo;
+			for (int i = 0; i < arrayResponse.length(); i++) {
+				jo = arrayResponse.getJSONObject(i);
+				groups.add(new Group(jo.getString("Gruppenavn"), jo.getString("Beskrivelse"), jo.getInt("GruppeID")));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return groups;
+	}
+	
 	public boolean confirmLogin(){
 		try {
 			if(objectResponse != null){

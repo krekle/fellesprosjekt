@@ -20,10 +20,10 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
-	public static void getMeetings(ApiCaller caller){
+	public static void getMeetings(ApiCaller caller, int ID){
 		String result = "";
 		try {
-			result = new Client("get/mineavtaler/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+			result = new Client("get/mineavtaler/" + ID, Type.GET).execute();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -32,13 +32,15 @@ public class Database {
 
 	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
+		System.out.println(m);
 		try {
 			result = new Client("add/avtale",Type.GET,
+					"tittel", m.getName(),
 					"start", m.getStart(), 
 					"slutt", m.getEnd(), 
 					"beskrivelse", m.getDescription().replace(" ", "[space]"),
 					"varighet", "",
-					"sted", "sad",
+					"sted", "NA",
 					"skaper", m.getCreator() + "",
 					"romid", m.getRoom()+"")
 			.execute();
@@ -185,12 +187,12 @@ public class Database {
 		//TODO: check status and people length
 		try {
 			result = new Client("get/ledigerom", Type.GET,
-					"Starttidspunkt", start,
-					"Sluttidspunkt", end).execute();
+					"Starttidspunkt", start.replace(" ", "[space]"),
+					"Sluttidspunkt", end.replace(" ", "[space]")).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, "rom"));
+		caller.callBack(new CalResponse(result, "Room"));
 	}
 	
 	public static void getAllPeople(ApiCaller caller){
@@ -202,5 +204,16 @@ public class Database {
 			e.printStackTrace();
 		}
 		caller.callBack(new CalResponse(result, "people"));
+	}
+	
+	public static void getGroups(ApiCaller caller){
+		String result = "";
+
+		try {
+			result = new Client("get/groups/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "groups"));
 	}
 }

@@ -20,10 +20,10 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
-	public static void getMeetings(ApiCaller caller){
+	public static void getMeetings(ApiCaller caller, int ID){
 		String result = "";
 		try {
-			result = new Client("get/mineavtaler/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+			result = new Client("get/mineavtaler/" + ID, Type.GET).execute();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -32,13 +32,15 @@ public class Database {
 
 	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
+		System.out.println(m);
 		try {
 			result = new Client("add/avtale",Type.GET,
+					"tittel", m.getName(),
 					"start", m.getStart(), 
 					"slutt", m.getEnd(), 
 					"beskrivelse", m.getDescription().replace(" ", "[space]"),
 					"varighet", "",
-					"sted", "sad",
+					"sted", "NA",
 					"skaper", m.getCreator() + "",
 					"romid", m.getRoom()+"")
 			.execute();
@@ -142,6 +144,18 @@ public class Database {
 		caller.callBack(new CalResponse(result, "alarm"));
 	}
 
+	public static void deleteAlert(ApiCaller caller, int personId, int avtaleId){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("delete/alarm", Type.GET,
+					"avtale_id", avtaleId +"",
+					"person_id", personId + "").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, null));
+	}
 	//Alert er typsik: Avtale slettet, avtale endret osv osv //TODO: Backend support
 	public static void getNotifications(ApiCaller caller){
 		String result = "";
@@ -154,30 +168,52 @@ public class Database {
 		caller.callBack(new CalResponse(result, "melding"));
 	}
 
+	public static void deleteNotification(ApiCaller caller, int personId, int avtaleId){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("delete/varsel", Type.GET,
+					"avtale_id", avtaleId +"",
+					"person_id", personId + "").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, null));
+	}
+	
 	public static void getAvaliableRooms(ApiCaller caller,String start, String end){
 		//Størrelse??
 		String result = "";
 		//TODO: check status and people length
 		try {
 			result = new Client("get/ledigerom", Type.GET,
-					"Starttidspunkt", start,
-					"Sluttidspunkt", end).execute();
+					"Starttidspunkt", start.replace(" ", "[space]"),
+					"Sluttidspunkt", end.replace(" ", "[space]")).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, "rom"));
+		caller.callBack(new CalResponse(result, "Room"));
 	}
 	
-	public static void main(String args[]){
-		//		CalResponse cal = login("eposten3@min.com", "passordet");
-		//		Person me = cal.confirmLogin();
-		//		System.out.println(me.getName() + me.getTelephonenumber());
-		//		
-		//		Meeting meet = new Meeting(7, 3, "2014-03-13-13:00:52", "2014-03-13-15:00:43", "Lorem ipsum dolor", 414);
-		//		CalResponse cal = addMeeting(meet);
-		//		System.out.println(cal.getCode() + " " + cal.getMsg());
-		//		System.out.println("Getting meetings");
-		//		CalResponse c = getParticipants(meet);
-		//		System.out.println(c.getDeltakere().get(1).getPersonID());
+	public static void getAllPeople(ApiCaller caller){
+		String result = "";
+		//TODO: check status and people length
+		try {
+			result = new Client("get/person/all", Type.GET).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "people"));
+	}
+	
+	public static void getGroups(ApiCaller caller){
+		String result = "";
+
+		try {
+			result = new Client("get/groups/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "groups"));
 	}
 }

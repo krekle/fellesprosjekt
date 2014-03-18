@@ -7,11 +7,11 @@ import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -21,6 +21,11 @@ import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -30,26 +35,72 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
 	Login_Window login;
 	Client client;
+	private Panel Felles;
 	private int current_week = 0;
 	private int current_year = 2014;
 	static boolean popupExists = false;
 	private Notification_Window notifications;
-    /** Creates new form Main_Window */
+	/** Creates new form Main_Window */
     public Main_Window(Login_Window login) 
     {
-    	Database.getMeetings(this);
+    	Database.getAllPeople(this);
+    	for(Person p : Bruker.getInstance().getAllPeople())
+    	{
+    		Database.getMeetings(this, p.getId());    		
+    	}
     	Database.getAlerts(this);
     	Database.getNotifications(this);
+    	System.out.println(Bruker.getInstance().getAvtaler().size());
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
+    	Database.getGroups(this);
     	this.login = login;
         initComponents();
-        tabWindow.addTab("Me", new Panel(week_list_scroller, this));
-        tabWindow.addTab("Felles", new Panel(week_list_scroller, this));
-        for (int x = 1; x<4; x++)
+        
+        Panel me = new Panel(week_list_scroller, this);
+        me.addPerson(Bruker.getInstance().getUser());
+        tabWindow.addTab("Me", me);
+        Felles = new Panel(week_list_scroller, this);
+        tabWindow.addTab("Felles", Felles);
+//        for (int x = 1; x<4; x++)
+//        {
+//            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
+//        }
+        tabWindow.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) 
+			{
+				System.out.println(tabWindow.getSelectedComponent());
+				if(tabWindow.getTitleAt(tabWindow.getSelectedIndex()).equals("Felles"))
+				{
+					felles_deltakere_box.setVisible(true);
+				}
+				else
+				{
+					felles_deltakere_box.setVisible(false);
+				}
+			}
+		});
+        felles_deltakere_box.setEditable(false);
+        felles_deltakere_box.setVisible(false);
+        felles_deltakere_box.setRenderer(new PersonRenderer());
+        for(Person p : Bruker.getInstance().getAllPeople())
         {
-            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
+        	felles_deltakere_box.addItem(p);
         }
+        felles_deltakere_box.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(!Felles.getPeople().contains((Person) felles_deltakere_box.getSelectedItem()))
+				{
+					Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());					
+				}
+//				felles_deltakere_box.removeItemAt(felles_deltakere_box.getSelectedIndex());
+			}
+		});
         notifications = new Notification_Window();
         String path = "resources/images/no_notification.png";
         if(hasNewNotification())
@@ -73,17 +124,25 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     		else if (response.getAlerts()) {
     		//Alarmene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getUser().getAlerts() <--returnerer en ArrayList med Alert
+	    	}
+	    	else if(response.getNotifications())
+	    	{
+	    		if(Bruker.getInstance().getNotifications() != null)
+	    		{
+	    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
+	    		}
+	    		else{
+	    			System.out.println("No new notifications..");
+	    		}
+	    	}
+	    	else if(response.getAllPeople())
+	    	{
+	    		for(Person p : Bruker.getInstance().getAllPeople())
+	    		{
+	    			System.out.println(p.getName() + " - " + p.getEmail());
+	    		}
+	    	}
     	}
-    	else if(response.getNotifications())
-    	{
-    		if(Bruker.getInstance().getNotifications() != null)
-    		{
-    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
-    		}
-    		else{
-    			System.out.println("No new notifications..");
-    		}
-    	}}
     	catch (Exception e)
     	{
     		System.out.println("TODO: ... ");
@@ -527,9 +586,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 				create_avtale_buttonActionPerformed(e);
 			}
 		});
+        
 
-        felles_deltakere_box.setEditable(true);
-        felles_deltakere_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -738,5 +796,35 @@ public Meeting getAvtale()
     private javax.swing.JTextField uke_search;
     private javax.swing.JTabbedPane tabWindow;
     // End of variables declaration//GEN-END:variables
+    
+    
+    private class PersonRenderer extends JLabel implements ListCellRenderer
+    {
 
+    	public PersonRenderer(){this.setOpaque(false);}
+    	boolean added = false;
+		@Override
+		public Component getListCellRendererComponent
+		(
+				JList list, Object value,
+				int index, boolean isSelected, 
+				boolean cellHasFocus		)
+		{
+			if(isSelected)
+			{
+				if(added)
+				{
+					added = false;
+				}
+				else
+				{
+					this.setBackground(Color.GRAY);
+					added=true;
+				}
+			}
+			this.setText(value.toString());
+			return this;
+		}
+    	
+    }
 }

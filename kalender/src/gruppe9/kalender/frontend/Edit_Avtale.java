@@ -86,6 +86,14 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		}
 		if (response.getSimpleResponse("avtaleid") != null) {
 			id = response.getSimpleResponse("avtaleid");
+			//Legg til deltakere
+			String csv = "";
+			String csvS = "";
+			for (Person p : meeting.getParticipants()) {
+				csv += p.getId() + ",";
+				csvS += "Ikke Svart,";
+			}
+			Database.addParticipants(this, id, csv, csvS);
 		}
 	}
     
@@ -622,6 +630,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	
 	if (rom_list.getSelectedValue() != null) {
 		room = (Room) rom_list.getSelectedValue();
+		meeting.setPlace("NA");
 	}
 	if (room == null) {
 		meeting.setPlace(rom_textfield.getText());
@@ -641,7 +650,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	else {
 		System.out.println("add");
 		Database.addMeeting(this, meeting);
-		Database.addParticipants(this, avtale_id, csvPeople, csvStatus);
 	}
 }
 
@@ -664,6 +672,7 @@ private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
 				room = r;		
 			}
 		}
+		meeting.setPlace("NA");
 		
 	}
 	else {

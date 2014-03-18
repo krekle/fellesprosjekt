@@ -21,6 +21,8 @@ import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -30,6 +32,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 
 	Login_Window login;
 	Client client;
+	private Panel Felles;
 	private int current_week = 0;
 	private int current_year = 2014;
 	static boolean popupExists = false;
@@ -37,19 +40,59 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     /** Creates new form Main_Window */
     public Main_Window(Login_Window login) 
     {
-    	Database.getMeetings(this);
+    	Database.getAllPeople(this);
+    	for(Person p : Bruker.getInstance().getAllPeople())
+    	{
+    		Database.getMeetings(this, p.getId());    		
+    	}
     	Database.getAlerts(this);
     	Database.getNotifications(this);
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
     	this.login = login;
         initComponents();
-        tabWindow.addTab("Me", new Panel(week_list_scroller, this));
-        tabWindow.addTab("Felles", new Panel(week_list_scroller, this));
-        for (int x = 1; x<4; x++)
+        
+        Panel me = new Panel(week_list_scroller, this);
+        me.addPerson(Bruker.getInstance().getUser());
+        tabWindow.addTab("Me", me);
+        Felles = new Panel(week_list_scroller, this);
+        tabWindow.addTab("Felles", Felles);
+//        for (int x = 1; x<4; x++)
+//        {
+//            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
+//        }
+        tabWindow.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) 
+			{
+				System.out.println(tabWindow.getSelectedComponent());
+				if(tabWindow.getTitleAt(tabWindow.getSelectedIndex()).equals("Felles"))
+				{
+					felles_deltakere_box.setVisible(true);
+				}
+				else
+				{
+					felles_deltakere_box.setVisible(false);
+				}
+			}
+		});
+        felles_deltakere_box.setEditable(false);
+        felles_deltakere_box.setVisible(false);
+        for(Person p : Bruker.getInstance().getAllPeople())
         {
-            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
+        	felles_deltakere_box.addItem(p);
         }
+        felles_deltakere_box.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());
+				Felles.refresh();
+				felles_deltakere_box.removeItemAt(felles_deltakere_box.getSelectedIndex());
+			}
+		});
         notifications = new Notification_Window();
         String path = "resources/images/no_notification.png";
         if(hasNewNotification())
@@ -73,17 +116,25 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     		else if (response.getAlerts()) {
     		//Alarmene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getUser().getAlerts() <--returnerer en ArrayList med Alert
+	    	}
+	    	else if(response.getNotifications())
+	    	{
+	    		if(Bruker.getInstance().getNotifications() != null)
+	    		{
+	    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
+	    		}
+	    		else{
+	    			System.out.println("No new notifications..");
+	    		}
+	    	}
+	    	else if(response.getAllPeople())
+	    	{
+	    		for(Person p : Bruker.getInstance().getAllPeople())
+	    		{
+	    			System.out.println(p.getName() + " - " + p.getEmail());
+	    		}
+	    	}
     	}
-    	else if(response.getNotifications())
-    	{
-    		if(Bruker.getInstance().getNotifications() != null)
-    		{
-    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
-    		}
-    		else{
-    			System.out.println("No new notifications..");
-    		}
-    	}}
     	catch (Exception e)
     	{
     		System.out.println("TODO: ... ");
@@ -527,9 +578,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 				create_avtale_buttonActionPerformed(e);
 			}
 		});
+        
 
-        felles_deltakere_box.setEditable(true);
-        felles_deltakere_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -737,6 +787,7 @@ public Meeting getAvtale()
     private javax.swing.JTextArea beskrivelse_area;
     private javax.swing.JTextField uke_search;
     private javax.swing.JTabbedPane tabWindow;
+
     // End of variables declaration//GEN-END:variables
 
 }

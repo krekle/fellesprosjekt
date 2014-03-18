@@ -12,9 +12,11 @@ public class Group {
 	{
 		return "Gruppe " + this.ID+": " + this.name;
 	}
-	public Group(String name) {
+	public Group(String name, String description, int ID) {
 		super();
 		this.name = name;
+		this.description = description;
+		this.ID = ID;
 	}
 
 	public void addPerson(Person person){

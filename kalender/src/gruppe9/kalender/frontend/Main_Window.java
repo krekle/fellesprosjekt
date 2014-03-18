@@ -64,6 +64,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         tabWindow.addTab("Me", me);
         Felles = new Panel(week_list_scroller, this);
         tabWindow.addTab("Felles", Felles);
+        Panel groupXPanel = new Panel(week_list_scroller, this);
+        for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) {
+        	groupXPanel = new Panel(week_list_scroller, this);
+			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupXPanel);
+		} //TODO: Men dette skulle vi kanskje ikke ha med ??
         tabWindow.addChangeListener(new ChangeListener() {
 			
 			@Override

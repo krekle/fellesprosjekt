@@ -19,6 +19,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	private String end;
 	private String description;
 	private int roomId;
+	private String place;
 	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
@@ -221,6 +222,12 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	@Override
 	public void callBack(CalResponse response) 
 	{
-		ArrayList<Deltaker> pe = response.getDeltakere();		
+		ArrayList<Deltaker> pe = response.getDeltakere();}		
+	public String getPlace() {
+		return place;
+	}
+
+	public void setPlace(String place) {
+		this.place = place;
 	}
 }

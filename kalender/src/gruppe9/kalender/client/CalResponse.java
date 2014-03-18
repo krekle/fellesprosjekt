@@ -40,7 +40,14 @@ public class CalResponse {
 				for (int i = 0; i < arrayResponse.length(); i++) {
 					JSONObject jo;
 					jo = arrayResponse.getJSONObject(i);
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+					int rom;
+					try {
+						rom = Integer.parseInt(jo.getString("rom"));
+					} catch (Exception e) {
+						rom = 0;
+					}
+					Integer.parseInt(jo.getString("rom"));
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel")));				
 				}}
 			Bruker.getInstance().getUser().setMeetings(meetList);
 			return true;
@@ -115,7 +122,7 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				notifytList.add(new Notification(jo.getString("Aarsak"), Integer.parseInt(jo.getString("Avtale_AvtaleID")), jo.getString("Tidspunkt")));
 				System.out.println("notification added!");
 			} catch (JSONException e) {
 				e.printStackTrace();

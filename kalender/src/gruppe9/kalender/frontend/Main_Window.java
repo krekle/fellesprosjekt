@@ -52,14 +52,13 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getMeetings(this, Bruker.getInstance().getUser().getId());    		
     	Database.getAlerts(this);
     	Database.getNotifications(this);
+    	Database.getGroups(this);
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
-    	// Resultatet kommer til callBack() metoden.
-        
-    	
+    	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
-        
-        
-        Panel me = new Panel(week_list_scroller, this);
+
+    	
+    	Panel me = new Panel(week_list_scroller, this);
         me.addPerson(Bruker.getInstance().getUser());
         tabWindow.addTab("Me", me);
         Felles = new Panel(week_list_scroller, this);

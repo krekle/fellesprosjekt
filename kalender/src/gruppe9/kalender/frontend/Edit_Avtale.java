@@ -34,6 +34,7 @@ import javax.xml.crypto.Data;
 import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Database;
+import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
@@ -47,10 +48,13 @@ import gruppe9.kalender.user.Bruker;
 public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private Main_Window main;
     private Meeting meeting;
+    private ArrayList<Deltaker> deltakere;
     private boolean edit;
     private ArrayList<Room> rooms;
+    private Room room;
     private String start;
     private String slutt;
+    private String id;
     
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
@@ -70,9 +74,26 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 	public void callBack(CalResponse response) {
 		if(response.getRoms() != null){
 			rooms = response.getRoms();
+			if (!romlist_model.isEmpty()) {
+				romlist_model.clear();
+			}
 			for (Room rom : rooms) {
 				romlist_model.addElement(rom);
 			}
+		}
+		if (response.getDeltakere() != null) {
+			deltakere = response.getDeltakere();
+		}
+		if (response.getSimpleResponse("avtaleid") != null) {
+			id = response.getSimpleResponse("avtaleid");
+			//Legg til deltakere
+			String csv = "";
+			String csvS = "";
+			for (Person p : meeting.getParticipants()) {
+				csv += p.getId() + ",";
+				csvS += "Ikke Svart,";
+			}
+			Database.addParticipants(this, id, csv, csvS);
 		}
 	}
     
@@ -506,22 +527,39 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     		}
     	});
     	DefaultComboBoxModel d = new DefaultComboBoxModel();
-    	ArrayList<Person> per = Bruker.getInstance().getAllPeople();
-    	for (Person p : per) {
+    	ArrayList<Person> people = Bruker.getInstance().getAllPeople();
+    	for (Person p : people) {
     		d.addElement(p);
     	}
     	
     }// </editor-fold>//GEN-END:initComponents
 
+private String toDateTime(String dato, String tid) {
+	
+	String year = dato.substring(5);
+	String day = dato.substring(0, 2);
+	String date1 = dato.substring(3,4);
+	String time = tid.substring(0,2);
+	String min = tid.substring(3,5);
+	String total = year + "-" + date1 + "-" + day + " " + time + ":" + min + ":" + "00";
+	return total;
+}
+    
 protected void start_action(ActionEvent evt) {
 	start = start_textfield.getText();
-	if (start.length() == 5 && slutt.length() == 5) {
+	slutt = slutt_textfield.getText();
+	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
+		start = toDateTime(date_textfield.getText(), start);
+		slutt = toDateTime(date_textfield.getText(), slutt);
 		Database.getAvaliableRooms(this, start, slutt);
 	}
 }    
 protected void slutt_action(ActionEvent evt) {
+	start = start_textfield.getText();
 	slutt = slutt_textfield.getText();
-	if (start.length() == 5 && slutt.length() == 5) {
+	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
+		start = toDateTime(date_textfield.getText(), start);
+		slutt = toDateTime(date_textfield.getText(), slutt);
 		Database.getAvaliableRooms(this, start, slutt);
 	}
 }
@@ -582,13 +620,22 @@ public void editDate(Integer increment)
 	dateChooser.ensureDateVisible(date);
 	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
 }
+
 private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	meeting.setCreator(Bruker.getInstance().getUser().getId());
 	meeting.setDescription(beskrivelse_textfield.getText());
 	meeting.setName(avtalenavn_textfield.getText());
-	meeting.setStart(start_textfield.getText());
-	meeting.setEnd(slutt_textfield.getText());
-	//meeting.setRoom()
+	meeting.setStart(start);
+	meeting.setEnd(slutt);
+	
+	if (rom_list.getSelectedValue() != null) {
+		room = (Room) rom_list.getSelectedValue();
+		meeting.setPlace("NA");
+	}
+	if (room == null) {
+		meeting.setPlace(rom_textfield.getText());
+	}
+	meeting.setRoom(room.getId());
 	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();
 	for (Component person : participants) {
@@ -598,11 +645,11 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 
 	if (edit) {
 		System.out.println("update");
-		Database.updateMeeting(null, meeting);
+		Database.updateMeeting(this, meeting);
 	}
 	else {
-		System.out.println("new");
-		Database.addMeeting(null, meeting);
+		System.out.println("add");
+		Database.addMeeting(this, meeting);
 	}
 }
 
@@ -613,7 +660,25 @@ this.setVisible(false);
 }
 
 private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
-	//Kode for å velge det enkleste rommet her
+	if (auto_select_choice.isSelected()) {
+		if (!rom_list.isSelectionEmpty()) {
+			rom_list.clearSelection();
+		}
+		rom_list.disable();
+		Database.getParticipants(this, meeting);
+		room = rooms.get(0);
+		for (Room r : rooms) {
+			if (r.getSize() > deltakere.size() && r.getSize() < room.getSize()) {
+				room = r;		
+			}
+		}
+		meeting.setPlace("NA");
+		
+	}
+	else {
+		rom_list.enable();
+	}
+		
 }
 
 private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) 

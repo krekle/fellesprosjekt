@@ -34,6 +34,14 @@ def test():
   test = dict(request.query)
   return respond(200, 'ok', test)
 
+# returnerer alle personer
+@route('/get/person/all', method = 'GET')
+def get_people():
+  res = read.get_all_people()
+  if(res):
+    return respond(200, 'ok', res)
+  else:
+    return respond(131, 'Error: people not found', None)
 
 #Returnere avtaler for gruppe med id gruppeid
 @route('/get/gruppe/avtaler/<gruppeid>', method = 'GET')
@@ -70,8 +78,9 @@ def add_avtale():
   if(avtale):
     avtale['beskrivelse'] = avtale['beskrivelse'].replace('[space]', ' ')
   print(avtale)
-  if(insert.create_avtale(avtale)):
-    return respond(200, 'Avtale lagret', None)
+  number = insert.create_avtale(avtale)
+  if(number):
+    return respond(200, 'Avtale lagret', {"avtaleid":number})
   else:
     return respond(133, 'Error: avtale ikke lagret', None)
 
@@ -275,7 +284,6 @@ def create_melding():
   else:
     return respond(131, 'Error: No person found', None)
 
-### Methods for deletion ###
 @route('/delete/avtale', method = 'GET')
 def delete_avtale():
   d = request.query.decode()
@@ -301,6 +309,25 @@ def delete_deltaker():
   else:
     return respond(134, 'Error: input format', None)
 
+@route('/delete/varsel', method = 'GET')
+def delete_varsel():
+  d = request.query.decode()
+  aid = d['avtale_id']
+  pid = d['person_id']
+  if(insert.delete_varsel(pid, aid)):
+    return respond(200, 'Varsel slettet', None)
+  else:
+    return respond(131, 'Varsel ikke slettet', None)
+
+@route('/delete/alarm', method = 'GET')
+def delete_varsel():
+  d = request.query.decode()
+  aid = d['avtale_id']
+  pid = d['person_id']
+  if(insert.delete_alarm(pid, aid)):
+    return respond(200, 'Alarm slettet', None)
+  else:
+    return respond(131, 'Alarm ikke slettet!', None)
 
 ### Get Rom ###
 
@@ -314,7 +341,17 @@ def get_ledige_rom():
     return respond(200, 'ok', rom)
   else:
     return respond(132, 'Error: Input format', None)
-##moar??
+
+### Get a persons group ###
+
+@route('/get/groups/<pid>', method = 'GET')
+def get_groups(pid):
+  d = request.query.decode()
+  if (pid):
+    groups = read.get_person_groups(pid)
+    return respond(200, 'ok', groups)
+  else:
+    return respond(131, 'Error: Input format', None)
 
 if __name__ == '__main__':
     run(host='0.0.0.0', port=4242, debug=True)

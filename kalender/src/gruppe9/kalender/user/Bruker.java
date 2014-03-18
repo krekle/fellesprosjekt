@@ -75,11 +75,11 @@ public class Bruker {
 		return notifications;
 	}
 	
-	private void setGroups(ArrayList<Group> groups){
+	public void setGroups(ArrayList<Group> groups){
 		this.groups = groups;
 	}
 	
-	private ArrayList<Group> getGroups() {
+	public ArrayList<Group> getGroups() {
 		return groups;
 
 	}

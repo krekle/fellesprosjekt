@@ -15,6 +15,7 @@ public class Meeting implements Comparable<Meeting>{
 	private String end;
 	private String description;
 	private int roomId;
+	private String place;
 	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
@@ -211,5 +212,13 @@ public class Meeting implements Comparable<Meeting>{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPlace() {
+		return place;
+	}
+
+	public void setPlace(String place) {
+		this.place = place;
 	}
 }

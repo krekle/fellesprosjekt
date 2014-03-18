@@ -1,11 +1,15 @@
 package gruppe9.kalender.model;
 
+import gruppe9.kalender.client.ApiCaller;
+import gruppe9.kalender.client.CalResponse;
+import gruppe9.kalender.client.Database;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.DefaultListModel;
 
-public class Meeting implements Comparable<Meeting>{
+public class Meeting implements Comparable<Meeting>, ApiCaller{
 	
 	private String name;
 	private int meetingId;
@@ -40,6 +44,7 @@ public class Meeting implements Comparable<Meeting>{
 		this.description = description;
 		this.roomId = roomId;
 		participants = new ArrayList<Person>();
+		Database.getParticipants(this, this);
 		notifications = new ArrayList<Notification>();
 		emailAlert = null;
 		soundAlert = null;
@@ -211,5 +216,11 @@ public class Meeting implements Comparable<Meeting>{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public void callBack(CalResponse response) 
+	{
+		ArrayList<Deltaker> pe = response.getDeltakere();		
 	}
 }

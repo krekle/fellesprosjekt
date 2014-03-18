@@ -117,7 +117,8 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
-	public static void updateParticipantStatus(ApiCaller caller, String avtale_id, String person_id, String status){
+	public static void updateParticipantStatus(ApiCaller caller, String avtale_id, String person_id, String status)
+	{
 		String result = "";
 		//TODO: check status and people length
 		try {

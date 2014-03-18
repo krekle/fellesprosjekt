@@ -48,6 +48,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private Main_Window main;
     private Meeting meeting;
     private boolean edit;
+    private ArrayList<Room> rooms;
+    private String start;
+    private String slutt;
     
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
@@ -66,8 +69,10 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     @Override
 	public void callBack(CalResponse response) {
 		if(response.getRoms() != null){
-			ArrayList<Room> rooms = response.getRoms();
-			
+			rooms = response.getRoms();
+			for (Room rom : rooms) {
+				romlist_model.addElement(rom);
+			}
 		}
 	}
     
@@ -130,6 +135,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         romScrollPane = new javax.swing.JScrollPane();
         rom_list = new javax.swing.JList();
         auto_select_choice = new javax.swing.JRadioButton();
+        romlist_model = new DefaultListModel();
 
         this.addWindowListener(new WindowListener() {
 			
@@ -395,9 +401,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 
         rom_label.setText("Rom:");
         velg_label.setText("Velg fra liste:");
-        
-        DefaultListModel defaultmodel = new DefaultListModel();
-        rom_list.setModel(defaultmodel);
+        rom_list.setModel(romlist_model);
         
         romScrollPane.setViewportView(rom_list);
 
@@ -488,18 +492,40 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         date_textfield.setEditable(false);
     	start_textfield.setToolTipText("Starttidspunkt i formatet HH:MM, f.eks 12:00");
     	start_textfield.setColumns(5);
+    	start_textfield.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				start_action(evt);
+			}
+    	});
     	
     	slutt_textfield.setToolTipText("Sluttidspunkt i formatet HH:MM, f.eks 12:00");
     	slutt_textfield.setColumns(5);
-    	
+    	slutt_textfield.addActionListener(new java.awt.event.ActionListener() {
+    		public void actionPerformed(ActionEvent evt) {
+    			slutt_action(evt);
+    		}
+    	});
     	DefaultComboBoxModel d = new DefaultComboBoxModel();
-    	for (Person p : Bruker.getInstance().getAllPeople()) {
+    	ArrayList<Person> per = Bruker.getInstance().getAllPeople();
+    	for (Person p : per) {
     		d.addElement(p);
     	}
     	deltaker_combo.setModel(d);
     	
     }// </editor-fold>//GEN-END:initComponents
 
+protected void start_action(ActionEvent evt) {
+	start = start_textfield.getText();
+	if (start.length() == 5 && slutt.length() == 5) {
+		Database.getAvaliableRooms(this, start, slutt);
+	}
+}    
+protected void slutt_action(ActionEvent evt) {
+	slutt = slutt_textfield.getText();
+	if (start.length() == 5 && slutt.length() == 5) {
+		Database.getAvaliableRooms(this, start, slutt);
+	}
+}
 protected void fjern_buttonActionPerformed(ActionEvent e) 
 {
 	if(person_list.getModel().getSize() >0)
@@ -608,11 +634,6 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 
 }
 
-private ArrayList<Room> populate_roomlist() {
-	ArrayList<Room> roomlist = new ArrayList<Room>();
-	// ADD ALL ROM I DATABASEN; VENTER PÅ SUPPORT FOR DET
-	return roomlist;
-}
 
     private javax.swing.JButton lagre_button;
     private javax.swing.JButton avbryt_button;
@@ -648,6 +669,7 @@ private ArrayList<Room> populate_roomlist() {
     private javax.swing.JTextField slutt_textfield;
     private javax.swing.JTextField varighet_textfield;
     private org.jdesktop.swingx.JXMonthView dateChooser;
+    private DefaultListModel romlist_model;
     
     private class combo_box_person_renderer extends JLabel implements ListCellRenderer
     {

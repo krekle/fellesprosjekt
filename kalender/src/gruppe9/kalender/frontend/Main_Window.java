@@ -3,6 +3,7 @@ import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
 import gruppe9.kalender.client.Database;
+import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
@@ -56,13 +57,13 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
-
+    	
     	
     	Panel me = new Panel(week_list_scroller, this);
-        me.addPerson(Bruker.getInstance().getUser());
-        tabWindow.addTab("Me", me);
         Felles = new Panel(week_list_scroller, this);
+        tabWindow.addTab("Me", me);
         tabWindow.addTab("Felles", Felles);
+        me.addPerson(Bruker.getInstance().getUser());
         tabWindow.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -173,6 +174,15 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    			System.out.println(p.getName() + " - " + p.getEmail());
 	    		}
 	    	}
+	    	else if(response.getDeltakere() != null)
+	    	{
+	    		DefaultListModel<String> newModel = new DefaultListModel<String>();
+	    		for(Deltaker d : response.getDeltakere())
+	    		{
+	    			newModel.addElement(d.getNavn() + " - " +d.getStatus() +" - " +d.getSistSett());
+	    		}
+	    		this.deltaker_list.setModel(newModel);
+	    	}
     	}
     	catch (Exception e)
     	{
@@ -203,13 +213,26 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		rediger_button.setEnabled(true);
     		slett_button.setEnabled(true);
     	}
+    	
+    	Database.getParticipants(this, meeting);
+    	//DETTE MÅ BYTTES UT MED DELTAKERE - IKKE PERSON.
     	if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
     	{
     		decline_choice.setSelected(false);
     		accept_choice.setSelected(true);
+    		System.out.println("Moop!");
+    		for(Person p : meeting.getParticipants())
+    		{
+    			System.out.println(p.getName());
+    		}
     	}
     	else
     	{
+    		System.out.println("Boop!");
+    		for(Person p : meeting.getParticipants())
+    		{
+    			System.out.println(p.getName());
+    		}
     		this.decline_choice.setSelected(true);
     		accept_choice.setSelected(false);
     	}

@@ -9,7 +9,7 @@ public class Deltaker {
 		this.avtaleID = avtaleId;
 		this.status = status;
 		this.sistSett = sistSett;
-		this.navn = navn;
+		this.navn = name;
 	}
 
 	public int getPersonID() {
@@ -42,6 +42,13 @@ public class Deltaker {
 
 	public void setSistSett(String sistSett) {
 		this.sistSett = sistSett;
+	}
+	public String getNavn(){
+		return navn;
+	}
+	public void setNavn(String navn)
+	{
+		this.navn =navn;
 	}
 	
 	

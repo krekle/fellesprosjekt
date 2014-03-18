@@ -86,7 +86,7 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				deltakerList.add(new Deltaker(jo.getInt("Person_Ansattnummer"), jo.getInt("Avtale_AvtaleID"), jo.getString("Status"), jo.getString("SistSett")));
+				deltakerList.add(new Deltaker(jo.getString("navn"),jo.getInt("Person_Ansattnummer"), jo.getInt("Avtale_AvtaleID"), jo.getString("Status"), jo.getString("SistSett")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -211,7 +211,7 @@ public class CalResponse {
 			code = data.getString("code");
 			msg = data.getString("msg");
 			try {
-				JSONObject temp = data.getJSONObject("response");
+				 JSONObject temp = data.getJSONObject("response");
 				arrayResponse = temp.getJSONArray(var);
 			} catch (Exception e) {
 				objectResponse = data.getJSONObject("response");

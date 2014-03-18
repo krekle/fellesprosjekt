@@ -20,6 +20,15 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
+	public static void getMeetings(ApiCaller caller, int ID){
+		String result = "";
+		try {
+			result = new Client("get/mineavtaler/" + ID, Type.GET).execute();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		caller.callBack(new CalResponse(result, "avtaler"));
+	}
 
 	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
@@ -199,7 +208,7 @@ public class Database {
 	
 	public static void getGroups(ApiCaller caller){
 		String result = "";
-		
+
 		try {
 			result = new Client("get/groups/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
 		} catch (Exception e){

@@ -53,6 +53,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	System.out.println(Bruker.getInstance().getAvtaler().size());
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.
+    	Database.getGroups(this);
     	this.login = login;
         initComponents();
         

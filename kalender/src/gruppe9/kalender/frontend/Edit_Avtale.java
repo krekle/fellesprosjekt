@@ -54,6 +54,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private Room room;
     private String start;
     private String slutt;
+    private String id;
     
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
@@ -82,6 +83,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		}
 		if (response.getDeltakere() != null) {
 			deltakere = response.getDeltakere();
+		}
+		if (response.getSimpleResponse("avtaleid") != null) {
+			id = response.getSimpleResponse("avtaleid");
 		}
 	}
     

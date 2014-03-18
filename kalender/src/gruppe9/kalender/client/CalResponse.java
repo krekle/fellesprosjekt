@@ -115,7 +115,7 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("Aarsak"), jo.getInt("Avtale_AvtaleID"), jo.getString("Tidspunkt")));
+				notifytList.add(new Notification(jo.getString("Aarsak"), Integer.parseInt(jo.getString("Avtale_AvtaleID")), jo.getString("Tidspunkt")));
 				System.out.println("notification added!");
 			} catch (JSONException e) {
 				e.printStackTrace();

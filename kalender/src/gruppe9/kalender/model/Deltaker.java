@@ -4,7 +4,7 @@ public class Deltaker {
 	private int personID, avtaleID;
 	private String status, sistSett, navn;
 	
-	public Deltaker(String navn, int personId, int avtaleId, String status, String sistSett){
+	public Deltaker(String name, int personId, int avtaleId, String status, String sistSett){
 		this.personID = personId;
 		this.avtaleID = avtaleId;
 		this.status = status;

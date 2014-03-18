@@ -3,6 +3,7 @@ package gruppe9.kalender.user;
 import java.util.ArrayList;
 
 import gruppe9.kalender.model.Alert;
+import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
@@ -18,6 +19,7 @@ public class Bruker {
 	private ArrayList<Notification> notifications;
 
 	private ArrayList<Person> allPeople;
+	private ArrayList<Group> groups;
 
 	private static Bruker instance = null;
 	
@@ -71,6 +73,15 @@ public class Bruker {
 
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
+	}
+	
+	private void setGroups(ArrayList<Group> groups){
+		this.groups = groups;
+	}
+	
+	private ArrayList<Group> getGroups() {
+		return groups;
+
 	}
 	
 	//For å bruke metoder fra bruker kall Bruker.getInstance().*

@@ -60,7 +60,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener
         		System.out.println("Day " + x + " - Week "+ meeting.getWeekOfYear());
         		if(x==meeting.getDayOfWeek() 
         				&& meeting.getWeekOfYear() == main.getWeek()
-        				&& meeting.getYear() == main.getYear()
+//        				&& meeting.getYear() == main.getYear()
         				)
         		{
         			avtaler.addElement(meeting);

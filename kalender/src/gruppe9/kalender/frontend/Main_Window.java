@@ -45,6 +45,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 		//Henter meldinger
 		Database.getAllPeople(this);
 		//Henter alle personer og lagrer dem i bruker
+		Database.getGroups(this);
+		//Henter grupper
 		
 		this.login = login;
 		initComponents();

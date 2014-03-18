@@ -178,4 +178,15 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, "people"));
 	}
+	
+	public static void getGroups(ApiCaller caller){
+		String result = "";
+		
+		try {
+			result = new Client("get/groups/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		caller.callBack(new CalResponse(result, "groups"));
+	}
 }

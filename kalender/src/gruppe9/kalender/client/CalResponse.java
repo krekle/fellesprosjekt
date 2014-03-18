@@ -49,7 +49,7 @@ public class CalResponse {
 					Integer.parseInt(jo.getString("rom"));
 					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel")));				
 				}}
-			Bruker.getInstance().setAvtaler(meetList);
+			Bruker.getInstance().getUser().setMeetings(meetList);
 			return true;
 		}catch (JSONException e) {
 			e.printStackTrace();

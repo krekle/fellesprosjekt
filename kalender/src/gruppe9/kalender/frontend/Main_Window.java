@@ -18,21 +18,25 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 /**
  *
  * @author krake, Berg
  */
-public class Main_Window extends javax.swing.JFrame implements ApiCaller{
-
+public class Main_Window extends javax.swing.JFrame implements ApiCaller
+{
 	Login_Window login;
 	Client client;
 	private Panel Felles;
@@ -43,29 +47,22 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 	/** Creates new form Main_Window */
     public Main_Window(Login_Window login) 
     {
+    	this.login = login;
     	Database.getAllPeople(this);
-    	for(Person p : Bruker.getInstance().getAllPeople())
-    	{
-    		Database.getMeetings(this, p.getId());    		
-    	}
+    	Database.getMeetings(this, Bruker.getInstance().getUser().getId());    		
     	Database.getAlerts(this);
     	Database.getNotifications(this);
-    	System.out.println(Bruker.getInstance().getAvtaler().size());
-    	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
-    	// Resultatet kommer til callBack() metoden.
     	Database.getGroups(this);
-    	this.login = login;
-        initComponents();
-        
-        Panel me = new Panel(week_list_scroller, this);
+    	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
+    	// Resultatet kommer til callBack() metoden.    	
+    	initComponents();
+
+    	
+    	Panel me = new Panel(week_list_scroller, this);
         me.addPerson(Bruker.getInstance().getUser());
         tabWindow.addTab("Me", me);
         Felles = new Panel(week_list_scroller, this);
         tabWindow.addTab("Felles", Felles);
-//        for (int x = 1; x<4; x++)
-//        {
-//            tabWindow.addTab("Gruppe "+x, new Panel(week_list_scroller, this));
-//        }
         tabWindow.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -94,9 +91,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
+				((Person) felles_deltakere_box.getSelectedItem()).setAdded();
 				if(!Felles.getPeople().contains((Person) felles_deltakere_box.getSelectedItem()))
 				{
 					Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());					
+				}
+				else
+				{
+					Felles.removePerson((Person) felles_deltakere_box.getSelectedItem());
 				}
 //				felles_deltakere_box.removeItemAt(felles_deltakere_box.getSelectedIndex());
 			}
@@ -110,14 +112,43 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         Image icon =new ImageIcon(path).getImage();
         ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
         notification_button.setIcon(notify_icon);
+        kom_møte_list.setCellRenderer(new MeetingRenderer());
+        kom_møte_list.addListSelectionListener(new ListSelectionListener() 
+        {
+			public void valueChanged(ListSelectionEvent e) 
+			{
+				setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));
+			}
+		});
+        updateKomMeetings();
     }
 
+    public void updateKomMeetings()
+    {
+    	try
+    	{
+    		ArrayList<Meeting> meetings = Bruker.getInstance().getUser().getMeetings();
+    		Collections.sort(meetings);
+	        DefaultListModel<Meeting> contentsOfKomMøtList = new DefaultListModel<Meeting>();
+	        System.out.println("MEETINGS.SIZE() = " + meetings.size());
+	        for(Meeting m : meetings)
+	        {
+	        	contentsOfKomMøtList.addElement(m);
+	        }
+	        kom_møte_list.setModel(contentsOfKomMøtList);
+        }
+    	catch(Exception e)
+    	{
+    		
+    	}
+    }
     public void callBack(CalResponse response){
     	try {
     		if(response.getAvtaler()) {
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
     		
+    			updateKomMeetings();
     		//Her kan man nå kjøre f.eks:
     		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();
     		}
@@ -165,20 +196,35 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
     	if(Bruker.getInstance().getUser().getId() == meeting.getId())
     	{
     		rediger_button.setEnabled(false);
+    		slett_button.setEnabled(false);
     	}
     	else
     	{
     		rediger_button.setEnabled(true);
+    		slett_button.setEnabled(true);
+    	}
+    	if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
+    	{
+    		decline_choice.setSelected(false);
+    		accept_choice.setSelected(true);
+    	}
+    	else
+    	{
+    		this.decline_choice.setSelected(true);
+    		accept_choice.setSelected(false);
+    	}
+    	if(meeting.getCreator() != Bruker.getInstance().getUser().getId())
+    	{
+    		this.rediger_button.setEnabled(false);
+    	}
+    	else
+    	{
+    		this.rediger_button.setEnabled(true);
     	}
     	this.current_Avtale = meeting;
     }
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
     	this.addWindowListener(new WindowListener() 
@@ -263,13 +309,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
         create_avtale_button = new javax.swing.JButton();
         felles_deltakere_box = new javax.swing.JComboBox();
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setResizable(false);
-
-        kom_møte_list.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        setResizable(false);        
         jScrollPane1.setViewportView(kom_møte_list);
 
         kom_møte_label.setText("Kommende Møter:");
@@ -286,6 +326,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller{
 				{
 					current_week = Integer.parseInt(uke_search.getText());
 					uke_label.setText(current_week+"/"+current_year);
+					((Panel)tabWindow.getSelectedComponent()).refresh();
 				}
 				
 			}
@@ -810,21 +851,45 @@ public Meeting getAvtale()
 				int index, boolean isSelected, 
 				boolean cellHasFocus		)
 		{
-			if(isSelected)
+			if(((Person) value).getAdded())
 			{
-				if(added)
-				{
-					added = false;
-				}
-				else
-				{
-					this.setBackground(Color.GRAY);
-					added=true;
-				}
+				this.setBackground(Color.GRAY);
+			}
+			else
+			{
+				this.setBackground(Color.WHITE);
+			}
+			if(cellHasFocus)
+			{
+				this.setBackground(Color.LIGHT_GRAY);
 			}
 			this.setText(value.toString());
 			return this;
 		}
+    }
+    
+    private class MeetingRenderer extends JTextArea implements ListCellRenderer
+    {
+
+    	public MeetingRenderer(){this.setOpaque(false);}
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) 
+		{	
+			if(isSelected){this.setBackground(Color.LIGHT_GRAY);}
+			else{this.setBackground(Color.WHITE);}
+			Meeting m = (Meeting) value;
+			String name = m.getName();
+			String date = m.getStart();
+			String start = m.getStartTime();
+			String end =m.getEndTime();
+			String desc = m.getDescription();
+			this.setText(name + " - " +date + "\n"
+					+ start +" -> " + end +"\n"
+					+ desc);
+			return this;
+		}
+    	
     	
     }
 }

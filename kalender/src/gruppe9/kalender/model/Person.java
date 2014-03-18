@@ -11,8 +11,14 @@ public class Person {
 	private ArrayList<Meeting> meetings;
 	private ArrayList<Alert> alerts;
 	private ArrayList<Notification> notifications;
+	private boolean isAdded = false;
 	
-	
+	public void setAdded()
+	{
+		if(isAdded){isAdded =false;}
+		else{isAdded =true;}
+	}
+	public boolean getAdded(){return isAdded;}
 	@Override
 	public String toString()
 	{

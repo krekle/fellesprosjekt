@@ -1,6 +1,7 @@
 import dataset
 import datetime
 import traceback
+import insert
 
 db = dataset.connect('mysql://bruker:passord@localhost/db2_gr9')
 
@@ -39,7 +40,13 @@ def update_person(d):
 #Tested and works
 def update_avtale(d):
   try:
+    persons= db['DeltagendeI']
+    p = persons.find(Avtale_AvtaleID = d['AvtaleID'])
+    people = []
+    for peo in p:
+      people.append(str(peo['Person_Ansattnummer']))
     db['Avtale'].update(d, ['AvtaleID'])
+    insert.multiple_melding(people, d['AvtaleID'], ("Avtale" + d['AvtaleID'] + " er blitt endret"))
     print("Success")
     return True
   except:

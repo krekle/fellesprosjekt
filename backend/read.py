@@ -49,7 +49,10 @@ def get_avtale(avtale_id):
   skaperData = db['SkaperAv']
 
   avtale = avtaleData.find_one(AvtaleID = avtale_id)
-  avtale['rom'] = str(romData.find_one(Avtale_AvtaleID = avtale_id)['Rom_ID'])
+  if(avtale['sted'] not 'NA'):
+    avtale['rom'] = str(romData.find_one(Avtale_AvtaleID = avtale_id)['Rom_ID'])i
+  else:
+    avtale['rom'] = avtale['sted']
   print(avtale['rom'])
   avtale['skaper'] = str(skaperData.find_one(Avtale_AvtaleID = avtale_id)['Person_Ansattnummer'])
   print(avtale['skaper'])
@@ -122,6 +125,20 @@ def get_gruppe(gruppeid):
     return gruppe
   return False
 
+def get_all_people():
+  people = db['Person']
+  all_people = {}
+  people_list = []
+  for person in people:
+    d = dict(person)
+    d.pop('Passord')
+    people_list.append(d)
+  all_people['people'] = people_list
+  if(people_list):
+    return all_people
+  else:
+    return False
+
 def get_deltakere(aid):
   try:
     aid = str(aid)
@@ -143,7 +160,7 @@ def get_ledige_rom(starttidspunkt, sluttidspunkt):
   Rom = db['Rom']
   romListe = []
   for rom in Rom:
-    romListe.append(rom['ID'])
+    romListe.append(rom)
   romDictionary = dict(Room = romListe)
 
   #Sjekker hvorvidt rom er ledig i tidsperiode, rotekode uten sidestykke, sorry...
@@ -167,4 +184,23 @@ def get_ledige_rom(starttidspunkt, sluttidspunkt):
       continue
   return romDictionary
 
+def get_person_groups(personid):
+  try:
+    personid = str(personid)
+    MedlemI = db['MedlemI']
+    groupList = MedlemI.find(Ansattnummer=personid)
+    groupids = []
+    res = []
+    result = {}
+    for group in MedlemI:
+      if group.items()[1][1]==int(personid):
+        group = dict([(str(k), str(v)) for k, v in group.items()])
+        groupids.append(group.values()[1])
+    for groupid in groupids:
+	res.append(dict(get_gruppe(groupid)))
+    result['groups'] = res
+    return result
+  except:
+    traceback.print_exc()
+    return False
 

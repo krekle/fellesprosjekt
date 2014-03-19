@@ -84,6 +84,9 @@ public class CalResponse {
 	}
 
 	public ArrayList<Deltaker> getDeltakere(){
+		if (var == null) {
+			return null;
+		}
 		if(!var.equals("deltakere")){
 			return null;
 		}
@@ -141,6 +144,9 @@ public class CalResponse {
 
 	public ArrayList<Room> getRoms(){
 		System.out.println(var);
+		if (var == null) {
+			return null;
+		}
 		if(!var.equals("Room")){
 			return null;
 		}

@@ -81,17 +81,18 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				romlist_model.addElement(rom);
 			}
 		}
-		if (response.getDeltakere() != null) {
+		else if (response.getDeltakere() != null) {
 			deltakere = response.getDeltakere();
 		}
-		if (response.getSimpleResponse("avtaleid") != null) {
+		else if (response.getSimpleResponse("avtaleid") != null) {
 			id = response.getSimpleResponse("avtaleid");
 			//Legg til deltakere
 			String csv = "";
 			String csvS = "";
-			for (Person p : meeting.getParticipants()) {
+			for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
+				Person p = (Person) o;
 				csv += p.getId() + ",";
-				csvS += "Ikke Svart,";
+				csvS += "IkkeSvart,";
 			}
 			Database.addParticipants(this, id, csv, csvS);
 		}

@@ -20,6 +20,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	private String description;
 	private int roomId;
 	private String place;
+	private Group group = null;
 	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
@@ -231,5 +232,13 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 
 	public void setPlace(String place) {
 		this.place = place;
+	}
+	
+	public void setGroup(Group group)
+	{
+		this.group = group;	
+	}
+	public Group getGroup(){
+		return group;
 	}
 }

@@ -3,9 +3,12 @@ import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
 import gruppe9.kalender.client.Database;
+import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.client.ServerPuller;
 import gruppe9.kalender.model.Deltaker;
+import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
 
@@ -61,19 +64,17 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
-    	
-    	
-    	Panel me = new Panel(week_list_scroller, this);
-        Felles = new Panel(week_list_scroller, this);
+    	Panel me = new Panel(week_list_scroller, this, "me");
+        Felles = new Panel(week_list_scroller, this, "felles");
         tabWindow.addTab("Me", me);
         tabWindow.addTab("Felles", Felles);
         ArrayList<Panel> groupPanels = new ArrayList<Panel>();
+
         for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) {
-        	groupPanels.add( new Panel(week_list_scroller, this));
+        	groupPanels.add( new Panel(week_list_scroller, this, Bruker.getInstance().getGroups().get(i).getName()));
 			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
 			for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
 				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
-//				System.out.println(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
 			}
 		}
         
@@ -83,6 +84,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			@Override
 			public void stateChanged(ChangeEvent e) 
 			{
+				
 				System.out.println(tabWindow.getSelectedComponent());
 				if(tabWindow.getTitleAt(tabWindow.getSelectedIndex()).equals("Felles"))
 				{
@@ -193,7 +195,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    		DefaultListModel<String> newModel = new DefaultListModel<String>();
 	    		for(Deltaker d : response.getDeltakere())
 	    		{
-	    			newModel.addElement(d.getNavn() + " - " +d.getStatus() +" - " +d.getSistSett());
+	    			newModel.addElement(d.getNavn() + " - " +d.getStatus());
 	    		}
 	    		this.deltaker_list.setModel(newModel);
 	    	}
@@ -433,6 +435,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 					if(!Main_Window.popupExists)
 					{
 						Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), null);
+						for(Alert a : Bruker.getInstance().getUser().getAlerts())
+						{
+							if(a.getMeetingID() == current_Avtale.getId() && p.getAlertType().equals(a.getType()))
+							{
+								p.setAlert(a);
+								break;
+							}
+						}
 						p.setVisible(true);
 						Main_Window.popupExists = true;
 					}
@@ -476,12 +486,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         //Listener som tar seg av endring av ikon for notifikasjonsknapp 
         notification_button.addMouseListener(new MouseListener() {
 			private boolean isHovering = false;
-			public void setImage(String image_path)
-			{
-				Image icon =new ImageIcon(image_path).getImage();
-				ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
-				notification_button.setIcon(notify_icon);
-			}
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
@@ -881,6 +885,76 @@ public Meeting getAvtale()
     // End of variables declaration//GEN-END:variables
     
     
+	private void setImage(String image_path)
+	{
+		Image icon =new ImageIcon(image_path).getImage();
+		ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));
+		notification_button.setIcon(notify_icon);
+	}
+    
+    public void parseObject(Object o)
+    {
+    	if(o instanceof Alert)
+    	{
+    		Bruker.getInstance().getUser().addAlert((Alert) o);
+    	}
+    	else if(o instanceof Group)
+    	{
+    		ArrayList<Group> newGroups = Bruker.getInstance().getGroups();
+    		newGroups.add((Group) o);
+    		Bruker.getInstance().setGroups(newGroups);
+    		Panel newGroup =new Panel(week_list_scroller,this,((Group) o).getName());
+    		tabWindow.add(newGroup);
+    		for(Person p : ((Group)o).getPeople())
+    		{
+    			newGroup.addPerson(p);
+    		}
+    	}
+    	else if(o instanceof Meeting)
+    	{
+    		Meeting meeting = (Meeting) o;
+    		if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
+    		{
+    			((Panel) tabWindow.getComponentAt(0)).addMeeting(meeting);
+    		}
+    		if(meeting.getGroup() != null)
+    		{
+    			for(Component C : tabWindow.getComponents())
+    			{
+    				Panel panel = (Panel) C;
+    				if(C.getName().equals(meeting.getGroup().getName())){
+    					panel.addMeeting(meeting);
+    				}
+    			}
+    		}
+    		else
+    		{
+				for(Component C : tabWindow.getComponents())
+				{
+					Panel panel = (Panel) C;
+					for(Person p : panel.getPeople()){
+						if(p.getId() == meeting.getCreator()){
+							panel.addMeeting(meeting);
+						}
+					}
+				}
+    		}
+    	}
+    	else if(o instanceof Notification)
+    	{
+    		this.notifications.addNotification((Notification) o);
+			if(hasNewNotification())
+			{
+				setImage("resources/images/notification.png");
+			}
+			else
+			{
+				setImage("resources/images/no_notification.png");
+			}
+    	}
+    		
+    }
+    
     private class PersonRenderer extends JLabel implements ListCellRenderer
     {
 
@@ -909,10 +983,8 @@ public Meeting getAvtale()
 			return this;
 		}
     }
-    
     private class MeetingRenderer extends JTextArea implements ListCellRenderer
     {
-
     	public MeetingRenderer(){this.setOpaque(false);}
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
@@ -930,8 +1002,6 @@ public Meeting getAvtale()
 					+ start +" -> " + end +"\n"
 					+ desc);
 			return this;
-		}
-    	
-    	
+		}    	
     }
 }

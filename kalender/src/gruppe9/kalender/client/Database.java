@@ -4,8 +4,6 @@ import gruppe9.kalender.client.Client.Type;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.user.Bruker;
 
-import java.util.Calendar;
-
 
 public class Database {
 
@@ -25,7 +23,7 @@ public class Database {
 		try {
 			result = new Client("get/mineavtaler/" + ID, Type.GET).execute();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		caller.callBack(new CalResponse(result, "avtaler"));
 	}
@@ -40,7 +38,7 @@ public class Database {
 					"slutt", m.getEnd(), 
 					"beskrivelse", m.getDescription().replace(" ", "[space]"),
 					"varighet", "",
-					"sted", "NA",
+					"sted", m.getPlace(),
 					"skaper", m.getCreator() + "",
 					"romid", m.getRoom()+"")
 			.execute();
@@ -108,7 +106,6 @@ public class Database {
 
 	public static void deleteParticipant(ApiCaller caller, String avtale_id, String person_id){
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("delete/deltaker", Type.GET,
 					"person_id", avtale_id,
@@ -122,7 +119,6 @@ public class Database {
 	public static void updateParticipantStatus(ApiCaller caller, String avtale_id, String person_id, String status)
 	{
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("update/avtalestatus/"+ Bruker.getInstance().getUser().getId(), Type.GET,
 					"status", status,
@@ -133,10 +129,8 @@ public class Database {
 		caller.callBack(new CalResponse(result, null));
 	}
 
-	//Alert er typsik: Møte med Kristian om 1 time! Obs Obs
 	public static void getAlerts(ApiCaller caller){
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("get/person/varsler/"+ Bruker.getInstance().getUser().getId(), Type.GET).execute();
 		} catch (Exception e) {
@@ -147,7 +141,6 @@ public class Database {
 
 	public static void deleteAlert(ApiCaller caller, int personId, int avtaleId){
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("delete/alarm", Type.GET,
 					"avtale_id", avtaleId +"",
@@ -157,10 +150,8 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, null));
 	}
-	//Alert er typsik: Avtale slettet, avtale endret osv osv //TODO: Backend support
 	public static void getNotifications(ApiCaller caller){
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("get/person/meldinger/"+ Bruker.getInstance().getUser().getId(), Type.GET).execute();
 		} catch (Exception e) {
@@ -171,7 +162,6 @@ public class Database {
 
 	public static void deleteNotification(ApiCaller caller, int personId, int avtaleId){
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("delete/varsel", Type.GET,
 					"avtale_id", avtaleId +"",
@@ -183,9 +173,7 @@ public class Database {
 	}
 	
 	public static void getAvaliableRooms(ApiCaller caller,String start, String end){
-		//Størrelse??
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("get/ledigerom", Type.GET,
 					"Starttidspunkt", start.replace(" ", "[space]"),
@@ -198,7 +186,6 @@ public class Database {
 	
 	public static void getAllPeople(ApiCaller caller){
 		String result = "";
-		//TODO: check status and people length
 		try {
 			result = new Client("get/person/all", Type.GET).execute();
 		} catch (Exception e) {
@@ -209,7 +196,6 @@ public class Database {
 	
 	public static void getGroups(ApiCaller caller){
 		String result = "";
-
 		try {
 			result = new Client("get/groups/" + Bruker.getInstance().getUser().getId(), Type.GET).execute();
 		} catch (Exception e){

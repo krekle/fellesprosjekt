@@ -122,8 +122,8 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("Aarsak"), Integer.parseInt(jo.getString("Avtale_AvtaleID")), jo.getString("Tidspunkt")));
-				System.out.println("notification added!");
+				int aid = ((jo.getString("Avtale_AvtaleID").equals("null")? 0: Integer.parseInt(jo.getString("Avtale_AvtaleID"))));
+				notifytList.add(new Notification(jo.getString("Aarsak"), aid, jo.getString("Tidspunkt")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return false;
@@ -134,6 +134,7 @@ public class CalResponse {
 	}
 
 	public ArrayList<Room> getRoms(){
+		System.out.println(var);
 		if(!var.equals("Room")){
 			return null;
 		}
@@ -212,7 +213,7 @@ public class CalResponse {
 			code = data.getString("code");
 			msg = data.getString("msg");
 			try {
-				 JSONObject temp = data.getJSONObject("response");
+				JSONObject temp = data.getJSONObject("response");
 				arrayResponse = temp.getJSONArray(var);
 			} catch (Exception e) {
 				objectResponse = data.getJSONObject("response");

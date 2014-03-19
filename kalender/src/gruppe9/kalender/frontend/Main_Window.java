@@ -3,7 +3,11 @@ import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
 import gruppe9.kalender.client.Database;
+<<<<<<< HEAD
 import gruppe9.kalender.model.Alert;
+=======
+import gruppe9.kalender.client.ServerPuller;
+>>>>>>> 360a7380c13bcc1a4e7d4d4783d60fa4c63cc1b2
 import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
@@ -57,6 +61,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getAlerts(this);
     	Database.getNotifications(this);
     	Database.getGroups(this);
+    	
+    	//ServerPuller.update();
 
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
@@ -67,11 +73,23 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         Felles = new Panel(week_list_scroller, this, "felles");
         tabWindow.addTab("Me", me);
         tabWindow.addTab("Felles", Felles);
+<<<<<<< HEAD
         Panel groupXPanel;
         for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) {
         	groupXPanel = new Panel(week_list_scroller, this,Bruker.getInstance().getGroups().get(i).getName());
 			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupXPanel);
 		} //TODO: Men dette skulle vi kanskje ikke ha med ??
+=======
+        ArrayList<Panel> groupPanels = new ArrayList<Panel>();
+        for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) {
+        	groupPanels.add( new Panel(week_list_scroller, this));
+			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
+			for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
+				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
+//				System.out.println(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
+			}
+		}
+>>>>>>> 360a7380c13bcc1a4e7d4d4783d60fa4c63cc1b2
         
         me.addPerson(Bruker.getInstance().getUser());
         tabWindow.addChangeListener(new ChangeListener() {

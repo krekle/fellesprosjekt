@@ -64,8 +64,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
-    	
-    	
     	Panel me = new Panel(week_list_scroller, this, "me");
         Felles = new Panel(week_list_scroller, this, "felles");
         tabWindow.addTab("Me", me);
@@ -985,10 +983,8 @@ public Meeting getAvtale()
 			return this;
 		}
     }
-    
     private class MeetingRenderer extends JTextArea implements ListCellRenderer
     {
-
     	public MeetingRenderer(){this.setOpaque(false);}
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
@@ -1006,8 +1002,6 @@ public Meeting getAvtale()
 					+ start +" -> " + end +"\n"
 					+ desc);
 			return this;
-		}
-    	
-    	
+		}    	
     }
 }

@@ -103,10 +103,10 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
-		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
-		
+		date_textfield.setText(meeting.getDayOfMonth() + ":" + meeting.getMonth() + ":" + meeting.getYear());
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
+		System.out.println(meeting.getRoom());
 		romlist_model.addElement(meeting.getRoom());
 		varighet_textfield.setText(meeting.getDuration());
 		Database.getParticipants(this, meeting);
@@ -123,6 +123,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			personlist_model.addElement(pe);
 			deltaker_combo.removeItem(pe);
 		}
+		String s = toDateTime(date_textfield.getText(), start_textfield.getText());
+		String e = toDateTime(date_textfield.getText(), slutt_textfield.getText());
+		Database.getAvaliableRooms(this, s, e);
 	}
 	private void setMeeting(Meeting meeting)
     {
@@ -666,12 +669,20 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	if (edit) {
 		complete = true;
 		Database.updateMeeting(this, meeting);
+		ArrayList<Meeting> avtaler = Bruker.getInstance().getAvtaler();
+		for (Meeting m : avtaler) {
+			if (m.getId() == meeting.getId()) {
+				avtaler.remove(m);
+				avtaler.add(meeting);
+			}
+		}
+		Bruker.getInstance().setAvtaler(avtaler);
 		
 	}
 	else {
 		complete = true;
 		Database.addMeeting(this, meeting);
-		
+		Bruker.getInstance().getAvtaler().add(meeting);
 	}
 	main.setVisible(true);
 	this.setVisible(false);

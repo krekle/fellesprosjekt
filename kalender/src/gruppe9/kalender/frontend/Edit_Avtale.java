@@ -215,6 +215,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 
         beskrivelse_textfield.setColumns(20);
         beskrivelse_textfield.setRows(5);
+        beskrivelse_textfield.setLineWrap(true);
         beskrivelse_scrollpane.setViewportView(beskrivelse_textfield);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -531,6 +532,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	for (Person p : people) {
     		d.addElement(p);
     	}
+    	deltaker_combo.setModel(d);
     	
     }// </editor-fold>//GEN-END:initComponents
 

@@ -67,6 +67,16 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         Felles = new Panel(week_list_scroller, this);
         tabWindow.addTab("Me", me);
         tabWindow.addTab("Felles", Felles);
+        ArrayList<Panel> groupPanels = new ArrayList<Panel>();
+        for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) {
+        	groupPanels.add( new Panel(week_list_scroller, this));
+			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
+			for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
+				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
+//				System.out.println(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
+			}
+		}
+        
         me.addPerson(Bruker.getInstance().getUser());
         tabWindow.addChangeListener(new ChangeListener() {
 			

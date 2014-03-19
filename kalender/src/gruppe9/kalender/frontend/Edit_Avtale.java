@@ -10,27 +10,6 @@
  */
 package gruppe9.kalender.frontend;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.xml.bind.DataBindingException;
-import javax.xml.crypto.Data;
-
 import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Database;
@@ -40,6 +19,25 @@ import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -794,43 +792,58 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 		}
     	
     }
-    private class list_person_renderer extends JLabel implements ListCellRenderer
+    private class list_person_renderer extends JPanel implements ListCellRenderer
     {
-
+    	ImageIcon icon = new ImageIcon("resources/images/person.png");
+    	JLabel name = new JLabel();
+    	JLabel email = new JLabel();
+    	JComboBox choice = new JComboBox(new String[]{"Deltar", "Avslått", "Ikke Svart"});
     	public list_person_renderer()
     	{
-    		this.setOpaque(true);
+    		super(new FlowLayout(FlowLayout.LEFT));
+    		this.setEnabled(true);
+    		name.setIcon(icon);
+    		add(name);
+    		add(email);
+    		add(choice);
+    		choice.setEnabled(true);
     	}
 		@Override
-		public JLabel getListCellRendererComponent(JList list, Object value,
+		public JPanel getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) 
 		{
 			if(isSelected)
 			{
 				this.setBackground(Color.GRAY);
+				this.setEnabled(true);
 			}
 			else
 			{
 				this.setBackground(Color.WHITE);
+				this.setEnabled(false);
 			}
 			if(value instanceof Person)
 			{
-				ImageIcon icon = new ImageIcon("resources/images/person.png");
-				this.setIcon(icon);
+				icon = new ImageIcon("resources/images/person.png");
 				Person person = (Person) value;
 				String name = person.getName();
-				String ID = Integer.toString(person.getId());
-				String email = ((Person) value).getEmail(); 
-				this.setText(name + " - " + ID + " - " + email);
+				String email = ((Person) value).getEmail();
+				this.name.setIcon(icon);
+				this.name.setText(name);
+				this.email.setText(email);
+				this.choice.setVisible(true);
+
 			}
 			else
 			{
-				ImageIcon icon = new ImageIcon("resources/images/group.png");
-				this.setIcon(icon);
+				icon = new ImageIcon("resources/images/group.png");
 				Group group = (Group) value;
 				String name = group.getName();
 				String ID = Integer.toString(group.getID());
-				this.setText("Gruppe "+ID+": " +name);
+				this.name.setIcon(icon);
+				this.name.setText(name);
+				this.email.setText(ID);
+				this.choice.setVisible(false);
 			}
 			return this;
 		}

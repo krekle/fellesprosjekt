@@ -15,6 +15,7 @@ import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
+import gruppe9.kalender.user.Bruker;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,12 +58,39 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     public String getName(){
     	return name;
     }
-    public void addPerson(Person p){
+    public void addMe()
+    {
+    	if(!people.contains(Bruker.getInstance().getUser()))
+    	{
+    		System.out.println("I wasnt there already!");
+    		System.out.println();System.out.println();System.out.println();System.out.println();
+    		for(int x = 0; x< meetings.size(); x++)
+    		{
+				if(meetings.get(x).getParticipants().contains(Bruker.getInstance().getUser()))
+				{
+					meetings.remove(x);
+				}
+    		}
+    		for(Meeting m : Bruker.getInstance().getAvtaler())
+    		{
+    			addMeeting(m);
+    		}
+    	}
+    	else
+    	{
+    		System.out.println("I was there ;_;");
+    		System.out.println();System.out.println();System.out.println();System.out.println();
+    	}
+    	refresh();
+    }
+    public void addPerson(Person p)
+    {
     	if(!people.contains(p))
     	{
     		people.add(p);
     		Database.getMeetings(this, p.getId());
     	}
+    	refresh();
     }
     public void removePerson(Person p){
     	if(people.contains(p))

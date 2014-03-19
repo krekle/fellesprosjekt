@@ -47,9 +47,17 @@ public class CalResponse {
 						rom = 0;
 					}
 					Integer.parseInt(jo.getString("rom"));
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel"), jo.getString("Status")));				
-				}}
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel"), jo.getString("Status")));
+					System.out.println();System.out.println();System.out.println();System.out.println();
+					System.out.println("Got stuff in calresponse");
+				}
+				}
 			Bruker.getInstance().getUser().setMeetings(meetList);
+			System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
+			for(Meeting m : meetList)
+			{
+				System.out.println(m.toString());
+			}
 			return true;
 		}catch (JSONException e) {
 			e.printStackTrace();

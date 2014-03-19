@@ -167,6 +167,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		if(response.getAvtaler()) {
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
+
     			System.out.println();System.out.println();System.out.println();System.out.println();
     			System.out.println("Got stuff");
     			for(Component c : tabWindow.getComponents())

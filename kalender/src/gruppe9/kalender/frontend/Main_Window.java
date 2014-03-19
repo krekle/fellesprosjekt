@@ -938,7 +938,7 @@ public Meeting getAvtale()
     		Meeting meeting = (Meeting) o;
     		for(Component c : tabWindow.getComponents())
     		{
-    			((Panel) c).addMeeting(meeting);
+    			((Panel) c).addMe();
     		}
     		updateKomMeetings();
     	}

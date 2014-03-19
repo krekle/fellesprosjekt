@@ -136,7 +136,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		}
 		else if (response.getCode().equals("200") && complete == true) {
 			id = response.getSimpleResponse("avtaleid");
-			//Legg til deltakere
+			System.out.println(response.getSimpleResponse("avtaleid"));
 			String csv = "";
 			String csvS = "";
 			for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
@@ -697,8 +697,8 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	meeting.setCreator(Bruker.getInstance().getUser().getId());
 	meeting.setDescription(beskrivelse_textfield.getText());
 	meeting.setName(avtalenavn_textfield.getText());
-	meeting.setStart(start);
-	meeting.setEnd(slutt);
+	meeting.setStart(toDateTime(date_textfield.getText(),start_textfield.getText()));
+	meeting.setEnd(toDateTime(date_textfield.getText(), slutt_textfield.getText()));
 	
 	if (rom_list.getSelectedValue() != null) {
 		room = (Room) rom_list.getSelectedValue();
@@ -714,9 +714,8 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		list.add(person);
 	}
 	meeting.setParticipants(list);
-
-	if (edit) 
-	{
+	System.out.print(meeting.getId());
+	if (edit) {
 		complete = true;
 		Database.updateMeeting(this, meeting);
 		

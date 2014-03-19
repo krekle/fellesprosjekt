@@ -58,7 +58,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getAlerts(this);
     	Database.getNotifications(this);
     	Database.getGroups(this);
-    	
     	ServerPuller.update(this);
 
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
@@ -70,15 +69,15 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         tabWindow.addTab("Felles", Felles);
         ArrayList<Panel> groupPanels = new ArrayList<Panel>();
 
-        for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) {
+        for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) 
+        {
         	groupPanels.add( new Panel(week_list_scroller, this, Bruker.getInstance().getGroups().get(i).getName()));
 			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
 			for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
-				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(i));
+				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(j));
 			}
 		}
         
-        me.addPerson(Bruker.getInstance().getUser());
         tabWindow.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -110,7 +109,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				((Person) felles_deltakere_box.getSelectedItem()).setAdded();
 				if(!Felles.getPeople().contains((Person) felles_deltakere_box.getSelectedItem()))
 				{
-					Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());					
+					if(((Person) felles_deltakere_box.getSelectedItem()).getId() == Bruker.getInstance().getUser().getId())
+					{
+						Felles.addMe();
+					}
+					else
+					{
+						Felles.addPerson((Person) felles_deltakere_box.getSelectedItem());											
+					}
 				}
 				else
 				{
@@ -162,10 +168,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		if(response.getAvtaler()) {
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-    			ArrayList<Meeting> meets = Bruker.getInstance().getAvtaler();
-    			for (Meeting meeting : meets) {
-					System.out.println(meeting.getName());
-				}
+
+    			System.out.println();System.out.println();System.out.println();System.out.println();
+    			System.out.println("Got stuff");
+    			for(Component c : tabWindow.getComponents())
+    			{
+    				System.out.println("Adding to...." + ((Panel) c).getName());
+    				((Panel) c).addMe();    				
+    			}
     			updateKomMeetings();
     		//Her kan man nå kjøre f.eks:
     		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();

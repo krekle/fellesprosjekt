@@ -55,6 +55,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private String start;
     private String slutt;
     private String id;
+    private boolean complete;
     
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
@@ -81,10 +82,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				romlist_model.addElement(rom);
 			}
 		}
-		else if (response.getDeltakere() != null) {
-			deltakere = response.getDeltakere();
-		}
-		else if (response.getSimpleResponse("avtaleid") != null) {
+		else if (response.getCode().equals("200") && complete == true) {
 			id = response.getSimpleResponse("avtaleid");
 			//Legg til deltakere
 			String csv = "";
@@ -95,6 +93,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				csvS += "IkkeSvart,";
 			}
 			Database.addParticipants(this, id, csv, csvS);
+		}
+		else if (response.getDeltakere() != null) {
+			deltakere = response.getDeltakere();
 		}
 	}
     
@@ -194,7 +195,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
-			System.out.println("K!O#K");
 				
 			}
 			
@@ -647,13 +647,15 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	meeting.setParticipants(list);
 
 	if (edit) {
-		System.out.println("update");
 		Database.updateMeeting(this, meeting);
+		complete = true;
 	}
 	else {
-		System.out.println("add");
 		Database.addMeeting(this, meeting);
+		complete = true;
 	}
+	main.setVisible(true);
+	this.setVisible(false);
 }
 
 private void avbryt_buttonActionPerformed(java.awt.event.ActionEvent evt){
@@ -768,7 +770,6 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 				String ID = Integer.toString(group.getID());
 				this.setText("Gruppe "+ID+": " +name);
 			}
-			System.out.println(" ");
 			return this;
 		}
     	

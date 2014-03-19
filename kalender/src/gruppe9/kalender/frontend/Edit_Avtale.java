@@ -22,21 +22,23 @@ import gruppe9.kalender.user.Bruker;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 
 /**
@@ -54,7 +56,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private String slutt;
     private String id;
     private boolean complete;
-    
+    private HashMap<Person, String> setStatus = new HashMap<Person, String>();
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
     	initComponents();
@@ -65,10 +67,62 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	}
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
+        person_list.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==3)
+				{
+					person_list.setSelectedIndex(person_list.locationToIndex(e.getPoint()));
+					System.out.println("DID STUFF AND SUCH");
+					JPopupMenu popmenu = new JPopupMenu();
+					JMenuItem ikke = new JMenuItem("Udefinert"),
+							ja = new JMenuItem("Godtar"),
+							nei = new JMenuItem("Avslår");
+					ActionListener l = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Person p = person_list.getModel().getElementAt(person_list.getSelectedIndex());
+							switch(((JMenuItem) e.getSource()).getText())
+							{
+							case("Udefinert"):
+								//TODO ADD FUNCTIONALITY FOR SETTING PARTICIPATING/NOT PARTICIPATING-STATUS
+								setStatus.put(p, "IkkeSvart");
+								break;
+							case("Godtar"):
+								setStatus.put(p, "Deltar");
+								break;
+							case("Avslår"):
+								setStatus.put(p, "Avslaatt");
+								break;
+							}
+						}
+					};
+					ja.addActionListener(l);nei.addActionListener(l);ikke.addActionListener(l);
+					popmenu.add(ikke); popmenu.add(ja); popmenu.add(nei);
+					popmenu.show(person_list, e.getPoint().x,e.getPoint().y);
+
+				}
+				
+			}
+		});
         deltaker_combo.setRenderer(new combo_box_person_renderer());
         
     }
-
+    
     @Override
 	public void callBack(CalResponse response) {
 		if(response.getRoms() != null){
@@ -101,7 +155,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
-		date_textfield.setText(meeting.getDayOfMonth() + ":" + meeting.getMonth() + ":" + meeting.getYear());
+		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
+		
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		romlist_model.addElement(meeting.getRoom());
@@ -120,9 +175,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			personlist_model.addElement(pe);
 			deltaker_combo.removeItem(pe);
 		}
-		String s = toDateTime(date_textfield.getText(), start_textfield.getText());
-		String e = toDateTime(date_textfield.getText(), slutt_textfield.getText());
-		Database.getAvaliableRooms(this, s, e);
 	}
 	private void setMeeting(Meeting meeting)
     {
@@ -663,28 +715,20 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 	meeting.setParticipants(list);
 
-	if (edit) {
+	if (edit) 
+	{
 		complete = true;
 		Database.updateMeeting(this, meeting);
-		ArrayList<Meeting> avtaler = Bruker.getInstance().getAvtaler();
-		for (Meeting m : avtaler) {
-			if (m.getId() == meeting.getId()) {
-				avtaler.remove(m);
-				avtaler.add(meeting);
-			}
-		}
-		Bruker.getInstance().setAvtaler(avtaler);
-		main.parseObject(meeting);
 		
 	}
 	else {
 		complete = true;
 		Database.addMeeting(this, meeting);
-		if (Bruker.getInstance().getAvtaler() == null) {
-			Bruker.getInstance().setAvtaler(new ArrayList<Meeting>());
-		}
-		Bruker.getInstance().getAvtaler().add(meeting);
-		main.parseObject(meeting);
+		
+	}
+	for(Person p: setStatus.keySet())
+	{
+		Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
 	}
 	main.setVisible(true);
 	this.setVisible(false);
@@ -806,66 +850,43 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 			return this;
 		}
     	
-
     }
-    @SuppressWarnings("serial")
-	private class list_person_renderer extends JPanel implements ListCellRenderer
+    private class list_person_renderer extends JLabel implements ListCellRenderer
     {
-    	ImageIcon icon = new ImageIcon("resources/images/person.png");
-    	JLabel name = new JLabel();
-    	JLabel email = new JLabel();
-    	JComboBox<String> choice = new JComboBox<String>(new String[]{"Deltar", "Avslått", "Ikke Svart"});
     	public list_person_renderer()
     	{
-    		super(new FlowLayout(FlowLayout.LEFT));
-    		this.setEnabled(true);
-    		name.setIcon(icon);
-    		add(name);
-    		add(email);
-    		add(choice);
-    		choice.setEnabled(true);
+    		setOpaque(true);
+    		
     	}
 		@Override
-		public JPanel getListCellRendererComponent(JList list, Object value,
+		public JLabel getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) 
 		{
-			this.setEnabled(true);
-			this.setVisible(true);
-			this.validate();
 			if(isSelected)
 			{
 				this.setBackground(Color.GRAY);
-				this.setEnabled(true);
-				this.choice.setEditable(true);
 			}
 			else
 			{
 				this.setBackground(Color.WHITE);
-				this.setEnabled(false);
-				this.choice.setEditable(false);
 			}
 			if(value instanceof Person)
 			{
-				icon = new ImageIcon("resources/images/person.png");
+				ImageIcon icon = new ImageIcon("resources/images/person.png");
 				Person person = (Person) value;
 				String name = person.getName();
 				String email = ((Person) value).getEmail();
-				this.name.setIcon(icon);
-				this.name.setText(name);
-				this.email.setText(email);
-				this.choice.setVisible(true);
-
+				setIcon(icon);
+				setText(name + " - " + email);
 			}
 			else
 			{
-				icon = new ImageIcon("resources/images/group.png");
+				ImageIcon icon = new ImageIcon("resources/images/group.png");
 				Group group = (Group) value;
 				String name = group.getName();
 				String ID = Integer.toString(group.getID());
-				this.name.setIcon(icon);
-				this.name.setText(name);
-				this.email.setText(ID);
-				this.choice.setVisible(false);
+				setIcon(icon);
+				setText(name + " -  Gruppe" + ID);
 			}
 			return this;
 		}

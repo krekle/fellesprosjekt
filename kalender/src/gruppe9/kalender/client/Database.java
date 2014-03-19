@@ -180,6 +180,7 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//DENNER ER HELT PÅ TRYNET!
 		caller.callBack(new CalResponse(result, "Room"));
 	}
 	

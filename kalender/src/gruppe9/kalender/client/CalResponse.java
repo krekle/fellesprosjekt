@@ -144,11 +144,13 @@ public class CalResponse {
 	}
 
 	public ArrayList<Room> getRoms(){
-		System.out.println(var);
+		//VAR BLIR HER null NÅR DEN ETTER ALLE SIGENDE SKULLE VÆRT "Room"
+		System.out.println("var var " +var);
 		if (var == null) {
 			return null;
 		}
-		if(!var.equals("Room")){
+		if(!var.equals("Room"))
+		{
 			return null;
 		}
 		ArrayList<Room> roomList = new ArrayList<Room>();
@@ -157,7 +159,7 @@ public class CalResponse {
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
 				roomList.add(new Room(jo.getInt("ID"), jo.getString("Bygg"), jo.getInt("Etasje"), jo.getString("Beskrivelse"), jo.getInt("Stoerrelse")));
-				System.out.println("notification added!");
+				System.out.println("Room added!");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

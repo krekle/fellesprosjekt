@@ -52,23 +52,16 @@ public class CalResponse {
 							rom, 
 							jo.getString("Tittel"), 
 							jo.getString("Status")));
-					System.out.println("MEETING ADDED");
 				} catch (Exception e) {
 					e.printStackTrace();
 					return false;
 				}
 			}}
-		System.out.print(meetList.size() + "");
 		Bruker.getInstance().setAvtaler(meetList);
-		System.out.print("meetings added to BRUKER");
 		return true;
 	}
 
 	public ArrayList<Meeting> getOtherMeetings(){
-		//		if(!var.equals("avtaler"))
-		//		{
-		//			return null;
-		//		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
 		try 
 		{

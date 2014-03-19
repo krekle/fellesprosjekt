@@ -148,7 +148,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     {
     	try
     	{
-    		ArrayList<Meeting> meetings = Bruker.getInstance().getUser().getMeetings();
+    		ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
     		Collections.sort(meetings);
 	        DefaultListModel<Meeting> contentsOfKomMøtList = new DefaultListModel<Meeting>();
 	        for(Meeting m : meetings)

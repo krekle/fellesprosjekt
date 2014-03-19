@@ -56,7 +56,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getNotifications(this);
     	Database.getGroups(this);
     	
-    	//ServerPuller.update();
+    	ServerPuller.update();
 
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
@@ -214,7 +214,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     public void setMeeting(Meeting meeting)
     {
     	beskrivelse_area.setText(meeting.getDescription());
-    	avtale_label.setText("Avtale: "+meeting.getId());
+    	avtale_label.setText("Avtale: "+ meeting.getName() + " Id: "+meeting.getId());
     	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth()+1)+"."+meeting.getYear());
     	tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
     	eier_label.setText("Eier: "+meeting.getCreator());

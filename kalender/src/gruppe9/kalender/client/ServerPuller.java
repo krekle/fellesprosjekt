@@ -1,6 +1,7 @@
 package gruppe9.kalender.client;
 
 import gruppe9.kalender.model.Alert;
+import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
 
@@ -17,26 +18,28 @@ public class ServerPuller {
 	private static class Updater implements Runnable, ApiCaller {
 
 		private static ArrayList<Notification> notifications;
-		private static ArrayList<Alert> alerts;
+		private static ArrayList<Meeting> meetings;
 
 		@Override
 		public void run() {
 			getNot();
+			System.out.println("getNot called");
 		}
 
 		private void getNot(){
+			//Notifications, Avtaler og Grupper
 			try {
+				System.out.println("Checking for information");
 				notifications = Bruker.getInstance().getNotifications();
-				System.out.println("30 seconds passed");
-				alerts = Bruker.getInstance().getVarsler();
+				meetings = Bruker.getInstance().getAvtaler();
 			} catch (Exception e) {
 				notifications = null;
-				alerts = null;
-				System.out.println("alerts and notifications empty");
+				meetings = null;
+				System.out.println("No alerts and notifications");
 			}
-
+			System.out.println("Asking for updates");
 			try {
-				Database.getAlerts(this);
+				Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 				Database.getNotifications(this);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -50,20 +53,22 @@ public class ServerPuller {
 			System.out.println("AT CALLBACK");
 			if(response.getAlerts()){
 				System.out.println("AT CALLBACK alert");
-				if(alerts != null && Bruker.getInstance().getVarsler() != null){
-					int oldSize = alerts.size();
-					int newSize = Bruker.getInstance().getVarsler().size();
+				if(meetings != null && Bruker.getInstance().getVarsler() != null){
+					int oldSize = ((meetings != null)?meetings.size():0);
+					int newSize = Bruker.getInstance().getAvtaler().size();
 					if(newSize > oldSize){
-						//NEW ALERTS
-						System.out.println("new ALERTS!");
+						//CALL MAIN_WINDOW
+						System.out.println("new MEETINGS!");
 					}
 				}
-			}else if(response.getNotifications()){
+			}
+				else if(response.getNotifications()){
 				System.out.println("AT CALLBACK notifications");
 				if(notifications != null && Bruker.getInstance().getNotifications() != null){
-					int oldSize = alerts.size();
+					int oldSize = notifications.size();
 					int newSize = Bruker.getInstance().getNotifications().size();
 					if(newSize > oldSize){
+						//CALL MAIN_WINDOW
 						System.out.println("new NOTIFICATIONS!");
 					}
 				}
@@ -79,9 +84,9 @@ public class ServerPuller {
 	public static void update() {
 		Runnable r = new Updater();
 		service = Executors.newScheduledThreadPool(1);
-//		service.scheduleAtFixedRate(r, 10, 60, TimeUnit.SECONDS);
 		try {
-			service.schedule(r, 10, TimeUnit.SECONDS);			
+			service.scheduleAtFixedRate(r, 10, 20, TimeUnit.SECONDS);
+//			service.schedule(r, 60, TimeUnit.SECONDS);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -44,6 +44,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		this.end = end;
 		this.description = description;
 		this.roomId = roomId;
+		this.name = title;
 		participants = new ArrayList<Person>();
 		Database.getParticipants(this, this);
 		notifications = new ArrayList<Notification>();

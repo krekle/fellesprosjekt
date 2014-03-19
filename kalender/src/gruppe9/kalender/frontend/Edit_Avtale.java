@@ -87,10 +87,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			//Legg til deltakere
 			String csv = "";
 			String csvS = "";
-			System.out.println("saso");
 			for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
 				Person p = (Person) o;
-				System.out.println(p);
 				csv += p.getId() + ",";
 				csvS += "IkkeSvart,";
 			}
@@ -106,9 +104,25 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
 		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
+		
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
+		romlist_model.addElement(meeting.getRoom());
 		varighet_textfield.setText(meeting.getDuration());
+		Database.getParticipants(this, meeting);
+		ArrayList<Person> p = Bruker.getInstance().getAllPeople();
+		ArrayList<Person> deltakende = new ArrayList<Person>();
+		for (Person per : p) {
+			for (Deltaker d : deltakere) {
+				if (per.getId() == d.getPersonID()) {
+					deltakende.add(per);
+				}
+			}
+		}
+		for (Person pe : deltakende) {
+			personlist_model.addElement(pe);
+			deltaker_combo.removeItem(pe);
+		}
 	}
 	private void setMeeting(Meeting meeting)
     {
@@ -161,6 +175,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         rom_list = new javax.swing.JList();
         auto_select_choice = new javax.swing.JRadioButton();
         romlist_model = new DefaultListModel();
+        personlist_model = new DefaultListModel();
 
         this.addWindowListener(new WindowListener() {
 			
@@ -275,7 +290,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		});
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        person_list.setModel(new DefaultListModel());
+        person_list.setModel(personlist_model);
         jScrollPane3.setViewportView(person_list);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -743,6 +758,7 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField varighet_textfield;
     private org.jdesktop.swingx.JXMonthView dateChooser;
     private DefaultListModel romlist_model;
+    private DefaultListModel personlist_model;
     
     private class combo_box_person_renderer extends JLabel implements ListCellRenderer
     {

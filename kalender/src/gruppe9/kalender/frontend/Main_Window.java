@@ -3,6 +3,7 @@ import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Client;
 import gruppe9.kalender.client.Database;
+import gruppe9.kalender.client.ServerPuller;
 import gruppe9.kalender.model.Deltaker;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
@@ -54,6 +55,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getAlerts(this);
     	Database.getNotifications(this);
     	Database.getGroups(this);
+    	
+    	ServerPuller.update();
 
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	

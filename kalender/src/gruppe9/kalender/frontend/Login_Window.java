@@ -37,10 +37,7 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 
 	public void callBack(CalResponse response)
 	{
-		if(response.confirmLogin()){
-//			ServerPuller puller = new ServerPuller();
-//			
-			
+		if(response.confirmLogin()){			
 			Main_Window window = new Main_Window(this);
 			window.setVisible(true);
 			this.setVisible(false);

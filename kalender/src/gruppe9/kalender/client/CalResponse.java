@@ -197,19 +197,20 @@ public class CalResponse {
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try {
 			JSONObject jo;			
+			ArrayList<Person> personList = new ArrayList<Person>();
 			for (int i = 0; i < arrayResponse.length(); i++) {
+//				System.out.println("heisann" + arrayResponse.toString());
 				jo = arrayResponse.getJSONObject(i);
-
-				JSONArray peopleArray = jo.getJSONArray("people");
-				ArrayList<Person> personList = new ArrayList<Person>();
-				for (int j = 0; j < peopleArray.length(); j++) {
-					JSONObject jobj = (JSONObject) peopleArray.get(j);
-					personList.add(new Person(jobj.getInt("Ansattnummer"), 
-												jobj.getString("Navn"), 
-												jobj.getInt("Telefonnummer"), 
-												jobj.getString("adresse"), 
-												jobj.getString("Epost")));	
-				}
+				
+//				JSONArray peopleArray = jo.getJSONArray("people");
+//				for (int j = 0; j < peopleArray.length(); j++) {
+//					JSONObject jobj = (JSONObject) peopleArray.get(j);
+//					personList.add(new Person(jobj.getInt("Ansattnummer"), 
+//												jobj.getString("Navn"), 
+//												jobj.getInt("Telefonnummer"), 
+//												jobj.getString("adresse"), 
+//												jobj.getString("Epost")));	
+//				}
 				groups.add(new Group(jo.getString("Gruppenavn"), 
 						jo.getString("Beskrivelse"), 
 						jo.getInt("GruppeID"),

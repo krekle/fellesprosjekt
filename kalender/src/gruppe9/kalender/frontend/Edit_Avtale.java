@@ -87,8 +87,10 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			//Legg til deltakere
 			String csv = "";
 			String csvS = "";
+			System.out.println("saso");
 			for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
 				Person p = (Person) o;
+				System.out.println(p);
 				csv += p.getId() + ",";
 				csvS += "IkkeSvart,";
 			}

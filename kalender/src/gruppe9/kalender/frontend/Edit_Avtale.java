@@ -676,6 +676,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 			}
 		}
 		Bruker.getInstance().setAvtaler(avtaler);
+		main.parseObject(meeting);
 		
 	}
 	else {
@@ -685,6 +686,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 			Bruker.getInstance().setAvtaler(new ArrayList<Meeting>());
 		}
 		Bruker.getInstance().getAvtaler().add(meeting);
+		main.parseObject(meeting);
 	}
 	main.setVisible(true);
 	this.setVisible(false);

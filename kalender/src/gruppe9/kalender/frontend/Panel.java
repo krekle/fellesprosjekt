@@ -173,7 +173,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 		}
     	return newModel;
     }
-    
     private void initComponents() 
     {   mondayScrollPane = new javax.swing.JScrollPane();
         mandag_list = new javax.swing.JList(new DefaultListModel<Meeting>());
@@ -325,43 +324,48 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     private DefaultListModel<Meeting> monday_model;
 	public void setSelected(int day)
 	{
+		try{
 		switch(day)
 		{
 		case 0:
+			main.setMeeting((Meeting) mandag_list.getModel().getElementAt(mandag_list.getSelectedIndex()));
 			tirsdag_list.clearSelection();
 			onsdag_list.clearSelection();
 			torsdag_list.clearSelection();
 			fredag_list.clearSelection();
-			main.setMeeting((Meeting) mandag_list.getModel().getElementAt(mandag_list.getSelectedIndex()));
 			break;
 		case 1:
+			main.setMeeting((Meeting) tirsdag_list.getModel().getElementAt(tirsdag_list.getSelectedIndex()));
 			mandag_list.clearSelection();
 			onsdag_list.clearSelection();
 			torsdag_list.clearSelection();
 			fredag_list.clearSelection();
-			main.setMeeting((Meeting) tirsdag_list.getModel().getElementAt(tirsdag_list.getSelectedIndex()));
 			break;
 		case 2:
+			main.setMeeting((Meeting) onsdag_list.getModel().getElementAt(onsdag_list.getSelectedIndex()));
 			mandag_list.clearSelection();
 			tirsdag_list.clearSelection();
 			torsdag_list.clearSelection();
 			fredag_list.clearSelection();
-			main.setMeeting((Meeting) onsdag_list.getModel().getElementAt(onsdag_list.getSelectedIndex()));
 			break;
 		case 3:
+			main.setMeeting((Meeting) torsdag_list.getModel().getElementAt(torsdag_list.getSelectedIndex()));
 			mandag_list.clearSelection();
 			tirsdag_list.clearSelection();
 			onsdag_list.clearSelection();
 			fredag_list.clearSelection();
-			main.setMeeting((Meeting) torsdag_list.getModel().getElementAt(torsdag_list.getSelectedIndex()));
 			break;
 		case 4:
+			main.setMeeting((Meeting) fredag_list.getModel().getElementAt(fredag_list.getSelectedIndex())); 
 			mandag_list.clearSelection();
 			tirsdag_list.clearSelection();
 			onsdag_list.clearSelection();
 			torsdag_list.clearSelection();
-			main.setMeeting((Meeting) fredag_list.getModel().getElementAt(fredag_list.getSelectedIndex())); 
 			break;		
+		}}
+		catch(Exception e)
+		{
+//			e.printStackTrace();
 		}
 	}
 	
@@ -402,9 +406,9 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 		if(toAdd == null){return;}
 		for(Meeting m : toAdd)
 		{
-//			System.out.println(m.getCreator()+":"+m.getName()+":"+m.getEnd());
-//			System.out.println("Meetings = "+meetings);
-			meetings.add(m);
+			if(!meetings.contains(m)){
+				meetings.add(m);				
+			}
 		}
 //		System.out.println("Ant møter: "+meetings.size());
 		refresh();

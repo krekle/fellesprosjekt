@@ -656,6 +656,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	if (room == null) {
 		meeting.setPlace(rom_textfield.getText());
 	}
+	System.out.println(room.getId());
 	meeting.setRoom(room.getId());
 	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();
@@ -680,6 +681,9 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	else {
 		complete = true;
 		Database.addMeeting(this, meeting);
+		if (Bruker.getInstance().getAvtaler() == null) {
+			Bruker.getInstance().setAvtaler(new ArrayList<Meeting>());
+		}
 		Bruker.getInstance().getAvtaler().add(meeting);
 	}
 	main.setVisible(true);

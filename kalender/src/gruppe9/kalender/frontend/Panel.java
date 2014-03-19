@@ -60,17 +60,21 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     }
     public void addMe()
     {
-    		for(int x = 0; x< meetings.size(); x++)
-    		{
-				if(meetings.get(x).getParticipants().contains(Bruker.getInstance().getUser()))
-				{
-					meetings.remove(x);
-				}
-    		}
-    		for(Meeting m : Bruker.getInstance().getAvtaler())
-    		{
-    			addMeeting(m);
-    		}
+    	System.out.println(meetings.size());
+		for(int x = 0; x< meetings.size(); x++)
+		{
+			if(meetings.get(x).getParticipants().contains(Bruker.getInstance().getUser()))
+			{
+				meetings.remove(x);
+			}
+		}
+		System.out.println();
+		System.out.println();
+		for(Meeting m : Bruker.getInstance().getAvtaler())
+		{
+			addMeeting(m);
+			System.out.println(m.toString());
+		}
     	refresh();
     }
     public void addPerson(Person p)

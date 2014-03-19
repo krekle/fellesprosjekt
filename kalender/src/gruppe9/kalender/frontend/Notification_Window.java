@@ -45,7 +45,6 @@ public class Notification_Window extends javax.swing.JFrame {
         {
         	for(Notification note : notifications)
         	{
-        		System.out.println(note.getDescription());
         		notes.addElement(note);
         	}
         	this.jList1.setModel(notes);        	
@@ -163,7 +162,6 @@ public class Notification_Window extends javax.swing.JFrame {
 			Notification curNote = (Notification) value;
 			if(isSelected)
 			{
-				System.out.println();
 				this.setBackground(Color.CYAN);
 				this.setText("SETT" + "  -   Avtale " + curNote.getMeetingId() + "  -  " + curNote.getTime());
 				curNote.hasBeenRead = true;

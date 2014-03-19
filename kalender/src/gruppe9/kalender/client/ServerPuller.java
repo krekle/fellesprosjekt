@@ -53,7 +53,6 @@ public class ServerPuller {
 					int newSize = Bruker.getInstance().getAvtaler().size();
 					if(newSize > oldSize){
 						mw.parseObject(Bruker.getInstance().getAvtaler());
-						System.out.println("new MEETINGS!");
 					}
 				}
 			}
@@ -63,7 +62,6 @@ public class ServerPuller {
 					int newSize = Bruker.getInstance().getNotifications().size();
 					if(newSize > oldSize){
 						mw.parseObject(Bruker.getInstance().getNotifications());
-						System.out.println("new NOTIFICATIONS!");
 					}
 				}
 			}

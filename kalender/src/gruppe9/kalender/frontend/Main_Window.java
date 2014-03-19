@@ -53,8 +53,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     public Main_Window(Login_Window login) 
     {
     	this.login = login;
-    	Database.getAllPeople(this);
-    	Database.getMeetings(this, Bruker.getInstance().getUser().getId());    		
+    	Database.getAllPeople(this);    		
     	Database.getAlerts(this);
     	Database.getNotifications(this);
     	Database.getGroups(this);
@@ -68,7 +67,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         tabWindow.addTab("Me", me);
         tabWindow.addTab("Felles", Felles);
         ArrayList<Panel> groupPanels = new ArrayList<Panel>();
-
         for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) 
         {
         	groupPanels.add( new Panel(week_list_scroller, this, Bruker.getInstance().getGroups().get(i).getName()));
@@ -77,7 +75,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(j));
 			}
 		}
-        
+    	Database.getMeetings(this, Bruker.getInstance().getUser().getId());
         tabWindow.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -142,13 +140,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));
 			}
 		});
-        updateKomMeetings();
+//        updateKomMeetings();
     }
     public void updateKomMeetings()
     {
     	try
     	{
     		ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
+    		System.out.println("MEETINGS: " + meetings.size());
     		Collections.sort(meetings);
 	        DefaultListModel<Meeting> contentsOfKomMøtList = new DefaultListModel<Meeting>();
 	        for(Meeting m : meetings)
@@ -159,20 +158,18 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         }
     	catch(Exception e)
     	{
-    		
+    		e.printStackTrace();
     	}
     }
     public void callBack(CalResponse response){
     	try {
-    		if(response.getAvtaler()) {
+    		if(response.getAvtaler()) 
+    		{
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-
-    			System.out.println();System.out.println();System.out.println();System.out.println();
-    			System.out.println("Got stuff");
+    			System.out.println("MEETINGS SIZE: "+Bruker.getInstance().getAvtaler().size());
     			for(Component c : tabWindow.getComponents())
     			{
-    				System.out.println("Adding to...." + ((Panel) c).getName());
     				((Panel) c).addMe();    				
     			}
     			updateKomMeetings();
@@ -187,17 +184,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    	{
 	    		if(Bruker.getInstance().getNotifications() != null)
 	    		{
-	    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
 	    		}
 	    		else{
-	    			System.out.println("No new notifications..");
 	    		}
 	    	}
 	    	else if(response.getAllPeople())
 	    	{
 	    		for(Person p : Bruker.getInstance().getAllPeople())
 	    		{
-	    			System.out.println(p.getName() + " - " + p.getEmail());
 	    		}
 	    	}
 	    	else if(response.getDeltakere() != null)
@@ -211,13 +205,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    	}
 	    	else if(response.getGroups())
 	    	{
-	    		System.out.println(Bruker.getInstance().getGroups());
 
 	    	}
     	}
     	catch (Exception e)
     	{
-    		System.out.println("TODO: ... ");
     	}
 
     	//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
@@ -331,7 +323,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 //				client.logOut();
 				login = new Login_Window();
-				System.out.println("Closing!");
 			}
 			
 			@Override

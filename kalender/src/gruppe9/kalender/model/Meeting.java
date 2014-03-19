@@ -48,9 +48,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		this.roomId = roomId;
 		this.name = title;
 		
-		System.out.println("FOLK SIN STATUS: " + status);
 		this.myStatus = ((status != null)? status:"IkkeSvart");
-		System.out.println(myStatus);
 		
 		participants = new ArrayList<Person>();
 		Database.getParticipants(this, this);
@@ -70,12 +68,8 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	public String getDuration(){
 		int minutes = 0;
 		minutes += ((Integer.parseInt(this.getEndTime().substring(0,2))*60) + Integer.parseInt(this.getEndTime().substring(3)));
-		System.out.println(minutes);
-		System.out.println((Integer.parseInt(this.getStartTime().substring(0,2))*60) + Integer.parseInt(this.getStartTime().substring(3)));
 		minutes -= (Integer.parseInt(this.getStartTime().substring(0,2))*60) + Integer.parseInt(this.getStartTime().substring(3));
-		System.out.println(minutes);
 		int hours = (int) Math.floor(minutes/60);
-		System.out.println("hours" + hours);
 		minutes = minutes%60;
 		if (minutes >= 10){
 			return String.valueOf(hours) + ":" + String.valueOf(minutes);
@@ -90,7 +84,6 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		return Integer.parseInt(start.substring(0,4));
 	}
 	public int getMonth(){
-		System.out.println(start);
 		return Integer.parseInt(start.substring(5,7));
 	}
 	public int getDayOfMonth(){
@@ -117,7 +110,6 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		calendar.set(Calendar.YEAR,getYear());
 		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
-//		System.out.println(calendar.getTime());
 
 		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);
 	}
@@ -128,7 +120,6 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
 		
-//		System.out.println(calendar.getTime());
 
 		return (calendar.get(Calendar.WEEK_OF_YEAR));
 	}

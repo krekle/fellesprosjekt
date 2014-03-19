@@ -21,9 +21,6 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 	{
 		
 		Meeting meeting = (Meeting) value;
-		System.out.println("MEETING ID: " + meeting.getId()+ "\n"
-				+	"	MEETING STATUS: "+meeting.getMyStatus() +"\n"
-				+	"	MEETING CREATOR: "+ meeting.getCreator());
 		switch(meeting.getMyStatus())
 		{
 		case "Deltar":

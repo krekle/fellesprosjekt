@@ -104,7 +104,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		date_textfield.setText(meeting.getDayOfMonth() + ":" + meeting.getMonth() + ":" + meeting.getYear());
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
-		System.out.println(meeting.getRoom());
 		romlist_model.addElement(meeting.getRoom());
 		varighet_textfield.setText(meeting.getDuration());
 		Database.getParticipants(this, meeting);
@@ -656,7 +655,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	if (room == null) {
 		meeting.setPlace(rom_textfield.getText());
 	}
-	System.out.println(room.getId());
 	meeting.setRoom(room.getId());
 	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();

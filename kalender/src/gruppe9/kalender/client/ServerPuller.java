@@ -1,5 +1,6 @@
 package gruppe9.kalender.client;
 
+import gruppe9.kalender.frontend.Main_Window;
 import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerPuller {
 
 	private static ScheduledExecutorService service; 
+	private static Main_Window mw;
 
 	private static class Updater implements Runnable, ApiCaller {
 
@@ -57,7 +59,7 @@ public class ServerPuller {
 					int oldSize = ((meetings != null)?meetings.size():0);
 					int newSize = Bruker.getInstance().getAvtaler().size();
 					if(newSize > oldSize){
-						//CALL MAIN_WINDOW
+						mw.parseObject(Bruker.getInstance().getAvtaler());
 						System.out.println("new MEETINGS!");
 					}
 				}
@@ -68,7 +70,7 @@ public class ServerPuller {
 					int oldSize = notifications.size();
 					int newSize = Bruker.getInstance().getNotifications().size();
 					if(newSize > oldSize){
-						//CALL MAIN_WINDOW
+						mw.parseObject(Bruker.getInstance().getNotifications());
 						System.out.println("new NOTIFICATIONS!");
 					}
 				}
@@ -80,7 +82,8 @@ public class ServerPuller {
 
 	}
 
-	public static void update() {
+	public static void update(Main_Window main) {
+		mw = main;
 		Runnable r = new Updater();
 		service = Executors.newScheduledThreadPool(1);
 		try {

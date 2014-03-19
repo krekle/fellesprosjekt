@@ -241,7 +241,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	
     	Database.getParticipants(this, meeting);
     	//DETTE MÅ BYTTES UT MED DELTAKERE - IKKE PERSON.
-    	if(meeting.getMyStatus().equals("IkkeSvart"))
+    	if(meeting.getMyStatus().equals("IkkeSvart")&& meeting.getParticipants().contains(Bruker.getInstance().getUser()))
     	{
     		if(!meeting.getParticipants().contains(Bruker.getInstance().getUser()))
     		{
@@ -261,9 +261,15 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     			decline_choice.setSelected(false);
     			accept_choice.setSelected(true);
     		}
-    		else
+    		else if(meeting.getMyStatus().equals("Avslaatt"))
     		{
     			decline_choice.setSelected(true);
+    			accept_choice.setSelected(false);
+    		}
+    		else
+    		{
+    			decline_choice.setSelected(false
+    					);
     			accept_choice.setSelected(false);
     		}
     	}
@@ -910,36 +916,41 @@ public Meeting getAvtale()
     			newGroup.addPerson(p);
     		}
     	}
-    	else if(o instanceof Meeting)
+    	else if(o instanceof ArrayList)
     	{
-    		Meeting meeting = (Meeting) o;
-    		if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
-    		{
-    			((Panel) tabWindow.getComponentAt(0)).addMeeting(meeting);
-    		}
-    		if(meeting.getGroup() != null)
-    		{
-    			for(Component C : tabWindow.getComponents())
-    			{
-    				Panel panel = (Panel) C;
-    				if(C.getName().equals(meeting.getGroup().getName())){
-    					panel.addMeeting(meeting);
-    				}
-    			}
-    		}
-    		else
-    		{
-				for(Component C : tabWindow.getComponents())
-				{
-					Panel panel = (Panel) C;
-					for(Person p : panel.getPeople()){
-						if(p.getId() == meeting.getCreator()){
-							panel.addMeeting(meeting);
-						}
-					}
-				}
-    		}
+    		
+    		((Panel)tabWindow.getComponentAt(0)).refresh();
     	}
+//    	else if(o instanceof Meeting)
+//    	{
+//    		Meeting meeting = (Meeting) o;
+//    		if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
+//    		{
+//    			((Panel) tabWindow.getComponentAt(0)).addMeeting(meeting);
+//    		}
+//    		if(meeting.getGroup() != null)
+//    		{
+//    			for(Component C : tabWindow.getComponents())
+//    			{
+//    				Panel panel = (Panel) C;
+//    				if(C.getName().equals(meeting.getGroup().getName())){
+//    					panel.addMeeting(meeting);
+//    				}
+//    			}
+//    		}
+//    		else
+//    		{
+//				for(Component C : tabWindow.getComponents())
+//				{
+//					Panel panel = (Panel) C;
+//					for(Person p : panel.getPeople()){
+//						if(p.getId() == meeting.getCreator()){
+//							panel.addMeeting(meeting);
+//						}
+//					}
+//				}
+//    		}
+//    	}
     	else if(o instanceof Notification)
     	{
     		this.notifications.addNotification((Notification) o);

@@ -419,12 +419,14 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 		{
 			this.meetings.add(meeting);
 		}
+		refresh();
 	}
 	public void removeMeeting(Meeting meeting)
 	{
 		if(this.meetings.contains(meeting)){
 			this.meetings.remove(meeting);
 		}
+		refresh();
 	}
 	
     

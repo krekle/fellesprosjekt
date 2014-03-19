@@ -51,10 +51,11 @@ public class Varsel_Popup extends javax.swing.JFrame {
         {
         	this.alert = new Alert("","","",1,"");
         }
-        
-        
     }
-
+    public String getAlertType()
+    {
+    	return type_label.getText(); 
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -217,4 +218,10 @@ public class Varsel_Popup extends javax.swing.JFrame {
     private javax.swing.JTextArea melding_text;
     private javax.swing.JTextField date_time_text;
     // End of variables declaration//GEN-END:variables
+	public void setAlert(Alert a) 
+	{
+		this.date_time_text.setText(a.getTime());
+		this.melding_text.setText(a.getDesciption());
+		this.sound_label.setText(a.getSound());
+	}
 }

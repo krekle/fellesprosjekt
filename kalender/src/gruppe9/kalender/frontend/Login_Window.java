@@ -53,7 +53,6 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
-
 		user_field = new javax.swing.JTextField();
 		user_label = new javax.swing.JLabel();
 		pass_label = new javax.swing.JLabel();
@@ -68,7 +67,7 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 			{
 				attemptLogin();
 			}
-		};      
+		};   
 		user_field.addActionListener(listener);
 		pass_field.addActionListener(listener);
 		login_button.addActionListener(listener);

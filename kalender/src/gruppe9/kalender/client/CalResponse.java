@@ -10,6 +10,7 @@ import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -193,10 +194,24 @@ public class CalResponse {
 		}
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try {
-			JSONObject jo;
+			JSONObject jo;			
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
-				groups.add(new Group(jo.getString("Gruppenavn"), jo.getString("Beskrivelse"), jo.getInt("GruppeID")));
+
+				JSONArray peopleArray = jo.getJSONArray("people");
+				ArrayList<Person> personList = new ArrayList<Person>();
+				for (int j = 0; j < peopleArray.length(); j++) {
+					JSONObject jobj = (JSONObject) peopleArray.get(j);
+					personList.add(new Person(jobj.getInt("Ansattnummer"), 
+												jobj.getString("Navn"), 
+												jobj.getInt("Telefonnummer"), 
+												jobj.getString("adresse"), 
+												jobj.getString("Epost")));	
+				}
+				groups.add(new Group(jo.getString("Gruppenavn"), 
+						jo.getString("Beskrivelse"), 
+						jo.getInt("GruppeID"),
+						personList));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

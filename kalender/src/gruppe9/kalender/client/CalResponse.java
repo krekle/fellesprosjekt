@@ -57,10 +57,10 @@ public class CalResponse {
 		return false;
 	}
 	public ArrayList<Meeting> getOtherMeetings(){
-//		if(!var.equals("avtaler"))
-//		{
-//			return null;
-//		}
+		//		if(!var.equals("avtaler"))
+		//		{
+		//			return null;
+		//		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
 		try 
 		{
@@ -204,7 +204,7 @@ public class CalResponse {
 		Bruker.getInstance().setGroups(groups);
 		return true;
 	}
-	
+
 	public boolean confirmLogin(){
 		try {
 			if(objectResponse != null){
@@ -252,10 +252,16 @@ public class CalResponse {
 	 * 
 	 */
 	public String getSimpleResponse(String var){
+		String result = "";
 		try {
-			return objectResponse.getString(var);
+			result = objectResponse.getString(var);
 		} catch (JSONException e) {
-			return null;
+			try {
+				result =  objectResponse.getInt(var)+"";
+			} catch (Exception e2) {
+				return null;
+			}
 		}
+		return result;
 	}
 }

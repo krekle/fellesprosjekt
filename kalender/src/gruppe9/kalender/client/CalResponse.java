@@ -134,6 +134,7 @@ public class CalResponse {
 	}
 
 	public ArrayList<Room> getRoms(){
+		System.out.println(var);
 		if(!var.equals("Room")){
 			return null;
 		}

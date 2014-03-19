@@ -266,7 +266,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		}
     		else
     		{
-    			System.out.println("   IKKESVART HER");
     			AvslåDelta.clearSelection();
     		}
     	}

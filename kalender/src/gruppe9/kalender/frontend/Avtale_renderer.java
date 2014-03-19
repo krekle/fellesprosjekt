@@ -21,10 +21,10 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 	{
 		
 		Meeting meeting = (Meeting) value;
-		Boolean boop = meeting.getParticipants().contains(Bruker.getInstance().getUser());
-		switch(boop.toString())
+		System.out.println(meeting.getMyStatus());
+		switch(meeting.getMyStatus())
 		{
-		case "true":
+		case "Deltar":
 			if(isSelected){
 				this.setBackground(lightGreen);
 			}
@@ -32,7 +32,7 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 				this.setBackground(Color.GREEN);
 			}
 			break;
-		case "false":
+		case "Avslaatt":
 			if(isSelected)
 			{
 				this.setBackground(lightRed);
@@ -42,7 +42,7 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 				this.setBackground(Color.RED);
 			}
 			break;
-		case "ikke_svart":
+		case "IkkeSvart":
 			this.setBackground(Color.GRAY);
 			break;
 		}

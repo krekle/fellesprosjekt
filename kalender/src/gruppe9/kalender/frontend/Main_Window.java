@@ -217,7 +217,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     {
     	beskrivelse_area.setText("Avtalenavn " + meeting.getName() + "\n Beskrivelse: " + meeting.getDescription());
     	avtale_label.setText("Avtale: " + meeting.getId());
-    	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth()+1)+"."+meeting.getYear());
+    	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth())+"."+meeting.getYear());
     	tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
     	for(Person p : Bruker.getInstance().getAllPeople())
     	{
@@ -243,25 +243,31 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	
     	Database.getParticipants(this, meeting);
     	//DETTE MÅ BYTTES UT MED DELTAKERE - IKKE PERSON.
-    	if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
+    	if(meeting.getMyStatus().equals("IkkeSvart"))
     	{
-    		decline_choice.setSelected(false);
-    		accept_choice.setSelected(true);
-    		System.out.println("Moop!");
-    		for(Person p : meeting.getParticipants())
+    		if(!meeting.getParticipants().contains(Bruker.getInstance().getUser()))
     		{
-    			System.out.println(p.getName());
+    			decline_choice.setEnabled(false);
+    			accept_choice.setEnabled(false);
+    		}
+    		else
+    		{
+    			decline_choice.setEnabled(true);
+    			accept_choice.setEnabled(true);
     		}
     	}
     	else
     	{
-    		System.out.println("Boop!");
-    		for(Person p : meeting.getParticipants())
+    		if(meeting.getMyStatus().equals("Deltar"))
     		{
-    			System.out.println(p.getName());
+    			decline_choice.setSelected(false);
+    			accept_choice.setSelected(true);
     		}
-    		this.decline_choice.setSelected(true);
-    		accept_choice.setSelected(false);
+    		else
+    		{
+    			this.decline_choice.setSelected(true);
+    			accept_choice.setSelected(false);
+    		}
     	}
     	if(meeting.getCreator() != Bruker.getInstance().getUser().getId())
     	{
@@ -787,18 +793,13 @@ private void prev_buttonActionPerformed(java.awt.event.ActionEvent evt)
 }
 
 private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
-	if(current_Avtale.getParticipants().contains(Bruker.getInstance().getUser())) {
-		
-		ArrayList<Person> participates = current_Avtale.getParticipants();
-		participates.remove(Bruker.getInstance().getUser());
-		current_Avtale.setParticipants(participates);
-		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
-	}
+	current_Avtale.setMyStatus("Avslaatt");
+	Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
 }
 
 private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
 {
-	current_Avtale.addPerson(Bruker.getInstance().getUser());
+	current_Avtale.setMyStatus("Deltar");
 	Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
 }
 
@@ -832,9 +833,6 @@ private void notification_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {
 	
 }
-
-
-
 private Meeting current_Avtale = null;
 
 public Meeting getAvtale()

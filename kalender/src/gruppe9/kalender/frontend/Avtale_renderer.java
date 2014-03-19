@@ -13,19 +13,34 @@ import javax.swing.ListCellRenderer;
 public class Avtale_renderer extends JTextArea implements ListCellRenderer 
 {
 
+	Color lightGreen = new Color(100,255,100);
+	Color lightRed = new Color(255, 100, 100);
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
 		
 		Meeting meeting = (Meeting) value;
-		switch("deltar")
+		Boolean boop = meeting.getParticipants().contains(Bruker.getInstance().getUser());
+		switch(boop.toString())
 		{
-		case "deltar":
-			this.setBackground(Color.GREEN);
+		case "true":
+			if(isSelected){
+				this.setBackground(lightGreen);
+			}
+			else{
+				this.setBackground(Color.GREEN);
+			}
 			break;
-		case "deltar_ikke":
-			this.setBackground(Color.RED);
+		case "false":
+			if(isSelected)
+			{
+				this.setBackground(lightRed);
+			}
+			else{
+				
+				this.setBackground(Color.RED);
+			}
 			break;
 		case "ikke_svart":
 			this.setBackground(Color.GRAY);

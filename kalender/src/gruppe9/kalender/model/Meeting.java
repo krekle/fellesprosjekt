@@ -21,6 +21,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	private int roomId;
 	private String place;
 	private Group group = null;
+	private String myStatus;
 	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
@@ -37,7 +38,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	}
 
 	public Meeting(int meetingId, int creatorId, String start, String end,
-			String description, int roomId, String title) {
+			String description, int roomId, String title, String status) {
 		super();
 		this.meetingId = meetingId;
 		this.creatorId = creatorId;
@@ -46,11 +47,20 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		this.description = description;
 		this.roomId = roomId;
 		this.name = title;
+		this.myStatus = status;
 		participants = new ArrayList<Person>();
 		Database.getParticipants(this, this);
 		notifications = new ArrayList<Notification>();
 		emailAlert = null;
 		soundAlert = null;
+	}
+
+	public String getMyStatus() {
+		return myStatus;
+	}
+
+	public void setMyStatus(String myStatus) {
+		this.myStatus = myStatus;
 	}
 
 	public String getDuration(){

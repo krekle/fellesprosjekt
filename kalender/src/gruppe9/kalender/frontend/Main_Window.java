@@ -217,7 +217,13 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	avtale_label.setText("Avtale: " + meeting.getId());
     	dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth()+1)+"."+meeting.getYear());
     	tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
-    	eier_label.setText("Eier: "+meeting.getCreator());
+    	for(Person p : Bruker.getInstance().getAllPeople())
+    	{
+    		if(p.getId()==meeting.getCreator()){
+    			eier_label.setText("Eier: "+p.getName());
+    			break;
+    		}
+    	}
     	if(meeting.getParticipantListModel() != null)
     	{
     		deltaker_list.setModel(meeting.getParticipantListModel());

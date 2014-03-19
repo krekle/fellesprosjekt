@@ -108,13 +108,11 @@ public class Client
  
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
-		System.out.println(url);
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		
 		for (int i = 0; i < strings.length; i = i+2) {
 			urlParameters.add(new BasicNameValuePair(strings[i], strings[i+1]));
 		}
-		System.out.println(urlParameters.toString());
 		
 		post.setEntity(new UrlEncodedFormEntity(urlParameters));
  

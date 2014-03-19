@@ -185,20 +185,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    	}
 	    	else if(response.getNotifications())
 	    	{
-	    		if(Bruker.getInstance().getNotifications() != null)
-	    		{
-	    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
-	    		}
-	    		else{
-	    			System.out.println("No new notifications..");
-	    		}
+	    		//TODO: ??
 	    	}
 	    	else if(response.getAllPeople())
 	    	{
-	    		for(Person p : Bruker.getInstance().getAllPeople())
-	    		{
-	    			System.out.println(p.getName() + " - " + p.getEmail());
-	    		}
+	    		//TODO: ??
 	    	}
 	    	else if(response.getDeltakere() != null)
 	    	{
@@ -211,7 +202,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    	}
 	    	else if(response.getGroups())
 	    	{
-	    		System.out.println(Bruker.getInstance().getGroups());
+	    		//TODO: ??
 
 	    	}
     	}

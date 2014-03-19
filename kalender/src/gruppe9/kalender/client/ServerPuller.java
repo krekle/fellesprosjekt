@@ -1,72 +1,98 @@
 package gruppe9.kalender.client;
-import static java.util.concurrent.TimeUnit.*;
+
+import gruppe9.kalender.model.Alert;
+import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Notification;
+import gruppe9.kalender.user.Bruker;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-import gruppe9.kalender.frontend.*;
-import gruppe9.kalender.model.Alert;
-import gruppe9.kalender.model.Notification;
-import gruppe9.kalender.user.Bruker;
 
-public class ServerPuller implements ApiCaller{
+public class ServerPuller {
 
-	private static ArrayList<Notification> notif;
-	private static ArrayList<Alert> alerts;
-	
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	private final ApiCaller call = this;
+	private static ScheduledExecutorService service; 
 
-	public void pullFromServer() {
-		final Runnable pull = new Runnable() {
-			public void run() {
-				getNot();s
+	private static class Updater implements Runnable, ApiCaller {
+
+		private static ArrayList<Notification> notifications;
+		private static ArrayList<Meeting> meetings;
+
+		@Override
+		public void run() {
+			getNot();
+			System.out.println("getNot called");
+		}
+
+		private void getNot(){
+			//Notifications, Avtaler og Grupper
+			try {
+				System.out.println("Checking for information");
+				notifications = Bruker.getInstance().getNotifications();
+				meetings = Bruker.getInstance().getAvtaler();
+			} catch (Exception e) {
+				notifications = null;
+				meetings = null;
+				System.out.println("No alerts and notifications");
+			}
+			System.out.println("Asking for updates");
+			try {
+				Database.getMeetings(this, Bruker.getInstance().getUser().getId());
+				Database.getNotifications(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+
+		@Override
+		public void callBack(CalResponse response) {
+			try{
+			System.out.println("AT CALLBACK");
+			if(response.getAlerts()){
+				System.out.println("AT CALLBACK alert");
+				if(meetings != null && Bruker.getInstance().getVarsler() != null){
+					int oldSize = ((meetings != null)?meetings.size():0);
+					int newSize = Bruker.getInstance().getAvtaler().size();
+					if(newSize > oldSize){
+						//CALL MAIN_WINDOW
+						System.out.println("new MEETINGS!");
+					}
 				}
-		};
-		
-		final ScheduledFuture<?> pullHandle =
-				scheduler.scheduleAtFixedRate(pull, 60, 60, SECONDS);
-	
-//		
-//		scheduler.schedule(new Runnable() {
-//			public void run() { pullHandle.cancel(true); }
-//		}, 60 * 60, SECONDS);
+			}
+				else if(response.getNotifications()){
+				System.out.println("AT CALLBACK notifications");
+				if(notifications != null && Bruker.getInstance().getNotifications() != null){
+					int oldSize = notifications.size();
+					int newSize = Bruker.getInstance().getNotifications().size();
+					if(newSize > oldSize){
+						//CALL MAIN_WINDOW
+						System.out.println("new NOTIFICATIONS!");
+					}
+				}
+			}
+			}catch(Exception e){
+				e.printStackTrace();
+				System.err.println("Something went terribly wrong?");
+			}
+		}
+
 	}
 
-	private void getNot(){
+	public static void update() {
+		Runnable r = new Updater();
+		service = Executors.newScheduledThreadPool(1);
 		try {
-			notif = Bruker.getInstance().getNotifications();
-			alerts = Bruker.getInstance().getVarsler();
+			service.scheduleAtFixedRate(r, 10, 20, TimeUnit.SECONDS);
+//			service.schedule(r, 60, TimeUnit.SECONDS);			
 		} catch (Exception e) {
-			notif = null;
-			alerts = null;
-			System.out.println("alerts and notifications empty");
+			e.printStackTrace();
 		}
-		
-		Database.getAlerts(call);
-		Database.getNotifications(call);
-	}
-	
-	@Override
-	public void callBack(CalResponse response) {
-		if(response.getAlerts()){
-			if(alerts != null && Bruker.getInstance().getVarsler() != null){
-				int oldSize = alerts.size();
-				int newSize = Bruker.getInstance().getVarsler().size();
-				if(newSize > oldSize){
-					//NEW ALERTS
-				}
-			}
-		}else if(response.getNotifications()){
-			if(notif != null && Bruker.getInstance().getNotifications() != null){
-				int oldSize = alerts.size();
-				int newSize = Bruker.getInstance().getNotifications().size();
-				if(newSize > oldSize){
-					//NEW NOTIFICATIONS
-				}
-			}
-		}
+		//
+		//        Thread.sleep(10000);
+		//        service.shutdown();
+
 	}
 }

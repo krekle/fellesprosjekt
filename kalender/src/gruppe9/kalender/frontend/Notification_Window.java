@@ -79,8 +79,8 @@ public class Notification_Window extends javax.swing.JFrame {
 			{
 				Notification note = (Notification) jList1.getModel().getElementAt(jList1.getSelectedIndex());
 				jLabel1.setText(""+Bruker.getInstance().getUser().getId());
-				jLabel2.setText(""+note.getMeetingId());
-				jLabel3.setText(note.getTime());
+				jLabel2.setText("Avtale "+note.getMeetingId());
+				jLabel3.setText("kl. "+note.getTime());
 				jTextArea1.setText(note.getDescription());
 			}
 		});
@@ -196,5 +196,10 @@ public class Notification_Window extends javax.swing.JFrame {
 			}
 		}
 		return false;
+	}
+	public void addNotification(Notification o) 
+	{
+		o.hasBeenRead = false;
+		notifications.add(o);
 	}
 }

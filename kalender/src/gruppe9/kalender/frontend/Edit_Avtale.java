@@ -87,8 +87,10 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			//Legg til deltakere
 			String csv = "";
 			String csvS = "";
+			System.out.println("saso");
 			for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
 				Person p = (Person) o;
+				System.out.println(p);
 				csv += p.getId() + ",";
 				csvS += "IkkeSvart,";
 			}
@@ -111,7 +113,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 	private void setMeeting(Meeting meeting)
     {
     	this.edit = ((meeting != null) ? true:false);
-    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null));
+    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null, ""));
 
     	
     }
@@ -647,12 +649,14 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	meeting.setParticipants(list);
 
 	if (edit) {
-		Database.updateMeeting(this, meeting);
 		complete = true;
+		Database.updateMeeting(this, meeting);
+		
 	}
 	else {
-		Database.addMeeting(this, meeting);
 		complete = true;
+		Database.addMeeting(this, meeting);
+		
 	}
 	main.setVisible(true);
 	this.setVisible(false);

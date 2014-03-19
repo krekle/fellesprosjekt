@@ -64,6 +64,7 @@ public class Bruker {
 	}
 
 	public void setAvtaler(ArrayList<Meeting> avtaler) {
+		System.out.println("AVTALER ADDED IN BRUKER");
 		this.avtaler = avtaler;
 	}
 

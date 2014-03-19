@@ -52,13 +52,15 @@ public class CalResponse {
 							rom, 
 							jo.getString("Tittel"), 
 							jo.getString("Status")));
-
+					System.out.println("MEETING ADDED");
 				} catch (Exception e) {
 					e.printStackTrace();
 					return false;
 				}
 			}}
-		Bruker.getInstance().getUser().setMeetings(meetList);
+		System.out.print(meetList.size() + "");
+		Bruker.getInstance().setAvtaler(meetList);
+		System.out.print("meetings added to BRUKER");
 		return true;
 	}
 

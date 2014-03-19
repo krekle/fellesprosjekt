@@ -68,7 +68,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         deltaker_combo.setRenderer(new combo_box_person_renderer());
         
     }
-    
+
     @Override
 	public void callBack(CalResponse response) {
 		if(response.getRoms() != null){
@@ -791,13 +791,15 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 			return this;
 		}
     	
+
     }
-    private class list_person_renderer extends JPanel implements ListCellRenderer
+    @SuppressWarnings("serial")
+	private class list_person_renderer extends JPanel implements ListCellRenderer
     {
     	ImageIcon icon = new ImageIcon("resources/images/person.png");
     	JLabel name = new JLabel();
     	JLabel email = new JLabel();
-    	JComboBox choice = new JComboBox(new String[]{"Deltar", "Avslått", "Ikke Svart"});
+    	JComboBox<String> choice = new JComboBox<String>(new String[]{"Deltar", "Avslått", "Ikke Svart"});
     	public list_person_renderer()
     	{
     		super(new FlowLayout(FlowLayout.LEFT));
@@ -812,15 +814,20 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 		public JPanel getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) 
 		{
+			this.setEnabled(true);
+			this.setVisible(true);
+			this.validate();
 			if(isSelected)
 			{
 				this.setBackground(Color.GRAY);
 				this.setEnabled(true);
+				this.choice.setEditable(true);
 			}
 			else
 			{
 				this.setBackground(Color.WHITE);
 				this.setEnabled(false);
+				this.choice.setEditable(false);
 			}
 			if(value instanceof Person)
 			{

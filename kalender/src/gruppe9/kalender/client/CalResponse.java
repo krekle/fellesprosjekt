@@ -34,35 +34,34 @@ public class CalResponse {
 			return false;
 		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
-		try 
-		{
-			if(arrayResponse != null){
-				for (int i = 0; i < arrayResponse.length(); i++) {
-					JSONObject jo;
+		if(arrayResponse != null){
+			for (int i = 0; i < arrayResponse.length(); i++) {
+				JSONObject jo;
+				try {
 					jo = arrayResponse.getJSONObject(i);
-					int rom;
-					try {
-						rom = Integer.parseInt(jo.getString("rom"));
-					} catch (Exception e) {
-						rom = 0;
+					int rom = 0;
+					if(!jo.getString("rom").equals("NA")){
+						System.out.println(jo.getString("rom"));
+						rom = Integer.parseInt(jo.getString("rom"));	
 					}
-					Integer.parseInt(jo.getString("rom"));
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")),
+							Integer.parseInt(jo.getString("skaper")), 
+							jo.getString("Starttidspunkt"), 
+							jo.getString("Sluttidspunkt"), 
+							jo.getString("Beskrivelse").replace("[space]", " "), 
+							rom, 
+							jo.getString("Tittel"), 
+							jo.getString("Status")));
 
-					System.out.println("MINE AVTALER STATUS: " + jo.getString("Status"));
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel"), jo.getString("Status")));				
-				}}
-			Bruker.getInstance().getUser().setMeetings(meetList);
-			System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
-			for(Meeting m : meetList)
-			{
-				System.out.println(m.toString());
-			}
-			return true;
-		}catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return false;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			}}
+		Bruker.getInstance().getUser().setMeetings(meetList);
+		return true;
 	}
+
 	public ArrayList<Meeting> getOtherMeetings(){
 		//		if(!var.equals("avtaler"))
 		//		{

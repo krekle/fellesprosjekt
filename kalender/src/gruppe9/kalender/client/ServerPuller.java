@@ -75,7 +75,6 @@ public class ServerPuller {
 			}
 			}catch(Exception e){
 				e.printStackTrace();
-				System.err.println("Something went terribly wrong?");
 			}
 		}
 
@@ -86,13 +85,9 @@ public class ServerPuller {
 		service = Executors.newScheduledThreadPool(1);
 		try {
 			service.scheduleAtFixedRate(r, 10, 20, TimeUnit.SECONDS);
-//			service.schedule(r, 60, TimeUnit.SECONDS);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//
-		//        Thread.sleep(10000);
-		//        service.shutdown();
 
 	}
 }

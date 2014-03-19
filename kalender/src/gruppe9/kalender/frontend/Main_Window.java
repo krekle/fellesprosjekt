@@ -162,7 +162,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		if(response.getAvtaler()) {
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-    		
+    			ArrayList<Meeting> meets = Bruker.getInstance().getAvtaler();
+    			for (Meeting meeting : meets) {
+					System.out.println(meeting.getName());
+				}
     			updateKomMeetings();
     		//Her kan man nå kjøre f.eks:
     		//kalenderpanel.setAvtaler(Bruker.getInstance().getAvtaler();

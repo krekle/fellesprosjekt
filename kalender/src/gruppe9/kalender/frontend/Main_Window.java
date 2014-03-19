@@ -85,7 +85,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			public void stateChanged(ChangeEvent e) 
 			{
 				
-				System.out.println(tabWindow.getSelectedComponent());
 				if(tabWindow.getTitleAt(tabWindow.getSelectedIndex()).equals("Felles"))
 				{
 					felles_deltakere_box.setVisible(true);
@@ -147,7 +146,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		ArrayList<Meeting> meetings = Bruker.getInstance().getUser().getMeetings();
     		Collections.sort(meetings);
 	        DefaultListModel<Meeting> contentsOfKomMøtList = new DefaultListModel<Meeting>();
-	        System.out.println("MEETINGS.SIZE() = " + meetings.size());
 	        for(Meeting m : meetings)
 	        {
 	        	contentsOfKomMøtList.addElement(m);
@@ -241,15 +239,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	{
     		decline_choice.setSelected(false);
     		accept_choice.setSelected(true);
-    		System.out.println("Moop!");
-    		for(Person p : meeting.getParticipants())
-    		{
-    			System.out.println(p.getName());
-    		}
     	}
     	else
     	{
-    		System.out.println("Boop!");
     		for(Person p : meeting.getParticipants())
     		{
     			System.out.println(p.getName());
@@ -617,7 +609,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
         current_week = (Calendar.getInstance()).get(Calendar.getInstance().WEEK_OF_YEAR);
         current_year = (Calendar.getInstance()).get(Calendar.getInstance().YEAR);
         uke_label.setText(current_week+"/"+current_year);
-        System.out.println(current_week);
         uke_label.setToolTipText("");
         uke_label.setAlignmentY(0.0F);
 
@@ -767,7 +758,6 @@ private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	{
 		((Panel) o).refresh();
 	}
-	System.out.println("Current year: " +current_year);
 }
 private void prev_buttonActionPerformed(java.awt.event.ActionEvent evt) 
 {

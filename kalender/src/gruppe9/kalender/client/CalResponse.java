@@ -129,7 +129,7 @@ public class CalResponse {
 	}
 
 	public boolean getNotifications(){
-		if(!var.equals("melding")){
+		if(!var.equals("melding") || arrayResponse == null){
 			return false;
 		}
 		ArrayList<Notification> notifytList = new ArrayList<Notification>();

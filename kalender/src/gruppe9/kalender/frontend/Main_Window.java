@@ -144,7 +144,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		});
         updateKomMeetings();
     }
-
     public void updateKomMeetings()
     {
     	try
@@ -186,11 +185,20 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    	}
 	    	else if(response.getNotifications())
 	    	{
-	    		//TODO: ??
+	    		if(Bruker.getInstance().getNotifications() != null)
+	    		{
+	    			System.out.println("List size: " + Bruker.getInstance().getNotifications().size());
+	    		}
+	    		else{
+	    			System.out.println("No new notifications..");
+	    		}
 	    	}
 	    	else if(response.getAllPeople())
 	    	{
-	    		//TODO: ??
+	    		for(Person p : Bruker.getInstance().getAllPeople())
+	    		{
+	    			System.out.println(p.getName() + " - " + p.getEmail());
+	    		}
 	    	}
 	    	else if(response.getDeltakere() != null)
 	    	{
@@ -203,7 +211,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	    	}
 	    	else if(response.getGroups())
 	    	{
-	    		//TODO: ??
+	    		System.out.println(Bruker.getInstance().getGroups());
 
 	    	}
     	}
@@ -925,36 +933,15 @@ public Meeting getAvtale()
     		
     		((Panel)tabWindow.getComponentAt(0)).refresh();
     	}
-//    	else if(o instanceof Meeting)
-//    	{
-//    		Meeting meeting = (Meeting) o;
-//    		if(meeting.getParticipants().contains(Bruker.getInstance().getUser()))
-//    		{
-//    			((Panel) tabWindow.getComponentAt(0)).addMeeting(meeting);
-//    		}
-//    		if(meeting.getGroup() != null)
-//    		{
-//    			for(Component C : tabWindow.getComponents())
-//    			{
-//    				Panel panel = (Panel) C;
-//    				if(C.getName().equals(meeting.getGroup().getName())){
-//    					panel.addMeeting(meeting);
-//    				}
-//    			}
-//    		}
-//    		else
-//    		{
-//				for(Component C : tabWindow.getComponents())
-//				{
-//					Panel panel = (Panel) C;
-//					for(Person p : panel.getPeople()){
-//						if(p.getId() == meeting.getCreator()){
-//							panel.addMeeting(meeting);
-//						}
-//					}
-//				}
-//    		}
-//    	}
+    	else if(o instanceof Meeting)
+    	{
+    		Meeting meeting = (Meeting) o;
+    		for(Component c : tabWindow.getComponents())
+    		{
+    			((Panel) c).addMe();
+    		}
+    		updateKomMeetings();
+    	}
     	else if(o instanceof Notification)
     	{
     		this.notifications.addNotification((Notification) o);

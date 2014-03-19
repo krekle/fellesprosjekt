@@ -68,7 +68,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         deltaker_combo.setRenderer(new combo_box_person_renderer());
         
     }
-    
+
     @Override
 	public void callBack(CalResponse response) {
 		if(response.getRoms() != null){
@@ -101,10 +101,10 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
-		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
-		
+		date_textfield.setText(meeting.getDayOfMonth() + ":" + meeting.getMonth() + ":" + meeting.getYear());
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
+		System.out.println(meeting.getRoom());
 		romlist_model.addElement(meeting.getRoom());
 		varighet_textfield.setText(meeting.getDuration());
 		Database.getParticipants(this, meeting);
@@ -121,6 +121,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			personlist_model.addElement(pe);
 			deltaker_combo.removeItem(pe);
 		}
+		String s = toDateTime(date_textfield.getText(), start_textfield.getText());
+		String e = toDateTime(date_textfield.getText(), slutt_textfield.getText());
+		Database.getAvaliableRooms(this, s, e);
 	}
 	private void setMeeting(Meeting meeting)
     {
@@ -653,6 +656,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	if (room == null) {
 		meeting.setPlace(rom_textfield.getText());
 	}
+	System.out.println(room.getId());
 	meeting.setRoom(room.getId());
 	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();
@@ -664,12 +668,23 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	if (edit) {
 		complete = true;
 		Database.updateMeeting(this, meeting);
+		ArrayList<Meeting> avtaler = Bruker.getInstance().getAvtaler();
+		for (Meeting m : avtaler) {
+			if (m.getId() == meeting.getId()) {
+				avtaler.remove(m);
+				avtaler.add(meeting);
+			}
+		}
+		Bruker.getInstance().setAvtaler(avtaler);
 		
 	}
 	else {
 		complete = true;
 		Database.addMeeting(this, meeting);
-		
+		if (Bruker.getInstance().getAvtaler() == null) {
+			Bruker.getInstance().setAvtaler(new ArrayList<Meeting>());
+		}
+		Bruker.getInstance().getAvtaler().add(meeting);
 	}
 	main.setVisible(true);
 	this.setVisible(false);
@@ -791,13 +806,15 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 			return this;
 		}
     	
+
     }
-    private class list_person_renderer extends JPanel implements ListCellRenderer
+    @SuppressWarnings("serial")
+	private class list_person_renderer extends JPanel implements ListCellRenderer
     {
     	ImageIcon icon = new ImageIcon("resources/images/person.png");
     	JLabel name = new JLabel();
     	JLabel email = new JLabel();
-    	JComboBox choice = new JComboBox(new String[]{"Deltar", "Avslått", "Ikke Svart"});
+    	JComboBox<String> choice = new JComboBox<String>(new String[]{"Deltar", "Avslått", "Ikke Svart"});
     	public list_person_renderer()
     	{
     		super(new FlowLayout(FlowLayout.LEFT));
@@ -812,15 +829,20 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 		public JPanel getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) 
 		{
+			this.setEnabled(true);
+			this.setVisible(true);
+			this.validate();
 			if(isSelected)
 			{
 				this.setBackground(Color.GRAY);
 				this.setEnabled(true);
+				this.choice.setEditable(true);
 			}
 			else
 			{
 				this.setBackground(Color.WHITE);
 				this.setEnabled(false);
+				this.choice.setEditable(false);
 			}
 			if(value instanceof Person)
 			{

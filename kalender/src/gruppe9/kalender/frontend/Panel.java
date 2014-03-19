@@ -98,10 +98,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
         		{
         			avtaler.addElement(meeting);
         			boop.add(meeting.toString());
-        			for(Object m : avtaler.toArray())
-        			{
-        				System.out.println("           "+meeting.toString());
-        			}
         		}
         	}
         	switch(x)
@@ -205,7 +201,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
         mondayScrollPane.setViewportView(mandag_list);
         mondayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         mondayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        System.out.println(renderer.toString());
         mandag_list.setCellRenderer(renderer);
         DefaultListModel X = new DefaultListModel();
         mandag_list.setModel(X);
@@ -410,7 +405,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 				meetings.add(m);				
 			}
 		}
-//		System.out.println("Ant møter: "+meetings.size());
 		refresh();
 	}
 	public void addMeeting(Meeting meeting) 

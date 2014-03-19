@@ -1,7 +1,6 @@
 package gruppe9.kalender.client;
 
 import gruppe9.kalender.frontend.Main_Window;
-import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
@@ -25,21 +24,17 @@ public class ServerPuller {
 		@Override
 		public void run() {
 			getNot();
-			System.out.println("getNot called");
 		}
 
 		private void getNot(){
 			//Notifications, Avtaler og Grupper
 			try {
-				System.out.println("Checking for information");
 				notifications = Bruker.getInstance().getNotifications();
 				meetings = Bruker.getInstance().getAvtaler();
 			} catch (Exception e) {
 				notifications = null;
 				meetings = null;
-				System.out.println("No alerts and notifications");
 			}
-			System.out.println("Asking for updates");
 			try {
 				Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 				Database.getNotifications(this);
@@ -52,9 +47,7 @@ public class ServerPuller {
 		@Override
 		public void callBack(CalResponse response) {
 			try{
-			System.out.println("AT CALLBACK");
 			if(response.getAlerts()){
-				System.out.println("AT CALLBACK alert");
 				if(meetings != null && Bruker.getInstance().getVarsler() != null){
 					int oldSize = ((meetings != null)?meetings.size():0);
 					int newSize = Bruker.getInstance().getAvtaler().size();
@@ -65,7 +58,6 @@ public class ServerPuller {
 				}
 			}
 				else if(response.getNotifications()){
-				System.out.println("AT CALLBACK notifications");
 				if(notifications != null && Bruker.getInstance().getNotifications() != null){
 					int oldSize = notifications.size();
 					int newSize = Bruker.getInstance().getNotifications().size();

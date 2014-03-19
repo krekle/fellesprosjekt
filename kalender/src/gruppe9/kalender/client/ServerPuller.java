@@ -25,9 +25,9 @@ public class ServerPuller {
 		}
 
 		private void getNot(){
-			System.out.println("30 seconds passed");
 			try {
 				notifications = Bruker.getInstance().getNotifications();
+				System.out.println("30 seconds passed");
 				alerts = Bruker.getInstance().getVarsler();
 			} catch (Exception e) {
 				notifications = null;

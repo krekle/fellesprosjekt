@@ -56,7 +56,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	Database.getNotifications(this);
     	Database.getGroups(this);
     	
-    	ServerPuller.update();
+    	//ServerPuller.update();
 
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	

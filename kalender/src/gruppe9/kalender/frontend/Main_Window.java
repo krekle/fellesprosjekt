@@ -844,6 +844,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		}
 		current_Avtale = null;
 		setMeeting(current_Avtale);
+		updateKomMeetings();
 	}
 
 	private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 

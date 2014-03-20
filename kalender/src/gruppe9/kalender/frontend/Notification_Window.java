@@ -68,10 +68,16 @@ public class Notification_Window extends javax.swing.JFrame{
         DefaultListModel<Notification> notes = new DefaultListModel<Notification>();
         if(notifications != null && notifications.size() > 0)
         {
+        	System.out.println();System.out.println();System.out.println();
+        	System.out.println("Adding...");
         	for(Notification note : notifications)
         	{
+        		System.out.println(note.getDescription()+"\n"
+        	+ "HasbeenRead = " + note.hasBeenRead
+        				);
         		notes.addElement(note);
         	}
+        	System.out.println("Now contains "+notifications.size() + " elements.");
         	this.jList1.setModel(notes);        	
         }
     }
@@ -95,12 +101,14 @@ public class Notification_Window extends javax.swing.JFrame{
 			@Override
 			public void valueChanged(ListSelectionEvent e) 
 			{
-				Notification note = (Notification) jList1.getModel().getElementAt(jList1.getSelectedIndex());
-				jLabel1.setText(""+Bruker.getInstance().getUser().getId());
-				jLabel2.setText("Avtale "+note.getMeetingId());
-				jLabel3.setText(note.getTime());
-				jTextArea1.setText(note.getDescription());
-//				Bruker.getInstance(
+				if(jList1.getSelectedIndex()>0){
+					System.out.println(jList1.getSelectedIndex());
+					Notification note = (Notification) jList1.getModel().getElementAt(jList1.getSelectedIndex());
+					jLabel1.setText(""+Bruker.getInstance().getUser().getId());
+					jLabel2.setText("Avtale "+note.getMeetingId());
+					jLabel3.setText(note.getTime());
+					jTextArea1.setText(note.getDescription());
+				}
 			}
 		});
         jList1.setCellRenderer(new NotificationRenderer());
@@ -189,13 +197,18 @@ public class Notification_Window extends javax.swing.JFrame{
 			public void windowClosing(WindowEvent e) {
 				for(int x = 0; x < jList1.getModel().getSize(); x++)
 				{
+					System.out.println();System.out.println();System.out.println();System.out.println();
+					System.out.println("Deleting elements....");
 					Notification n = (Notification) jList1.getModel().getElementAt(x);
 					if(n.hasBeenRead)
 					{
+						System.out.println(n.getDescription() + "\n"
+								+"HasbeenRead = " +n.hasBeenRead);
 						notifications.remove(n);
+						Database.deleteNotification(null, Bruker.getInstance().getUser().getId(), n.getMeetingId());
 					}
-					Database.deleteNotification(null, Bruker.getInstance().getUser().getId(), n.getMeetingId());
 				}
+				System.out.println("Now contains "+notifications.size() + " elements.");
 			}
 			@Override
 			public void windowClosed(WindowEvent e){}

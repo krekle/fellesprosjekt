@@ -145,8 +145,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 					Person p = (Person) o;
 					csv += p.getId() + ",";
 					csvS += "IkkeSvart,";
-					csv = csv.substring(0, -1);
-					csvS = csvS.substring(0, -1);
+					csv = csv.substring(0, csv.length()-1);
+					csvS = csvS.substring(0, csvS.length()-1);
 				}
 				Database.addParticipants(this, id, csv, csvS);
 			}
@@ -729,16 +729,20 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 //	Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
 	String people = "", statuses = "";
-	for(Person p: setStatus.keySet())
-	{
-		people +=p.getId() + ",";
-		statuses += setStatus.get(p)+",";
+	
+	if (setStatus.size() != 0) {
+		for(Person p: setStatus.keySet())
+		{
+		
+			people +=p.getId() + ",";
+			statuses += setStatus.get(p)+",";
+		}
+		System.out.println("Skapte møte..");
+		System.out.println(meeting.toString());
+		System.out.println(people.substring(0, people.length()-1));
+		System.out.println(statuses.substring(0, statuses.length()-1));
+		Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 	}
-	System.out.println("Skapte møte..");
-	System.out.println(meeting.toString());
-	System.out.println(people.substring(0, people.length()-1));
-	System.out.println(statuses.substring(0, statuses.length()-1));
-	Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 	main.setVisible(true);
 	this.setVisible(false);
 }

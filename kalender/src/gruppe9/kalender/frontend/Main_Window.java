@@ -66,15 +66,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		Felles = new Panel(week_list_scroller, this, "felles");
 		tabWindow.addTab("Me", me);
 		tabWindow.addTab("Felles", Felles);
-		ArrayList<Panel> groupPanels = new ArrayList<Panel>();
-		for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) 
-		{
-			groupPanels.add( new Panel(week_list_scroller, this, Bruker.getInstance().getGroups().get(i).getName()));
-			tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
-			for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
-				groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(j));
-			}
-		}
+		
 		Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 		tabWindow.addChangeListener(new ChangeListener() {
 
@@ -203,7 +195,15 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			}
 			else if(response.getGroups())
 			{
-
+				ArrayList<Panel> groupPanels = new ArrayList<Panel>();
+				for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) 
+				{
+					groupPanels.add( new Panel(week_list_scroller, this, Bruker.getInstance().getGroups().get(i).getName()));
+					tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
+					for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
+						groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(j));
+					}
+				}
 			}
 		}
 		catch (Exception e)
@@ -240,7 +240,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			else
 			{
 				rediger_button.setEnabled(false);
-				slett_button.setEnabled(false);
 			}
 
 			Database.getParticipants(this, meeting);
@@ -276,7 +275,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				this.rediger_button.setEnabled(true);
 			}
 			this.current_Avtale = meeting;
-		}else{
+		}
+		else
+		
+		{
 			beskrivelse_area.setText("");
 			avtale_label.setText("");
 			dato_label.setText("");
@@ -836,12 +838,12 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		}else{
 			Database.deleteParticipant(null, current_Avtale.getId()+"", Bruker.getInstance().getUser().getId()+"");
 		}
-		setMeeting(current_Avtale);
 		Bruker.getInstance().setAvtaler(meetings);
 		for (Component c : tabWindow.getComponents()) {
 			((Panel)c).removeMeeting(current_Avtale);
 		}
 		current_Avtale = null;
+		setMeeting(current_Avtale);
 	}
 
 	private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 

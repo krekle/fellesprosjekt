@@ -84,10 +84,10 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		return Integer.parseInt(start.substring(0,4));
 	}
 	public int getMonth(){
-		return Integer.parseInt(start.substring(5,7));
+		return Integer.parseInt(start.substring(5,6));
 	}
 	public int getDayOfMonth(){
-		return Integer.parseInt(start.substring(8,10));
+		return Integer.parseInt(start.substring(7,9));
 	}
 	
 	public String getStartTime(){

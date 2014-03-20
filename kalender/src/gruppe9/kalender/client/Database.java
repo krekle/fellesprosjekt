@@ -56,7 +56,9 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){
+			caller.callBack(new CalResponse(result, null));			
+		}
 	}
 
 	public static void updateMeeting(ApiCaller caller, Meeting m){

@@ -60,7 +60,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     }
     public void addMe()
     {
-    	System.out.println(meetings.size());
 		for(int x = 0; x< meetings.size(); x++)
 		{
 			if(meetings.get(x).getParticipants().contains(Bruker.getInstance().getUser()))
@@ -68,8 +67,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 				meetings.remove(x);
 			}
 		}
-		System.out.println();
-		System.out.println();
 		for(Meeting m : Bruker.getInstance().getAvtaler())
 		{
 			addMeeting(m);

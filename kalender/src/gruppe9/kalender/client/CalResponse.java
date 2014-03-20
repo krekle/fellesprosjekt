@@ -42,7 +42,6 @@ public class CalResponse {
 					jo = arrayResponse.getJSONObject(i);
 					int rom = 0;
 					if(!jo.getString("rom").equals("NA")){
-						System.out.println(jo.getString("rom"));
 						rom = Integer.parseInt(jo.getString("rom"));	
 					}
 					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")),
@@ -76,7 +75,6 @@ public class CalResponse {
 					} catch (Exception e) {
 						rom = 0;
 					}
-					System.out.println("jo: " + jo.toString());
 					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel"), null));				
 				}}
 		}catch (JSONException e) {
@@ -146,7 +144,6 @@ public class CalResponse {
 
 	public ArrayList<Room> getRoms(){
 		//VAR BLIR HER null NÅR DEN ETTER ALLE SIGENDE SKULLE VÆRT "Room"
-		System.out.println("var var " +var);
 		if (var == null) {
 			return null;
 		}
@@ -160,7 +157,6 @@ public class CalResponse {
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
 				roomList.add(new Room(jo.getInt("ID"), jo.getString("Bygg"), jo.getInt("Etasje"), jo.getString("Beskrivelse"), jo.getInt("Stoerrelse")));
-				System.out.println("Room added!");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -199,7 +195,6 @@ public class CalResponse {
 			JSONObject jo;			
 			ArrayList<Person> personList = new ArrayList<Person>();
 			for (int i = 0; i < arrayResponse.length(); i++) {
-//				System.out.println("heisann" + arrayResponse.toString());
 				jo = arrayResponse.getJSONObject(i);
 				
 //				JSONArray peopleArray = jo.getJSONArray("people");

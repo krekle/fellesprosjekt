@@ -204,6 +204,9 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 
 	@Override
 	public int compareTo(Meeting o) {
+		if (o.start.equals("None") || o.end.equals("None") || start.equals("None") || end.equals("None")) {
+			return 0;
+		}
 		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace("-", ""));
 		if (dateDiff !=0){
 			return dateDiff;

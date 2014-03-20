@@ -148,7 +148,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	try
     	{
     		ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
-    		System.out.println("MEETINGS: " + meetings.size());
     		Collections.sort(meetings);
 	        DefaultListModel<Meeting> contentsOfKomMøtList = new DefaultListModel<Meeting>();
 	        for(Meeting m : meetings)
@@ -168,7 +167,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		{
     		//Avtalene ble hentet fra serveren og ligger nå i
     		// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-    			System.out.println("MEETINGS SIZE: "+Bruker.getInstance().getAvtaler().size());
     			for(Component c : tabWindow.getComponents())
     			{
     				((Panel) c).addMe();    				
@@ -246,7 +244,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	
     	Database.getParticipants(this, meeting);
     	//DETTE MÅ BYTTES UT MED DELTAKERE - IKKE PERSON.
-    	System.out.println(meeting.getMyStatus());
     	if(meeting.getMyStatus() == null)
     	{
 			decline_choice.setEnabled(false);

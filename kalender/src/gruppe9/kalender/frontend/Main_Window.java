@@ -232,7 +232,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	{
     		deltaker_list.setModel(meeting.getParticipantListModel());
     	}
-    	if(Bruker.getInstance().getUser().getId() == meeting.getId())
+    	if(Bruker.getInstance().getUser().getId() == meeting.getCreator())
     	{
     		rediger_button.setEnabled(false);
     		slett_button.setEnabled(false);
@@ -321,8 +321,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			@Override
 			public void windowClosing(WindowEvent e) 
 			{
-//				client.logOut();
 				login = new Login_Window();
+				ServerPuller.stop();
 			}
 			
 			@Override
@@ -825,7 +825,24 @@ private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt)
 }
 private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {
-	
+	ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
+	for (Meeting meeting : meetings) {
+		if(meeting.getId() == current_Avtale.getId()){
+			meetings.remove(current_Avtale);
+		}
+	Bruker.getInstance().setAvtaler(meetings);
+		
+	for (Component c : tabWindow.getComponents()) {
+		((Panel)c).addMe();
+	}
+		
+	}
+	if(Bruker.getInstance().getUser().getId() == current_Avtale.getCreator())
+	{
+		Database.deleteMeeting(null, current_Avtale);
+	}else{
+		Database.deleteParticipant(null, current_Avtale.getId()+"", Bruker.getInstance().getUser().getId()+"");
+	}
 }
 
 private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 

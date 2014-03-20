@@ -727,7 +727,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		complete = true;
 		Database.addMeeting(this, meeting);
 	}
-//	Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
 	String people = "", statuses = "";
 	
 	if (setStatus.size() != 0) {

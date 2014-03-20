@@ -69,6 +69,8 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 		}
 		for(Meeting m : Bruker.getInstance().getAvtaler())
 		{
+			System.out.println("Adding meeting:"+"\n"
+					+">>>"+m);
 			addMeeting(m);
 		}
     	refresh();
@@ -98,6 +100,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     {
     	if(meetings == null)
     	{
+    		System.out.println("I have no meetings!");
     		return;
     	}
         Collections.sort(meetings);
@@ -429,6 +432,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 	{
 		if(!this.meetings.contains(meeting))
 		{
+			System.out.println(">>>*Successfully added meeting*");
 			this.meetings.add(meeting);
 		}
 		refresh();

@@ -147,6 +147,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		return start.replace(" ", "-");
 	}
 	public void setStart(String start) {
+		System.out.println("Start set to.... "+ start);
 		this.start = start;
 	}
 	public String getEnd() {

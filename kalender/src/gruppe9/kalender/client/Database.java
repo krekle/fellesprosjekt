@@ -70,7 +70,7 @@ public class Database {
 					"Starttidspunkt", m.getStart(),	
 					"Sluttidspunkt", m.getEnd(),
 					"Beskrivelse", m.getDescription().replace(" ", "[space]"),
-					"varighet", m.getDuration()
+					"varighet", "0"
 					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();

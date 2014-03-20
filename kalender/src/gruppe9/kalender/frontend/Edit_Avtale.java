@@ -628,6 +628,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 
 private String toDateTime(String dato, String tid) {
 	
+	System.out.println(dato.substring(5));
+	System.out.println(dato.substring(2, 4));
+	
 	String year = dato.substring(5);
 	String day = dato.substring(0, 2);
 	String date1 = dato.substring(3,4);
@@ -720,6 +723,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	meeting.setDescription(beskrivelse_textfield.getText());
 	meeting.setName(avtalenavn_textfield.getText());
 	meeting.setStart(toDateTime(date_textfield.getText(),start_textfield.getText()));
+	System.out.println("Date = " + date_textfield.getText());
 	meeting.setEnd(toDateTime(date_textfield.getText(), slutt_textfield.getText()));
 	
 	if (rom_list.getSelectedValue() != null) {
@@ -733,7 +737,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		}
 		else meeting.setPlace(rom_textfield.getText());
 	}
-	//meeting.setRoom(room.getId());
+
 	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();
 	for (Component person : participants) {
@@ -816,7 +820,7 @@ private void dateChooserActionPerformed(java.awt.event.ActionEvent evt)
 {
 	date_textfield.setText(
 					 dateChooser.getSelectionDate().getDate()+":"
-					+(dateChooser.getSelectionDate().getMonth()+1)+":"
+					+(0+dateChooser.getSelectionDate().getMonth()+1)+":"
 					+(dateChooser.getSelectionDate().getYear()+1900));
 }
 

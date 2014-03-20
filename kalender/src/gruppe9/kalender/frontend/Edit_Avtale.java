@@ -719,11 +719,15 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	if (rom_list.getSelectedValue() != null) {
 		room = (Room) rom_list.getSelectedValue();
 		meeting.setPlace("NA");
+		meeting.setRoom(room.getId());
 	}
-	if (room == null) {
-		meeting.setPlace(rom_textfield.getText());
+	if (rom_list.getSelectedValue() == null) {
+		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) {
+			meeting.setPlace("NA");
+		}
+		else meeting.setPlace(rom_textfield.getText());
 	}
-	meeting.setRoom(room.getId());
+	//meeting.setRoom(room.getId());
 	ArrayList list = new ArrayList();
 	Component[] participants = person_list.getComponents();
 	for (Component person : participants) {

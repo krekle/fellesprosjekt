@@ -10,6 +10,7 @@ import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -144,11 +145,13 @@ public class CalResponse {
 	}
 
 	public ArrayList<Room> getRoms(){
-		System.out.println(var);
+		//VAR BLIR HER null NÅR DEN ETTER ALLE SIGENDE SKULLE VÆRT "Room"
+		System.out.println("var var " +var);
 		if (var == null) {
 			return null;
 		}
-		if(!var.equals("Room")){
+		if(!var.equals("Room"))
+		{
 			return null;
 		}
 		ArrayList<Room> roomList = new ArrayList<Room>();
@@ -157,7 +160,7 @@ public class CalResponse {
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
 				roomList.add(new Room(jo.getInt("ID"), jo.getString("Bygg"), jo.getInt("Etasje"), jo.getString("Beskrivelse"), jo.getInt("Stoerrelse")));
-				System.out.println("notification added!");
+				System.out.println("Room added!");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -193,10 +196,25 @@ public class CalResponse {
 		}
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try {
-			JSONObject jo;
+			JSONObject jo;			
+			ArrayList<Person> personList = new ArrayList<Person>();
 			for (int i = 0; i < arrayResponse.length(); i++) {
+//				System.out.println("heisann" + arrayResponse.toString());
 				jo = arrayResponse.getJSONObject(i);
-				groups.add(new Group(jo.getString("Gruppenavn"), jo.getString("Beskrivelse"), jo.getInt("GruppeID")));
+				
+//				JSONArray peopleArray = jo.getJSONArray("people");
+//				for (int j = 0; j < peopleArray.length(); j++) {
+//					JSONObject jobj = (JSONObject) peopleArray.get(j);
+//					personList.add(new Person(jobj.getInt("Ansattnummer"), 
+//												jobj.getString("Navn"), 
+//												jobj.getInt("Telefonnummer"), 
+//												jobj.getString("adresse"), 
+//												jobj.getString("Epost")));	
+//				}
+				groups.add(new Group(jo.getString("Gruppenavn"), 
+						jo.getString("Beskrivelse"), 
+						jo.getInt("GruppeID"),
+						personList));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -22,6 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
  
 @SuppressWarnings("deprecation")
 
+
 public class Client 
 {
  
@@ -90,7 +91,6 @@ public class Client
 			result.append(line);
 		}
 		//TODO: Remove
-		System.out.println("GET: "+ result.toString());
 		return result.toString();
 	}
  
@@ -126,7 +126,6 @@ public class Client
 			result.append(line);
 		}
 		//TODO: Remove
-		System.out.println(result.toString());
 		return result.toString();
 	}
 	public enum Type{

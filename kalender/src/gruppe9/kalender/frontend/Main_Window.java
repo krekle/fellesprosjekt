@@ -44,6 +44,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 {
 	Login_Window login;
 	Client client;
+	ButtonGroup AvslåDelta;
 	private Panel Felles;
 	private int current_week = 0;
 	private int current_year = 2014;
@@ -245,18 +246,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	
     	Database.getParticipants(this, meeting);
     	//DETTE MÅ BYTTES UT MED DELTAKERE - IKKE PERSON.
-    	if(meeting.getMyStatus().equals("IkkeSvart")&& meeting.getParticipants().contains(Bruker.getInstance().getUser()))
+    	System.out.println(meeting.getMyStatus());
+    	if(meeting.getMyStatus() == null)
     	{
-    		if(!meeting.getParticipants().contains(Bruker.getInstance().getUser()))
-    		{
-    			decline_choice.setEnabled(false);
-    			accept_choice.setEnabled(false);
-    		}
-    		else
-    		{
-    			decline_choice.setEnabled(true);
-    			accept_choice.setEnabled(true);
-    		}
+			decline_choice.setEnabled(false);
+			accept_choice.setEnabled(false);
     	}
     	else
     	{
@@ -272,9 +266,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     		}
     		else
     		{
-    			decline_choice.setSelected(false
-    					);
-    			accept_choice.setSelected(false);
+    			AvslåDelta.clearSelection();
     		}
     	}
     	if(meeting.getCreator() != Bruker.getInstance().getUser().getId())
@@ -437,7 +429,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
                 accept_choiceActionPerformed(evt);
             }
         });
-        ButtonGroup AvslåDelta = new ButtonGroup();
+        AvslåDelta = new ButtonGroup();
         AvslåDelta.add(decline_choice);
         AvslåDelta.add(accept_choice);
 

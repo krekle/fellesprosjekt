@@ -140,12 +140,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			}
 		});
 		//        updateKomMeetings();
-		Notification n = new Notification("Kakebaking på høgstadmoen", 1, "18-03-2008 20:00");
-		parseObject(n);
-		n = new Notification("Bolighogst", 4, "18-03-2008 18:00");
-		parseObject(n);
-		n = new Notification("Deigslakt på høgstadmoen", 1, "18-03-2008 00:00");
-		parseObject(n);
 	}
 	public void updateKomMeetings()
 	{

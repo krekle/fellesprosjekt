@@ -30,6 +30,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
@@ -910,7 +911,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	private javax.swing.JTextField uke_search;
 	private javax.swing.JTabbedPane tabWindow;
 	// End of variables declaration//GEN-END:variables
-
+	public JTabbedPane getTabs(){
+		return tabWindow;
+	}
 
 	private void setImage(String image_path)
 	{

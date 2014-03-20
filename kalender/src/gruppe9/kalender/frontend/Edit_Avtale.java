@@ -723,13 +723,19 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	else {
 		complete = true;
 		Database.addMeeting(this, meeting);
-		
 	}
+//	Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
+	String people = "", statuses = "";
 	for(Person p: setStatus.keySet())
 	{
-		//Database.addParticipants(this, meeting.getId(), "7,4,3", "Deltar,IkkeSvart,Avslaat");
-		Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
+		people +=p.getId() + ",";
+		statuses += setStatus.get(p)+",";
 	}
+	System.out.println("Skapte møte..");
+	System.out.println(meeting.toString());
+	System.out.println(people.substring(0, people.length()-1));
+	System.out.println(statuses.substring(0, statuses.length()-1));
+	Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 	main.setVisible(true);
 	this.setVisible(false);
 }

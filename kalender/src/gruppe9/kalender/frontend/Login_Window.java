@@ -41,7 +41,9 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 			Main_Window window = new Main_Window(this);
 			window.setVisible(true);
 			this.setVisible(false);
-		} else {
+		} 
+		else 
+		{
 			user_field.setToolTipText(response.getMsg());
 			System.out.println(response.getMsg());
 			//Force tooltip ?

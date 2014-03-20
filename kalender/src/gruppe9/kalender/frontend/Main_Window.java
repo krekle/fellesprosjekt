@@ -55,11 +55,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     {
     	this.login = login;
     	Database.getAllPeople(this);    		
-    	Database.getAlerts(this);
-    	Database.getNotifications(this);
+//    	Database.getAlerts(this);
+//    	Database.getNotifications(this);
     	Database.getGroups(this);
     	ServerPuller.update(this);
-
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
@@ -824,7 +823,7 @@ private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 		((Panel)c).addMe();
 		((Panel)c).refresh();
 	}
-		
+		//TODO: KREKLE
 	if(Bruker.getInstance().getUser().getId() == current_Avtale.getCreator())
 	{
 		Database.deleteMeeting(null, current_Avtale);

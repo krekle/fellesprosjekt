@@ -30,6 +30,8 @@ public class Database {
 
 	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
+		System.out.println(m.getStart());
+		System.out.println(m.getEnd());
 		try {
 			result = new Client("add/avtale",Type.GET,
 					"tittel", m.getName(),
@@ -62,6 +64,8 @@ public class Database {
 	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
+			System.out.println(m.getStart());
+			System.out.println(m.getEnd());
 			result = new Client("update/avtale/" + m.getId(), Type.GET,
 					"avtale_id", m.getId()+"",
 					"Tittel", m.getName(),

@@ -137,7 +137,19 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			deltakere = response.getDeltakere();
 		}
 		if (response.getCode() != null) {
-			if (response.getCode().equals("200") && complete == true) {
+			if (response.getCode().equals("200") && edit == true) {
+				String csv = "";
+				String csvS = "";
+				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
+					Person p = (Person) o;
+					csv += p.getId() + ",";
+					csvS += "IkkeSvart,";
+					csv = csv.substring(0, csv.length()-1);
+					csvS = csvS.substring(0, csvS.length()-1);
+				}
+				Database.addParticipants(this, id, csv, csvS);
+			}
+			else if (response.getCode().equals("200") && complete == true) {
 				id = response.getSimpleResponse("avtaleid");
 				String csv = "";
 				String csvS = "";

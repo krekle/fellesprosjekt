@@ -741,7 +741,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 	String people = "", statuses = "";
 	
-	if (setStatus.size() != 0) {
+	if (setStatus.size() != 0 && !this.edit) {
 		for(Person p: setStatus.keySet())
 		{
 		
@@ -753,6 +753,13 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		System.out.println(people.substring(0, people.length()-1));
 		System.out.println(statuses.substring(0, statuses.length()-1));
 		Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
+	}
+	else if((setStatus.size() != 0 && this.edit))
+	{
+		for(Person p: setStatus.keySet())
+		{
+			Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), ""+setStatus.get(p));
+		}
 	}
 	main.setVisible(true);
 	this.setVisible(false);

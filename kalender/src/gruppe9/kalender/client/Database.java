@@ -94,7 +94,9 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){			
+			caller.callBack(new CalResponse(result, null));
+		}
 	}
 
 	public static void getParticipants(ApiCaller caller, Meeting m){
@@ -116,7 +118,9 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){			
+			caller.callBack(new CalResponse(result, "foo"));
+		}
 	}
 
 	public static void updateParticipantStatus(ApiCaller caller, String avtale_id, String person_id, String status)

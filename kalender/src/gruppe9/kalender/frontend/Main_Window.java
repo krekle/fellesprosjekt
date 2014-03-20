@@ -55,11 +55,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     {
     	this.login = login;
     	Database.getAllPeople(this);    		
-    	Database.getAlerts(this);
-    	Database.getNotifications(this);
+//    	Database.getAlerts(this);
+//    	Database.getNotifications(this);
     	Database.getGroups(this);
     	ServerPuller.update(this);
-
     	//Henter avtalene til brukeren basert på id som ligger i Bruker.java
     	// Resultatet kommer til callBack() metoden.    	
     	initComponents();
@@ -231,7 +230,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
     	{
     		deltaker_list.setModel(meeting.getParticipantListModel());
     	}
-    	if(Bruker.getInstance().getUser().getId() == meeting.getId())
+    	if(Bruker.getInstance().getUser().getId() == meeting.getCreator())
     	{
     		rediger_button.setEnabled(false);
     		slett_button.setEnabled(false);
@@ -310,8 +309,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			@Override
 			public void windowClosing(WindowEvent e) 
 			{
-//				client.logOut();
 				login = new Login_Window();
+				ServerPuller.stop();
 			}
 			
 			@Override
@@ -814,7 +813,23 @@ private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt)
 }
 private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {
-	
+	ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
+	meetings.remove(current_Avtale);
+	current_Avtale = null;
+	setMeeting(current_Avtale);
+	Bruker.getInstance().setAvtaler(meetings);
+		
+	for (Component c : tabWindow.getComponents()) {
+		((Panel)c).addMe();
+		((Panel)c).refresh();
+	}
+		//TODO: KREKLE
+	if(Bruker.getInstance().getUser().getId() == current_Avtale.getCreator())
+	{
+		Database.deleteMeeting(null, current_Avtale);
+	}else{
+		Database.deleteParticipant(null, current_Avtale.getId()+"", Bruker.getInstance().getUser().getId()+"");
+	}
 }
 
 private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 

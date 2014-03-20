@@ -739,6 +739,13 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		complete = true;
 		Database.addMeeting(this, meeting);
 	}
+	ArrayList<Meeting> mongobarn = Bruker.getInstance().getAvtaler();
+	mongobarn.add(meeting);
+	Bruker.getInstance().setAvtaler(mongobarn);
+	for(Component c : main.getTabs().getComponents()){
+		((Panel) c).addMeeting(meeting);
+		((Panel) c).refresh();
+	}
 	String people = "", statuses = "";
 	
 	if (setStatus.size() != 0 && !this.edit) {

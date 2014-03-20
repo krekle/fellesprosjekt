@@ -178,7 +178,6 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
 	}
 	
 	public static void getAvaliableRooms(ApiCaller caller,String start, String end){

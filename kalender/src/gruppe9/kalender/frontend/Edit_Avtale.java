@@ -57,6 +57,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private String id;
     private boolean complete;
     private HashMap<Person, String> setStatus = new HashMap<Person, String>();
+	private boolean editComplete = false;
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
     	initComponents();
@@ -137,17 +138,20 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			deltakere = response.getDeltakere();
 		}
 		if (response.getCode() != null) {
-			if (response.getCode().equals("200") && edit == true) {
-				String csv = "";
-				String csvS = "";
-				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
-					Person p = (Person) o;
-					csv += p.getId() + ",";
-					csvS += "IkkeSvart,";
-					csv = csv.substring(0, csv.length()-1);
-					csvS = csvS.substring(0, csvS.length()-1);
+			if (response.getCode().equals("200") && edit == true && editComplete == true) {
+				if (setStatus.size() != 0 && !this.edit) {
+					String people = "", statuses = "";
+					for(Person p: setStatus.keySet())
+					{
+						people +=p.getId() + ",";
+						statuses += setStatus.get(p)+",";
+					}
+					System.out.println("Skapte møte..");
+					System.out.println(meeting.toString());
+					System.out.println(people.substring(0, people.length()-1));
+					System.out.println(statuses.substring(0, statuses.length()-1));
+					Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 				}
-				Database.addParticipants(this, id, csv, csvS);
 			}
 			else if (response.getCode().equals("200") && complete == true) {
 				id = response.getSimpleResponse("avtaleid");
@@ -157,9 +161,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 					Person p = (Person) o;
 					csv += p.getId() + ",";
 					csvS += "IkkeSvart,";
-					csv = csv.substring(0, csv.length()-1);
-					csvS = csvS.substring(0, csvS.length()-1);
 				}
+				csv = csv.substring(0, csv.length()-1);
+				csvS = csvS.substring(0, csvS.length()-1);
 				Database.addParticipants(this, id, csv, csvS);
 			}
 		}
@@ -665,6 +669,7 @@ protected void fjern_buttonActionPerformed(ActionEvent e)
 		{
 			person_list.setModel(newModel);
 			deltaker_combo.addItem((Person) obj);
+			setStatus.remove((Person) obj);
 		}
 		else
 		{
@@ -685,6 +690,7 @@ protected void add_buttonActionPerformed(ActionEvent e)
 		{
 			newModel.addElement((Person) obj);
 			person_list.setModel(newModel);
+			setStatus.put((Person) obj, "IkkeSvart");
 		}
 		else
 		{
@@ -756,6 +762,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 	String people = "", statuses = "";
 	
+	System.out.println(setStatus.size());
 	if (setStatus.size() != 0 && !this.edit) {
 		for(Person p: setStatus.keySet())
 		{

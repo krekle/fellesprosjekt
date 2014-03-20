@@ -14,11 +14,12 @@ public class Group {
 	{
 		return "Gruppe " + this.ID+": " + this.name;
 	}
-	public Group(String name, String description, int ID, ArrayList<Person> People) {
+	public Group(String name, String description, int ID, ArrayList<Person> people) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.ID = ID;
+		this.people = people;
 	}
 
 	public void addPerson(Person person){

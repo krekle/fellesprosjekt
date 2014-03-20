@@ -47,12 +47,13 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	Client client;
 	ButtonGroup AvslåDelta;
 	private Panel Felles;
+	private ArrayList<Panel> groupPanels;
 	private int current_week = 0;
 	private int current_year = 2014;
 	static boolean popupExists = false;
 	private Notification_Window notifications;
 	private javax.swing.JTabbedPane tabWindow;
-
+	
 	/** Creates new form Main_Window */
 	public Main_Window(Login_Window login) 
 	{
@@ -65,6 +66,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		// Resultatet kommer til callBack() metoden.    	
 		initComponents();
 		Panel me = new Panel(week_list_scroller, this, "me");
+		groupPanels = new ArrayList<Panel>();
 		Felles = new Panel(week_list_scroller, this, "felles");
 		tabWindow.addTab("Me", me);
 		tabWindow.addTab("Felles", Felles);
@@ -201,27 +203,33 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			}
 			else if(response.getGroups())
 			{
-				ArrayList<Panel> groupPanels = new ArrayList<Panel>();
 				ArrayList<Group> groupList = Bruker.getInstance().getGroups();
 				for (int i = 0; i < groupList.size(); i++) 
 				{
-					groupPanels.add( new Panel(week_list_scroller, this, groupList.get(i).getName()));
+					groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
+
 					try {
 						tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
 						for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
-//							System.out.println(groupPanels.get(i).getPeople());	
-							groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
-						}						
+//							System.out.println(groupPanels.get(i).getPeople());
+							if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId()){
+								groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+							}
+						}
+//						groupPanels.get(i).addMe();
 					} catch (Exception e) 
 					{
 						e.printStackTrace();
 					}
 				}
-//				for(Panel group : groupPanels)
-//				{
-//					tabWindow.add(group);
-//				}
-			}
+				for(Panel group : groupPanels)
+				{
+					System.out.println(group.getPeople());
+					tabWindow.add(group);
+				}
+				for(Component c : tabWindow.getComponents()){
+					((Panel) c).refresh();}
+				}
 		}
 		catch (Exception e)
 		{

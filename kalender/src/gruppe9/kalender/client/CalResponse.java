@@ -200,19 +200,17 @@ public class CalResponse {
 				JSONArray peopleArray = jo.getJSONArray("people");
 				for (int j = 0; j < peopleArray.length(); j++) {
 					JSONObject jobj = (JSONObject) peopleArray.get(j);
-//					System.out.println(jobj.getString("Navn"));
 					personList.add(new Person(jobj.getInt("Ansattnummer"), 
 												jobj.getString("Navn"), 
 												jobj.getInt("Telefonnummer"), 
 												jobj.getString("adresse"), 
 												jobj.getString("Epost")));	
-//					System.out.println("Person added");
 				}
 				groups.add(new Group(jo.getString("Gruppenavn"), 
 						jo.getString("Beskrivelse"), 
 						jo.getInt("GruppeID"),
 						personList));
-//				System.out.println("Group added");
+				personList = new ArrayList<Person>();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

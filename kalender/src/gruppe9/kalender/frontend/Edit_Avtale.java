@@ -772,6 +772,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 			Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), ""+setStatus.get(p));
 		}
 	}
+	main.updateKomMeetings();
 	main.setVisible(true);
 	this.setVisible(false);
 }

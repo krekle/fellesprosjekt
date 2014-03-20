@@ -134,6 +134,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			}
 		});
 		//        updateKomMeetings();
+		Notification n = new Notification(path, current_week, path);
 	}
 	public void updateKomMeetings()
 	{
@@ -216,8 +217,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	}
 	public void setMeeting(Meeting meeting)
 	{
-		if(meeting != null){
-
+		if(meeting != null)
+		{
 			beskrivelse_area.setText("Avtalenavn " + meeting.getName() + "\n Beskrivelse: " + meeting.getDescription());
 			avtale_label.setText("Avtale: " + meeting.getId());
 			dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth())+"."+meeting.getYear());

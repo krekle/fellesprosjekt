@@ -816,16 +816,9 @@ private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {
 	ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
 	meetings.remove(current_Avtale);
-	//change iterator LOL!
-//	for (Meeting meeting : Bruker.getInstance().getAvtaler()) {
-//		System.out.println(meeting.getName() + " " + meeting.getId());
-//		if(meeting.getId() == current_Avtale.getId()){
-//			System.out.println("CORRECT MEETING!");
-////			meetings.remove(current_Avtale);
-//		}
-//	}
-	//current_Avtale = null;
-	//Bruker.getInstance().setAvtaler(meetings);
+	current_Avtale = null;
+	setMeeting(current_Avtale);
+	Bruker.getInstance().setAvtaler(meetings);
 		
 	for (Component c : tabWindow.getComponents()) {
 		((Panel)c).addMe();

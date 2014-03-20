@@ -109,8 +109,8 @@ public class Database {
 		String result = "";
 		try {
 			result = new Client("delete/deltaker", Type.GET,
-					"person_id", avtale_id,
-					"avtale_id", person_id).execute();
+					"person_id", person_id,
+					"avtale_id", avtale_id).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

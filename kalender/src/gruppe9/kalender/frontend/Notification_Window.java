@@ -10,6 +10,9 @@
  */
 package gruppe9.kalender.frontend;
 
+import gruppe9.kalender.client.ApiCaller;
+import gruppe9.kalender.client.CalResponse;
+import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
 
@@ -31,7 +34,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author krake
  */
-public class Notification_Window extends javax.swing.JFrame {
+public class Notification_Window extends javax.swing.JFrame implements ApiCaller{
 
     /** Creates new form Notification_Window 
      * @param main_Window */
@@ -40,7 +43,10 @@ public class Notification_Window extends javax.swing.JFrame {
     public Notification_Window() 
     {
         initComponents();
-        notifications = Bruker.getInstance().getNotifications();
+        if(Bruker.getInstance().getNotifications() != null)
+        {
+        	notifications = Bruker.getInstance().getNotifications();
+        }
         DefaultListModel<Notification> notes = new DefaultListModel<Notification>();
         if(notifications != null)
         {
@@ -188,6 +194,7 @@ public class Notification_Window extends javax.swing.JFrame {
 					{
 						notifications.remove(n);
 					}
+					Database.deleteNotification(this, Bruker.getInstance().getUser().getId(), n.getMeetingId());
 				}
 				
 			}
@@ -268,5 +275,10 @@ public class Notification_Window extends javax.swing.JFrame {
     		notes.addElement(note);
     	}
     	this.jList1.setModel(notes);
+	}
+	@Override
+	public void callBack(CalResponse response) {
+		// TODO Auto-generated method stub
+		
 	}
 }

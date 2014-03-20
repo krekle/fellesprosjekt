@@ -70,7 +70,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 		for(Meeting m : Bruker.getInstance().getAvtaler())
 		{
 			addMeeting(m);
-			System.out.println(m.toString());
 		}
     	refresh();
     }

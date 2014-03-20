@@ -145,6 +145,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 					Person p = (Person) o;
 					csv += p.getId() + ",";
 					csvS += "IkkeSvart,";
+					csv = csv.substring(0, -1);
+					csvS = csvS.substring(0, -1);
 				}
 				Database.addParticipants(this, id, csv, csvS);
 			}
@@ -161,7 +163,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		romlist_model.addElement(meeting.getRoom());
-		varighet_textfield.setText(meeting.getDuration());
 		Database.getParticipants(this, meeting);
 		ArrayList<Person> p = Bruker.getInstance().getAllPeople();
 		ArrayList<Person> deltakende = new ArrayList<Person>();
@@ -598,6 +599,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     			slutt_action(evt);
     		}
     	});
+    	varighet_textfield.setVisible(false);
+    	varighet_label.setVisible(false);
     	DefaultComboBoxModel d = new DefaultComboBoxModel();
     	ArrayList<Person> people = Bruker.getInstance().getAllPeople();
     	for (Person p : people) {
@@ -724,7 +727,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		complete = true;
 		Database.addMeeting(this, meeting);
 	}
-//	Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
 	String people = "", statuses = "";
 	for(Person p: setStatus.keySet())
 	{

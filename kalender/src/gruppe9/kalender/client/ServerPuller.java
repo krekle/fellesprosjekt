@@ -23,10 +23,10 @@ public class ServerPuller {
 
 		@Override
 		public void run() {
-			getNot();
+			getUpdates();
 		}
 
-		private void getNot(){
+		private void getUpdates(){
 			//Notifications, Avtaler og Grupper
 			try {
 				notifications = Bruker.getInstance().getNotifications();
@@ -77,10 +77,14 @@ public class ServerPuller {
 		Runnable r = new Updater();
 		service = Executors.newScheduledThreadPool(1);
 		try {
-			service.scheduleAtFixedRate(r, 10, 20, TimeUnit.SECONDS);
+			service.scheduleAtFixedRate(r, 10, 60, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public static void stop(){
+		service.shutdown();
 	}
 }

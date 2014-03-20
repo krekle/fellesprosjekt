@@ -86,7 +86,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				if(e.getButton()==3)
 				{
 					person_list.setSelectedIndex(person_list.locationToIndex(e.getPoint()));
-					System.out.println("DID STUFF AND SUCH");
 					JPopupMenu popmenu = new JPopupMenu();
 					JMenuItem ikke = new JMenuItem("Udefinert"),
 							ja = new JMenuItem("Godtar"),
@@ -134,21 +133,37 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				romlist_model.addElement(rom);
 			}
 		}
-		else if (response.getCode().equals("200") && complete == true) {
-			id = response.getSimpleResponse("avtaleid");
-			System.out.println(response.getSimpleResponse("avtaleid"));
-			String csv = "";
-			String csvS = "";
-			for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
-				Person p = (Person) o;
-				csv += p.getId() + ",";
-				csvS += "IkkeSvart,";
-			}
-			Database.addParticipants(this, id, csv, csvS);
-		}
 		else if (response.getDeltakere() != null) {
 			deltakere = response.getDeltakere();
 		}
+		if (response.getCode() != null) {
+			if (response.getCode().equals("200") && edit == true) {
+				String csv = "";
+				String csvS = "";
+				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
+					Person p = (Person) o;
+					csv += p.getId() + ",";
+					csvS += "IkkeSvart,";
+					csv = csv.substring(0, csv.length()-1);
+					csvS = csvS.substring(0, csvS.length()-1);
+				}
+				Database.addParticipants(this, id, csv, csvS);
+			}
+			else if (response.getCode().equals("200") && complete == true) {
+				id = response.getSimpleResponse("avtaleid");
+				String csv = "";
+				String csvS = "";
+				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
+					Person p = (Person) o;
+					csv += p.getId() + ",";
+					csvS += "IkkeSvart,";
+					csv = csv.substring(0, csv.length()-1);
+					csvS = csvS.substring(0, csvS.length()-1);
+				}
+				Database.addParticipants(this, id, csv, csvS);
+			}
+		}
+		
 	}
     
 	private void setMeetingFields(){
@@ -160,7 +175,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		romlist_model.addElement(meeting.getRoom());
-		varighet_textfield.setText(meeting.getDuration());
 		Database.getParticipants(this, meeting);
 		ArrayList<Person> p = Bruker.getInstance().getAllPeople();
 		ArrayList<Person> deltakende = new ArrayList<Person>();
@@ -597,6 +611,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     			slutt_action(evt);
     		}
     	});
+    	varighet_textfield.setVisible(false);
+    	varighet_label.setVisible(false);
     	DefaultComboBoxModel d = new DefaultComboBoxModel();
     	ArrayList<Person> people = Bruker.getInstance().getAllPeople();
     	for (Person p : people) {
@@ -714,7 +730,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		list.add(person);
 	}
 	meeting.setParticipants(list);
-	System.out.print(meeting.getId());
 	if (edit) {
 		complete = true;
 		Database.updateMeeting(this, meeting);
@@ -723,11 +738,21 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	else {
 		complete = true;
 		Database.addMeeting(this, meeting);
-		
 	}
-	for(Person p: setStatus.keySet())
-	{
-		Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
+	String people = "", statuses = "";
+	
+	if (setStatus.size() != 0) {
+		for(Person p: setStatus.keySet())
+		{
+		
+			people +=p.getId() + ",";
+			statuses += setStatus.get(p)+",";
+		}
+		System.out.println("Skapte møte..");
+		System.out.println(meeting.toString());
+		System.out.println(people.substring(0, people.length()-1));
+		System.out.println(statuses.substring(0, statuses.length()-1));
+		Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 	}
 	main.setVisible(true);
 	this.setVisible(false);

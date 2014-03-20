@@ -61,6 +61,8 @@ public class Database {
 
 	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
+		System.out.println(m.getStart());
+		System.out.println(m.getEnd());
 		try {
 			result = new Client("update/avtale/" + m.getId(), Type.GET,
 					"avtale_id", m.getId()+"",
@@ -68,7 +70,7 @@ public class Database {
 					"Starttidspunkt", m.getStart(),	
 					"Sluttidspunkt", m.getEnd(),
 					"Beskrivelse", m.getDescription().replace(" ", "[space]"),
-					"varighet", m.getDuration()
+					"varighet", "0"
 					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +92,9 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){			
+			caller.callBack(new CalResponse(result, null));
+		}
 	}
 
 	public static void getParticipants(ApiCaller caller, Meeting m){
@@ -107,12 +111,14 @@ public class Database {
 		String result = "";
 		try {
 			result = new Client("delete/deltaker", Type.GET,
-					"person_id", avtale_id,
-					"avtale_id", person_id).execute();
+					"person_id", person_id,
+					"avtale_id", avtale_id).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){			
+			caller.callBack(new CalResponse(result, "foo"));
+		}
 	}
 
 	public static void updateParticipantStatus(ApiCaller caller, String avtale_id, String person_id, String status)

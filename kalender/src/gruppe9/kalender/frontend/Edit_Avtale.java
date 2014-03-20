@@ -38,6 +38,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 
@@ -162,9 +163,23 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 					csv += p.getId() + ",";
 					csvS += "IkkeSvart,";
 				}
-				csv = csv.substring(0, csv.length()-1);
-				csvS = csvS.substring(0, csvS.length()-1);
-				Database.addParticipants(this, id, csv, csvS);
+				
+				String people = "";
+				String statuses = "";
+				for(Person p: setStatus.keySet())
+				{
+				
+					people +=p.getId() + ",";
+					statuses += setStatus.get(p)+",";
+				}
+				System.out.println("Skapte møte..");
+				System.out.println(meeting.toString());
+				System.out.println(people.substring(0, people.length()-1));
+				System.out.println(statuses.substring(0, statuses.length()-1));
+				Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
+//				csv = csv.substring(0, csv.length()-1);
+//				csvS = csvS.substring(0, csvS.length()-1);
+//				Database.addParticipants(this, id, csv, csvS);
 			}
 		}
 		
@@ -359,8 +374,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			}
 		});
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        person_list.setModel(personlist_model);
+       
+        person_list.setModel(personlist_model);        
         jScrollPane3.setViewportView(person_list);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -622,6 +637,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	for (Person p : people) {
     		d.addElement(p);
     	}
+    	d.addElement("EPOST");
     	deltaker_combo.setModel(d);
     	
     }// </editor-fold>//GEN-END:initComponents
@@ -664,17 +680,29 @@ protected void fjern_buttonActionPerformed(ActionEvent e)
 	{
 		Object obj = person_list.getModel().getElementAt(person_list.getSelectedIndex());
 		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
-		newModel.remove(person_list.getSelectedIndex());
-		if(obj instanceof Person)
+		if(newModel.getElementAt(person_list.getSelectedIndex()) instanceof String)
 		{
-			person_list.setModel(newModel);
-			deltaker_combo.addItem((Person) obj);
-			setStatus.remove((Person) obj);
+			//Fortell database at person er borte fra denne avtalen..................
+			newModel.removeElementAt(person_list.getSelectedIndex());
 		}
 		else
 		{
-			person_list.setModel(newModel);
-			deltaker_combo.addItem((Group) obj);
+			newModel.remove(person_list.getSelectedIndex());
+			if(obj instanceof Person)
+			{
+				person_list.setModel(newModel);
+				deltaker_combo.insertItemAt((Person) obj, 0);
+				setStatus.remove((Person) obj);
+			}
+			else
+			{
+				person_list.setModel(newModel);
+				deltaker_combo.insertItemAt((Group) obj,0);
+			}	
+		}
+		if(person_list.getModel().getSize() > 0)
+		{
+			person_list.setSelectedIndex(0);
 		}
 	}
 	
@@ -683,19 +711,33 @@ protected void add_buttonActionPerformed(ActionEvent e)
 {
 	if(deltaker_combo.getModel().getSize()>0)
 	{
-		Object obj = deltaker_combo.getSelectedItem();
-		deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
-		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
-		if(obj instanceof Person)
+		if(deltaker_combo.getSelectedItem() instanceof String)
 		{
-			newModel.addElement((Person) obj);
-			person_list.setModel(newModel);
-			setStatus.put((Person) obj, "IkkeSvart");
+			String mailaddress = JOptionPane.showInputDialog("Skriv inn mail til ekstern bruker:");
+			if(mailaddress != null )
+			{
+				
+//				TODO LEGG TIL SKAPELSE AV CUSTOM-PERSON FOR Å HOLDE PÅ MAILEN.
+				DefaultListModel newModel = (DefaultListModel) person_list.getModel();	
+				newModel.addElement(mailaddress);
+				person_list.setModel(newModel);
+			}
 		}
 		else
-		{
-			newModel.addElement((Group) obj);
-			person_list.setModel(newModel);
+		{	Object obj = deltaker_combo.getSelectedItem();
+			deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
+			DefaultListModel newModel = (DefaultListModel) person_list.getModel();
+			if(obj instanceof Person)
+			{
+				newModel.addElement((Person) obj);
+				person_list.setModel(newModel);
+				setStatus.put((Person) obj, "IkkeSvart");
+			}
+			else
+			{
+				newModel.addElement((Group) obj);
+				person_list.setModel(newModel);
+			}
 		}
 	}
 }
@@ -760,23 +802,8 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		((Panel) c).addMeeting(meeting);
 		((Panel) c).refresh();
 	}
-	String people = "", statuses = "";
 	
-	System.out.println(setStatus.size());
-	if (setStatus.size() != 0 && !this.edit) {
-		for(Person p: setStatus.keySet())
-		{
-		
-			people +=p.getId() + ",";
-			statuses += setStatus.get(p)+",";
-		}
-		System.out.println("Skapte møte..");
-		System.out.println(meeting.toString());
-		System.out.println(people.substring(0, people.length()-1));
-		System.out.println(statuses.substring(0, statuses.length()-1));
-		Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
-	}
-	else if((setStatus.size() != 0 && this.edit))
+	if((setStatus.size() != 0 && this.edit))
 	{
 		for(Person p: setStatus.keySet())
 		{
@@ -892,6 +919,12 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 				String ID = Integer.toString(person.getId());
 				this.setText(name + " - " + ID);
 			}
+			else if(value instanceof String)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/email.png");
+				this.setIcon(icon);
+				this.setText("Ekstern bruker");
+			}
 			else
 			{
 				ImageIcon icon = new ImageIcon("resources/images/group.png");
@@ -932,6 +965,14 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 				String email = ((Person) value).getEmail();
 				setIcon(icon);
 				setText(name + " - " + email);
+			}
+
+			else if(value instanceof String)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/email.png");
+				this.setIcon(icon);
+				this.setText("Ekstern bruker - "+ value.toString());
+				
 			}
 			else
 			{

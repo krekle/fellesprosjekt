@@ -65,21 +65,16 @@ public class Notification_Window extends javax.swing.JFrame{
     public void setVisibleAndUpdate(boolean b)
     {
     	setVisible(b);
+    	System.out.println("In setvisibleandupdate...");
         DefaultListModel<Notification> notes = new DefaultListModel<Notification>();
         if(notifications != null && notifications.size() > 0)
         {
-        	System.out.println();System.out.println();System.out.println();
-        	System.out.println("Adding...");
         	for(Notification note : notifications)
         	{
-        		System.out.println(note.getDescription()+"\n"
-        	+ "HasbeenRead = " + note.hasBeenRead
-        				);
         		notes.addElement(note);
         	}
-        	System.out.println("Now contains "+notifications.size() + " elements.");
-        	this.jList1.setModel(notes);        	
         }
+        this.jList1.setModel(notes);        	
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -101,6 +96,7 @@ public class Notification_Window extends javax.swing.JFrame{
 			@Override
 			public void valueChanged(ListSelectionEvent e) 
 			{
+				System.out.println(jList1.getSelectedIndex());
 				if(jList1.getSelectedIndex()>0){
 					System.out.println(jList1.getSelectedIndex());
 					Notification note = (Notification) jList1.getModel().getElementAt(jList1.getSelectedIndex());
@@ -197,18 +193,13 @@ public class Notification_Window extends javax.swing.JFrame{
 			public void windowClosing(WindowEvent e) {
 				for(int x = 0; x < jList1.getModel().getSize(); x++)
 				{
-					System.out.println();System.out.println();System.out.println();System.out.println();
-					System.out.println("Deleting elements....");
 					Notification n = (Notification) jList1.getModel().getElementAt(x);
 					if(n.hasBeenRead)
 					{
-						System.out.println(n.getDescription() + "\n"
-								+"HasbeenRead = " +n.hasBeenRead);
 						notifications.remove(n);
 						Database.deleteNotification(null, Bruker.getInstance().getUser().getId(), n.getMeetingId());
 					}
 				}
-				System.out.println("Now contains "+notifications.size() + " elements.");
 			}
 			@Override
 			public void windowClosed(WindowEvent e){}

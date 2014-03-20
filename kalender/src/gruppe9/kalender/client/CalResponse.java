@@ -200,6 +200,7 @@ public class CalResponse {
 				JSONArray peopleArray = jo.getJSONArray("people");
 				for (int j = 0; j < peopleArray.length(); j++) {
 					JSONObject jobj = (JSONObject) peopleArray.get(j);
+//					System.out.println(jobj.getString("Navn"));
 					personList.add(new Person(jobj.getInt("Ansattnummer"), 
 												jobj.getString("Navn"), 
 												jobj.getInt("Telefonnummer"), 
@@ -211,7 +212,7 @@ public class CalResponse {
 						jo.getString("Beskrivelse"), 
 						jo.getInt("GruppeID"),
 						personList));
-//				System.out.println("Person added");
+//				System.out.println("Group added");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

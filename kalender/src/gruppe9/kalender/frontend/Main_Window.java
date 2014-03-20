@@ -212,15 +212,20 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				{
 					groupPanels.add( new Panel(week_list_scroller, this, groupList.get(i).getName()));
 					try {
-						System.out.println(tabWindow.getTabCount());
 						tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
 						for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
+//							System.out.println(groupPanels.get(i).getPeople());	
 							groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
 						}						
-					} catch (Exception e) {
+					} catch (Exception e) 
+					{
 						e.printStackTrace();
 					}
 				}
+//				for(Panel group : groupPanels)
+//				{
+//					tabWindow.add(group);
+//				}
 			}
 		}
 		catch (Exception e)

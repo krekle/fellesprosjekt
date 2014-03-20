@@ -50,6 +50,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	private int current_year = 2014;
 	static boolean popupExists = false;
 	private Notification_Window notifications;
+	private javax.swing.JTabbedPane tabWindow;
+
 	/** Creates new form Main_Window */
 	public Main_Window(Login_Window login) 
 	{
@@ -57,7 +59,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		Database.getAllPeople(this);    		
 		//    	Database.getAlerts(this);
 		//    	Database.getNotifications(this);
-		Database.getGroups(this);
 		ServerPuller.update(this);
 		//Henter avtalene til brukeren basert på id som ligger i Bruker.java
 		// Resultatet kommer til callBack() metoden.    	
@@ -66,6 +67,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		Felles = new Panel(week_list_scroller, this, "felles");
 		tabWindow.addTab("Me", me);
 		tabWindow.addTab("Felles", Felles);
+		Database.getGroups(this);
+		
+		
 		
 		Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 		tabWindow.addChangeListener(new ChangeListener() {
@@ -196,12 +200,18 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			else if(response.getGroups())
 			{
 				ArrayList<Panel> groupPanels = new ArrayList<Panel>();
-				for (int i = 0; i < Bruker.getInstance().getGroups().size(); i++) 
+				ArrayList<Group> groupList = Bruker.getInstance().getGroups();
+				for (int i = 0; i < groupList.size(); i++) 
 				{
-					groupPanels.add( new Panel(week_list_scroller, this, Bruker.getInstance().getGroups().get(i).getName()));
-					tabWindow.addTab(Bruker.getInstance().getGroups().get(i).getName(), groupPanels.get(i));
-					for (int j = 0; j < Bruker.getInstance().getGroups().get(i).getPeople().size(); j++) {
-						groupPanels.get(i).addPerson(Bruker.getInstance().getGroups().get(i).getPeople().get(j));
+					groupPanels.add( new Panel(week_list_scroller, this, groupList.get(i).getName()));
+					try {
+						System.out.println(tabWindow.getTabCount());
+						tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
+						for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
+							groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+						}						
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -908,7 +918,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	private javax.swing.JSeparator jSeparator1;
 	private javax.swing.JTextArea beskrivelse_area;
 	private javax.swing.JTextField uke_search;
-	private javax.swing.JTabbedPane tabWindow;
 	// End of variables declaration//GEN-END:variables
 
 

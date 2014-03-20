@@ -69,7 +69,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		
 		Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 		tabWindow.addChangeListener(new ChangeListener() {
-
+			
 			@Override
 			public void stateChanged(ChangeEvent e) 
 			{

@@ -234,13 +234,13 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			}
 			if(Bruker.getInstance().getUser().getId() == meeting.getCreator())
 			{
-				rediger_button.setEnabled(false);
-				slett_button.setEnabled(false);
+				rediger_button.setEnabled(true);
+				slett_button.setEnabled(true);
 			}
 			else
 			{
-				rediger_button.setEnabled(true);
-				slett_button.setEnabled(true);
+				rediger_button.setEnabled(false);
+				slett_button.setEnabled(false);
 			}
 
 			Database.getParticipants(this, meeting);
@@ -836,13 +836,12 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		}else{
 			Database.deleteParticipant(null, current_Avtale.getId()+"", Bruker.getInstance().getUser().getId()+"");
 		}
-		current_Avtale = null;
 		setMeeting(current_Avtale);
 		Bruker.getInstance().setAvtaler(meetings);
-
 		for (Component c : tabWindow.getComponents()) {
-			((Panel)c).addMe();
+			((Panel)c).removeMeeting(current_Avtale);
 		}
+		current_Avtale = null;
 	}
 
 	private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 

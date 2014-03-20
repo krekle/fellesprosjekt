@@ -537,7 +537,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 						setImage("resources/images/no_notification_clicked.png");
 					}
 					notifications.setLocation(notification_button.getLocation());
-					notifications.setVisible(true);
+					notifications.setVisibleAndUpdate(true);
 				}
 			}
 			@Override
@@ -804,12 +804,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
 		current_Avtale.setMyStatus("Avslaatt");
 		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
+		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
 	}
 
 	private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
 	{
 		current_Avtale.setMyStatus("Deltar");
 		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
+		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
 	}
 
 	private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 

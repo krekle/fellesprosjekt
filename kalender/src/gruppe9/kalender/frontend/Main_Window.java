@@ -818,17 +818,23 @@ private void create_avtale_buttonActionPerformed(java.awt.event.ActionEvent evt)
 private void slett_buttonActionPerformed(java.awt.event.ActionEvent evt)
 {
 	ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
-	for (Meeting meeting : meetings) {
-		if(meeting.getId() == current_Avtale.getId()){
-			meetings.remove(current_Avtale);
-		}
-	Bruker.getInstance().setAvtaler(meetings);
+	meetings.remove(current_Avtale);
+	//change iterator LOL!
+//	for (Meeting meeting : Bruker.getInstance().getAvtaler()) {
+//		System.out.println(meeting.getName() + " " + meeting.getId());
+//		if(meeting.getId() == current_Avtale.getId()){
+//			System.out.println("CORRECT MEETING!");
+////			meetings.remove(current_Avtale);
+//		}
+//	}
+	//current_Avtale = null;
+	//Bruker.getInstance().setAvtaler(meetings);
 		
 	for (Component c : tabWindow.getComponents()) {
 		((Panel)c).addMe();
+		((Panel)c).refresh();
 	}
 		
-	}
 	if(Bruker.getInstance().getUser().getId() == current_Avtale.getCreator())
 	{
 		Database.deleteMeeting(null, current_Avtale);

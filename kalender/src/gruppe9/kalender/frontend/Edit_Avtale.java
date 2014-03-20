@@ -727,6 +727,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 	for(Person p: setStatus.keySet())
 	{
+		//Database.addParticipants(this, meeting.getId(), "7,4,3", "Deltar,IkkeSvart,Avslaat");
 		Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), setStatus.get(p));
 	}
 	main.setVisible(true);

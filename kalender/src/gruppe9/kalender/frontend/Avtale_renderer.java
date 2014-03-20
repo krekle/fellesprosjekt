@@ -15,6 +15,7 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 
 	Color lightGreen = new Color(100,255,100);
 	Color lightRed = new Color(255, 100, 100);
+	Color lightGray = new Color(200,200,200);
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus)
@@ -42,12 +43,21 @@ public class Avtale_renderer extends JTextArea implements ListCellRenderer
 			}
 			break;
 		case "IkkeSvart":
-			this.setBackground(Color.GRAY);
+			if(isSelected){
+				this.setBackground(lightGray);
+			}
+			else{
+				
+				this.setBackground(Color.GRAY);
+			}
 			break;
 		}
 		String start = meeting.getStartTime();
 		String name = meeting.getName();
 		String slutt = meeting.getEndTime();
+		if(name.length()>12){
+			name = name.substring(0, 13) + "...";
+		}
 		this.setText(start + "\n"+name+"\n"+slutt);
 		return this;
 	}

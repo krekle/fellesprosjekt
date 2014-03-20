@@ -30,6 +30,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
@@ -547,7 +548,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 						setImage("resources/images/no_notification_clicked.png");
 					}
 					notifications.setLocation(notification_button.getLocation());
-					notifications.setVisible(true);
+					notifications.setVisibleAndUpdate(true);
 				}
 			}
 			@Override
@@ -814,12 +815,14 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
 		current_Avtale.setMyStatus("Avslaatt");
 		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
+		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
 	}
 
 	private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
 	{
 		current_Avtale.setMyStatus("Deltar");
 		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
+		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
 	}
 
 	private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 
@@ -854,6 +857,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		}
 		current_Avtale = null;
 		setMeeting(current_Avtale);
+		updateKomMeetings();
 	}
 
 	private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) 
@@ -919,7 +923,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	private javax.swing.JTextArea beskrivelse_area;
 	private javax.swing.JTextField uke_search;
 	// End of variables declaration//GEN-END:variables
-
+	public JTabbedPane getTabs(){
+		return tabWindow;
+	}
 
 	private void setImage(String image_path)
 	{

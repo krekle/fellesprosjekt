@@ -56,7 +56,9 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){
+			caller.callBack(new CalResponse(result, null));			
+		}
 	}
 
 	public static void updateMeeting(ApiCaller caller, Meeting m){
@@ -70,7 +72,9 @@ public class Database {
 					"Starttidspunkt", m.getStart(),	
 					"Sluttidspunkt", m.getEnd(),
 					"Beskrivelse", m.getDescription().replace(" ", "[space]"),
-					"varighet", "0"
+					"varighet", "0",
+					"sted", m.getPlace(),
+					"romid", m.getRoom() + ""
 					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();

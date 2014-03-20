@@ -973,7 +973,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		}
 		else if(o instanceof Notification)
 		{
-			System.out.println(((Notification) o ).toString());
 			this.notifications.addNotification((Notification) o);
 			if(hasNewNotification())
 			{

@@ -1,6 +1,7 @@
 package gruppe9.kalender.client;
 
 import gruppe9.kalender.frontend.Main_Window;
+import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
@@ -18,25 +19,17 @@ public class ServerPuller {
 
 	private static class Updater implements Runnable, ApiCaller {
 
-		private static ArrayList<Notification> notifications;
-		private static ArrayList<Meeting> meetings;
-
 		@Override
 		public void run() {
 			getUpdates();
+			System.out.println("PULL FROM SERVER COMPLETE");
 		}
 
 		private void getUpdates(){
 			//Notifications, Avtaler og Grupper
 			try {
-				notifications = Bruker.getInstance().getNotifications();
-				meetings = Bruker.getInstance().getAvtaler();
-			} catch (Exception e) {
-				notifications = null;
-				meetings = null;
-			}
-			try {
 				Database.getMeetings(this, Bruker.getInstance().getUser().getId());
+				Database.getNotifications(this);
 				Database.getNotifications(this);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -47,25 +40,22 @@ public class ServerPuller {
 		@Override
 		public void callBack(CalResponse response) {
 			try{
-			if(response.getAlerts()){
-				if(meetings != null && Bruker.getInstance().getVarsler() != null){
-					int oldSize = ((meetings != null)?meetings.size():0);
-					int newSize = Bruker.getInstance().getAvtaler().size();
-					if(newSize > oldSize){
-						mw.parseObject(Bruker.getInstance().getAvtaler());
+				if(response.getAlerts()){
+					for (Alert alert : Bruker.getInstance().getVarsler()) {
+						mw.parseObject(alert);						
 					}
 				}
-			}
 				else if(response.getNotifications()){
-				if(notifications != null && Bruker.getInstance().getNotifications() != null){
-					int oldSize = notifications.size();
-					int newSize = Bruker.getInstance().getNotifications().size();
-					if(newSize > oldSize){
-						mw.parseObject(Bruker.getInstance().getNotifications());
+					
+					for (Notification no : Bruker.getInstance().getNotifications()) {
+						mw.parseObject(no);
 					}
 				}
+				else if(response.getAvtaler()){
+					mw.parseObject(Bruker.getInstance().getAvtaler());
+				}
 			}
-			}catch(Exception e){
+			catch(Exception e){
 				e.printStackTrace();
 			}
 		}
@@ -83,7 +73,7 @@ public class ServerPuller {
 		}
 
 	}
-	
+
 	public static void stop(){
 		service.shutdown();
 	}

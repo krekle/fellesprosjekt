@@ -15,6 +15,8 @@ import gruppe9.kalender.user.Bruker;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -70,7 +72,6 @@ public class Notification_Window extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-
         jList1.addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
@@ -81,6 +82,7 @@ public class Notification_Window extends javax.swing.JFrame {
 				jLabel2.setText("Avtale "+note.getMeetingId());
 				jLabel3.setText(note.getTime());
 				jTextArea1.setText(note.getDescription());
+//				Bruker.getInstance(
 			}
 		});
         jList1.setCellRenderer(new NotificationRenderer());

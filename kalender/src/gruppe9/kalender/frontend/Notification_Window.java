@@ -260,13 +260,16 @@ public class Notification_Window extends javax.swing.JFrame {
 	}
 	public void addNotification(Notification o) 
 	{
-		o.hasBeenRead = false;
-		notifications.add(o);
-		DefaultListModel<Notification> notes = new DefaultListModel<Notification>();
-    	for(Notification note : notifications)
-    	{
-    		notes.addElement(note);
-    	}
-    	this.jList1.setModel(notes);
+		if(o != null){
+			o.hasBeenRead = false;
+			notifications.add(o);
+			DefaultListModel<Notification> notes = new DefaultListModel<Notification>();
+			for(Notification note : notifications)
+			{
+				notes.addElement(note);
+			}
+			this.jList1.setModel(notes);			
+		}
 	}
+	
 }

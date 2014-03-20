@@ -10,7 +10,6 @@ import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;

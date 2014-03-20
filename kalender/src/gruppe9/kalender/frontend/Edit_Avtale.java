@@ -86,7 +86,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				if(e.getButton()==3)
 				{
 					person_list.setSelectedIndex(person_list.locationToIndex(e.getPoint()));
-					System.out.println("DID STUFF AND SUCH");
 					JPopupMenu popmenu = new JPopupMenu();
 					JMenuItem ikke = new JMenuItem("Udefinert"),
 							ja = new JMenuItem("Godtar"),
@@ -140,7 +139,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		if (response.getCode() != null) {
 			if (response.getCode().equals("200") && complete == true) {
 				id = response.getSimpleResponse("avtaleid");
-				System.out.println(response.getSimpleResponse("avtaleid"));
 				String csv = "";
 				String csvS = "";
 				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
@@ -717,7 +715,6 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		list.add(person);
 	}
 	meeting.setParticipants(list);
-	System.out.print(meeting.getId());
 	if (edit) {
 		complete = true;
 		Database.updateMeeting(this, meeting);

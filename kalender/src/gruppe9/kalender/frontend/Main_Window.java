@@ -170,9 +170,13 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 				//Avtalene ble hentet fra serveren og ligger nå i
 				// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-				for(Component c : tabWindow.getComponents())
-				{
-					((Panel) c).addMe();    				
+//				for(Component c : tabWindow.getComponents())
+//				{
+//					((Panel) c).addMe();
+//				}
+				for (int i = 0; i < tabWindow.getComponents().length; i++) {
+					if (i==2) { break; } // gruppetabs skal ikke addMe
+					((Panel)tabWindow.getComponents()[i]).addMe();
 				}
 				updateKomMeetings();
 				//Her kan man nå kjøre f.eks:
@@ -211,16 +215,17 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				for (int i = 0; i < groupList.size(); i++) 
 				{
 					groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
-
 					try {
 						tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
 						for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
-//							System.out.println(groupPanels.get(i).getPeople());
 							if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId()){
 								groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
 							}
+							if((groupList.get(i).getPeople().size()==1) // om eneste gruppemedlem er deg selv
+									&& (groupList.get(i).getPeople().get(0).getId() == Bruker.getInstance().getUser().getId())){
+								groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+							}
 						}
-//						groupPanels.get(i).addMe();
 					} catch (Exception e) 
 					{
 						e.printStackTrace();
@@ -228,17 +233,16 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				}
 				for(Panel group : groupPanels)
 				{
-					System.out.println(group.getPeople());
 					tabWindow.add(group);
 				}
 				for(Component c : tabWindow.getComponents()){
-					((Panel) c).refresh();}
+					((Panel) c).refresh();
 				}
+			}
+		} catch (Exception e)
+		{	
+			
 		}
-		catch (Exception e)
-		{
-		}
-
 		//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
 		// response.getVarsler() her
 	}

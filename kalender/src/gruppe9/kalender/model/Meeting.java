@@ -190,8 +190,9 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	}
 	
 	public DefaultListModel<Person> getParticipantListModel(){
-		DefaultListModel<Person> participantListModel = new DefaultListModel<Person>();
+		DefaultListModel participantListModel = new DefaultListModel();
 		for (int i = 0; i < this.participants.size(); i++){
+//			System.out.println(participants.get(i).getName());
 			participantListModel.addElement(participants.get(i));
 		}
 		return participantListModel;

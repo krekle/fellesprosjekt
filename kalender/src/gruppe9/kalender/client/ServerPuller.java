@@ -30,7 +30,6 @@ public class ServerPuller {
 			try {
 				Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 				Database.getNotifications(this);
-				Database.getNotifications(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

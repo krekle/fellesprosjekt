@@ -74,6 +74,7 @@ public class Varsel_Popup extends javax.swing.JFrame {
         type_selection_box = new javax.swing.JComboBox();
         datetime_label = new javax.swing.JLabel();
         date_time_text = new javax.swing.JTextField();
+        date_time_text.setText(meeting.getStart());
         jScrollPane1 = new javax.swing.JScrollPane();
         melding_text = new javax.swing.JTextArea();
         melding_label = new javax.swing.JLabel();
@@ -86,11 +87,9 @@ public class Varsel_Popup extends javax.swing.JFrame {
         type_label.setText("Type:");
 
         type_selection_box.setVisible(false);
-//        type_selection_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "e-post", "alarm" }));
 
         datetime_label.setText("Dato-Tid:");
-
-        date_time_text.setToolTipText("Tast inn dato og tid i formatet dd-mm-åå tt:mm:ss.");
+        date_time_text.setToolTipText("Tast inn dato og tid i formatet yyyy-mm-dd tt:mm:ss.");
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);

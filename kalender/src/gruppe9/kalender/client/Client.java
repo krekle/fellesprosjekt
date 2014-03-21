@@ -22,6 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
  
 @SuppressWarnings("deprecation")
 
+
 public class Client 
 {
  
@@ -89,8 +90,7 @@ public class Client
 		while ((line = rd.readLine()) != null) {
 			result.append(line);
 		}
-		//TODO: Remove
-		System.out.println("GET: "+ result.toString());
+//		System.out.println(result.toString());
 		return result.toString();
 	}
  
@@ -108,13 +108,11 @@ public class Client
  
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
-		System.out.println(url);
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		
 		for (int i = 0; i < strings.length; i = i+2) {
 			urlParameters.add(new BasicNameValuePair(strings[i], strings[i+1]));
 		}
-		System.out.println(urlParameters.toString());
 		
 		post.setEntity(new UrlEncodedFormEntity(urlParameters));
  
@@ -128,7 +126,6 @@ public class Client
 			result.append(line);
 		}
 		//TODO: Remove
-		System.out.println(result.toString());
 		return result.toString();
 	}
 	public enum Type{

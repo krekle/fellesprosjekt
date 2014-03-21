@@ -2,6 +2,8 @@ package gruppe9.kalender.model;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 public class Group {
 	private String name;
 	private String description;
@@ -12,11 +14,12 @@ public class Group {
 	{
 		return "Gruppe " + this.ID+": " + this.name;
 	}
-	public Group(String name, String description, int ID) {
+	public Group(String name, String description, int ID, ArrayList<Person> people) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.ID = ID;
+		this.people = people;
 	}
 
 	public void addPerson(Person person){

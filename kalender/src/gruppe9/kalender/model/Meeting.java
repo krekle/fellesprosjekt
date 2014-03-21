@@ -1,11 +1,15 @@
 package gruppe9.kalender.model;
 
+import gruppe9.kalender.client.ApiCaller;
+import gruppe9.kalender.client.CalResponse;
+import gruppe9.kalender.client.Database;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.DefaultListModel;
 
-public class Meeting implements Comparable<Meeting>{
+public class Meeting implements Comparable<Meeting>, ApiCaller{
 	
 	private String name;
 	private int meetingId;
@@ -15,7 +19,9 @@ public class Meeting implements Comparable<Meeting>{
 	private String end;
 	private String description;
 	private int roomId;
-	private String place;
+	private String place = "NA";
+	private Group group = null;
+	private String myStatus;
 	
 	private ArrayList<Person> participants;
 	private ArrayList<Notification> notifications;
@@ -32,7 +38,7 @@ public class Meeting implements Comparable<Meeting>{
 	}
 
 	public Meeting(int meetingId, int creatorId, String start, String end,
-			String description, int roomId, String title) {
+			String description, int roomId, String title, String status) {
 		super();
 		this.meetingId = meetingId;
 		this.creatorId = creatorId;
@@ -40,21 +46,30 @@ public class Meeting implements Comparable<Meeting>{
 		this.end = end;
 		this.description = description;
 		this.roomId = roomId;
+		this.name = title;
+		
+		this.myStatus = ((status != null)? status:"IkkeSvart");
+		
 		participants = new ArrayList<Person>();
+		Database.getParticipants(this, this);
 		notifications = new ArrayList<Notification>();
 		emailAlert = null;
 		soundAlert = null;
 	}
 
+	public String getMyStatus() {
+		return myStatus;
+	}
+
+	public void setMyStatus(String myStatus) {
+		this.myStatus = myStatus;
+	}
+
 	public String getDuration(){
 		int minutes = 0;
 		minutes += ((Integer.parseInt(this.getEndTime().substring(0,2))*60) + Integer.parseInt(this.getEndTime().substring(3)));
-		System.out.println(minutes);
-		System.out.println((Integer.parseInt(this.getStartTime().substring(0,2))*60) + Integer.parseInt(this.getStartTime().substring(3)));
 		minutes -= (Integer.parseInt(this.getStartTime().substring(0,2))*60) + Integer.parseInt(this.getStartTime().substring(3));
-		System.out.println(minutes);
 		int hours = (int) Math.floor(minutes/60);
-		System.out.println("hours" + hours);
 		minutes = minutes%60;
 		if (minutes >= 10){
 			return String.valueOf(hours) + ":" + String.valueOf(minutes);
@@ -69,6 +84,7 @@ public class Meeting implements Comparable<Meeting>{
 		return Integer.parseInt(start.substring(0,4));
 	}
 	public int getMonth(){
+//		System.out.println(start.substring(5,7));
 		return Integer.parseInt(start.substring(5,7));
 	}
 	public int getDayOfMonth(){
@@ -95,7 +111,6 @@ public class Meeting implements Comparable<Meeting>{
 		calendar.set(Calendar.YEAR,getYear());
 		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
-//		System.out.println(calendar.getTime());
 
 		return (calendar.get(Calendar.DAY_OF_WEEK) - 1);
 	}
@@ -106,7 +121,6 @@ public class Meeting implements Comparable<Meeting>{
 		calendar.set(Calendar.MONTH,getMonth() - 1);
 		calendar.set(Calendar.DATE,getDayOfMonth());
 		
-//		System.out.println(calendar.getTime());
 
 		return (calendar.get(Calendar.WEEK_OF_YEAR));
 	}
@@ -134,6 +148,7 @@ public class Meeting implements Comparable<Meeting>{
 		return start.replace(" ", "-");
 	}
 	public void setStart(String start) {
+		System.out.println("Start set to.... "+ start);
 		this.start = start;
 	}
 	public String getEnd() {
@@ -174,7 +189,7 @@ public class Meeting implements Comparable<Meeting>{
 	}
 	
 	public DefaultListModel<Person> getParticipantListModel(){
-		DefaultListModel<Person> participantListModel = null;
+		DefaultListModel<Person> participantListModel = new DefaultListModel<Person>();
 		for (int i = 0; i < this.participants.size(); i++){
 			participantListModel.addElement(participants.get(i));
 		}
@@ -191,6 +206,9 @@ public class Meeting implements Comparable<Meeting>{
 
 	@Override
 	public int compareTo(Meeting o) {
+		if (o.start.equals("None") || o.end.equals("None") || start.equals("None") || end.equals("None")) {
+			return 0;
+		}
 		int dateDiff = Integer.parseInt(this.getStart().substring(0,10).replace("-", "")) - Integer.parseInt(o.getStart().substring(0,10).replace("-", ""));
 		if (dateDiff !=0){
 			return dateDiff;
@@ -214,11 +232,24 @@ public class Meeting implements Comparable<Meeting>{
 		this.name = name;
 	}
 
+	@Override
+	public void callBack(CalResponse response) 
+	{
+		ArrayList<Deltaker> pe = response.getDeltakere();
+	}		
 	public String getPlace() {
 		return place;
 	}
 
 	public void setPlace(String place) {
 		this.place = place;
+	}
+	
+	public void setGroup(Group group)
+	{
+		this.group = group;	
+	}
+	public Group getGroup(){
+		return group;
 	}
 }

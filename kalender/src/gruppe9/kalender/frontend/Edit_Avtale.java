@@ -10,27 +10,6 @@
  */
 package gruppe9.kalender.frontend;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.xml.bind.DataBindingException;
-import javax.xml.crypto.Data;
-
 import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Database;
@@ -40,6 +19,31 @@ import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.model.Room;
 import gruppe9.kalender.user.Bruker;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Pattern;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -55,7 +59,9 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     private String start;
     private String slutt;
     private String id;
-    
+    private boolean complete;
+    private HashMap<Person, String> setStatus = new HashMap<Person, String>();
+	private boolean editComplete = false;
     public Edit_Avtale(Main_Window main, Meeting meeting) 
     {
     	initComponents();
@@ -63,15 +69,76 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	if (edit) 
     	{
     		setMeetingFields();
+    	
     	}
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
+        person_list.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton()==3)
+				{
+					person_list.setSelectedIndex(person_list.locationToIndex(e.getPoint()));
+					JPopupMenu popmenu = new JPopupMenu();
+					JMenuItem ikke = new JMenuItem("Udefinert"),
+							ja = new JMenuItem("Godtar"),
+							nei = new JMenuItem("Avslår");
+					ActionListener l = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							if(person_list.getModel().getElementAt(person_list.getSelectedIndex()) instanceof Person)
+							{								
+								Person p = person_list.getModel().getElementAt(person_list.getSelectedIndex());
+								switch(((JMenuItem) e.getSource()).getText())
+								{
+								case("Udefinert"):
+									//TODO ADD FUNCTIONALITY FOR SETTING PARTICIPATING/NOT PARTICIPATING-STATUS
+									setStatus.put(p, "IkkeSvart");
+								break;
+								case("Godtar"):
+									setStatus.put(p, "Deltar");
+								break;
+								case("Avslår"):
+									setStatus.put(p, "Avslaatt");
+								break;
+								}
+							}
+						}
+					};
+					ja.addActionListener(l);nei.addActionListener(l);ikke.addActionListener(l);
+					popmenu.add(ikke); popmenu.add(ja); popmenu.add(nei);
+					popmenu.show(person_list, e.getPoint().x,e.getPoint().y);
+
+				}
+				
+			}
+		});
         deltaker_combo.setRenderer(new combo_box_person_renderer());
-        
+    	start = start_textfield.getText();
+    	slutt = slutt_textfield.getText();
+    	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
+    		start = toDateTime(date_textfield.getText(), start);
+    		slutt = toDateTime(date_textfield.getText(), slutt);
+    		Database.getAvaliableRooms(this, start, slutt);}    
     }
     
     @Override
-	public void callBack(CalResponse response) {
+	public void callBack(CalResponse response) 
+    {
 		if(response.getRoms() != null){
 			rooms = response.getRoms();
 			if (!romlist_model.isEmpty()) {
@@ -81,11 +148,53 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				romlist_model.addElement(rom);
 			}
 		}
-		if (response.getDeltakere() != null) {
+		else if (response.getDeltakere() != null) {
 			deltakere = response.getDeltakere();
 		}
-		if (response.getSimpleResponse("avtaleid") != null) {
-			id = response.getSimpleResponse("avtaleid");
+		if (response.getCode() != null) {
+			if (response.getCode().equals("200") && edit == true && editComplete == true) {
+				if (setStatus.size() != 0) {
+					String people = "", statuses = "";
+					for(Person p: setStatus.keySet())
+					{
+						people +=p.getId() + ",";
+						statuses += setStatus.get(p)+",";
+					}
+					System.out.println("Skapte møte..");
+					System.out.println(meeting.toString());
+					System.out.println(people.substring(0, people.length()-1));
+					System.out.println(statuses.substring(0, statuses.length()-1));
+					Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
+				}
+			}
+			else if (response.getCode().equals("200") && complete && !edit  && !harID) {
+				id = response.getSimpleResponse("avtaleid");
+				String csv = "";
+				String csvS = "";
+				String people = "";
+				String statuses = "";
+				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
+					if (o instanceof Group){
+						for (Person p : ((Group) o).getPeople())
+						{
+							people += p.getId() + ",";
+							statuses += "IkkeSvart,";													
+						}
+						}
+					}
+				
+				for(Person p: setStatus.keySet())
+				{
+					if(!Arrays.asList(people.split(",")).contains(p.getId()))
+					{
+						people +=p.getId() + ",";
+						statuses += setStatus.get(p)+",";
+					}
+				}
+				meeting.setId(Integer.parseInt(id));
+				Database.addParticipants(null, id, people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
+				harID = true;
+			}
 		}
 	}
     
@@ -93,15 +202,36 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
-		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
+		Date date = new Date();
+		date.setYear(meeting.getYear()-1900); date.setMonth(meeting.getMonth()-1); date.setDate(meeting.getDayOfMonth()); 
+		dateChooser.updateUI();
+		dateChooser.ensureDateVisible(date);
+		dateChooser.setSelectionDate(date);
+		date_textfield.setText(dateChooser.getSelectionDate().getDate()+":"
+				+(dateChooser.getSelectionDate().getMonth()+1)+":"
+				+(dateChooser.getSelectionDate().getYear()+1900));
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
-		varighet_textfield.setText(meeting.getDuration());
+		romlist_model.addElement(new Room(meeting.getRoom(), "",0,"",0));
+		Database.getParticipants(this, meeting);
+		ArrayList<Person> p = Bruker.getInstance().getAllPeople();
+		ArrayList<Person> deltakende = new ArrayList<Person>();
+		for (Person per : p) {
+			for (Deltaker d : deltakere) {
+				if (per.getId() == d.getPersonID()) {
+					deltakende.add(per);
+				}
+			}
+		}
+		for (Person pe : deltakende) {
+			personlist_model.addElement(pe);
+			deltaker_combo.removeItem(pe);
+		}
 	}
 	private void setMeeting(Meeting meeting)
     {
     	this.edit = ((meeting != null) ? true:false);
-    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null));
+    	this.meeting = ((meeting != null) ? meeting:new Meeting(0, Bruker.getInstance().getUser().getId(), "", "", "", 0, null, ""));
 
     	
     }
@@ -149,7 +279,35 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         rom_list = new javax.swing.JList();
         auto_select_choice = new javax.swing.JRadioButton();
         romlist_model = new DefaultListModel();
-
+        personlist_model = new DefaultListModel();
+        rom_textfield.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rom_list.clearSelection();
+			}
+		});
         this.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -185,7 +343,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
-			System.out.println("K!O#K");
 				
 			}
 			
@@ -207,6 +364,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 
         beskrivelse_textfield.setColumns(20);
         beskrivelse_textfield.setRows(5);
+        beskrivelse_textfield.setLineWrap(true);
         beskrivelse_scrollpane.setViewportView(beskrivelse_textfield);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -262,8 +420,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			}
 		});
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        person_list.setModel(new DefaultListModel());
+       
+        person_list.setModel(personlist_model);        
         jScrollPane3.setViewportView(person_list);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -415,9 +573,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         rom_label.setText("Rom:");
         velg_label.setText("Velg fra liste:");
         rom_list.setModel(romlist_model);
-        
         romScrollPane.setViewportView(rom_list);
-
+        
         auto_select_choice.setText("Velg automatisk");
         auto_select_choice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -518,22 +675,41 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     			slutt_action(evt);
     		}
     	});
+    	varighet_textfield.setVisible(false);
+    	varighet_label.setVisible(false);
     	DefaultComboBoxModel d = new DefaultComboBoxModel();
     	ArrayList<Person> people = Bruker.getInstance().getAllPeople();
+    	ArrayList<Group> grupper = Bruker.getInstance().getGroups();
     	for (Person p : people) {
     		d.addElement(p);
     	}
+    	for (Group g : grupper) {
+			d.addElement(g);
+		}
+    	d.addElement("EPOST");
+    	deltaker_combo.setModel(d);
     	
     }// </editor-fold>//GEN-END:initComponents
 
 private String toDateTime(String dato, String tid) {
 	
-	String year = dato.substring(5);
+	System.out.println(dato);
+	System.out.println(tid);
+	String[] date = dato.split(":");
+	if (date[0].length() == 1) {
+		date[0] = "0" + date[0]; 
+	}
+	if (date[1].length() == 1) {
+		date[1] = "0" + date[1];
+	}
+	dato = date[0] + date[1] + date[2];
+	String year = dato.substring(4);
 	String day = dato.substring(0, 2);
-	String date1 = dato.substring(3,4);
+	String date1 = dato.substring(2,4);
 	String time = tid.substring(0,2);
 	String min = tid.substring(3,5);
 	String total = year + "-" + date1 + "-" + day + " " + time + ":" + min + ":" + "00";
+	System.out.println(total);
 	return total;
 }
     
@@ -561,36 +737,78 @@ protected void fjern_buttonActionPerformed(ActionEvent e)
 	{
 		Object obj = person_list.getModel().getElementAt(person_list.getSelectedIndex());
 		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
-		newModel.remove(person_list.getSelectedIndex());
-		if(obj instanceof Person)
+		if(newModel.getElementAt(person_list.getSelectedIndex()) instanceof String)
 		{
-			person_list.setModel(newModel);
-			deltaker_combo.addItem((Person) obj);
+			//Fortell database at person er borte fra denne avtalen..................
+			newModel.removeElementAt(person_list.getSelectedIndex());
 		}
 		else
 		{
-			person_list.setModel(newModel);
-			deltaker_combo.addItem((Group) obj);
+			newModel.remove(person_list.getSelectedIndex());
+			if(obj instanceof Person)
+			{
+				person_list.setModel(newModel);
+				deltaker_combo.insertItemAt((Person) obj, 0);
+				setStatus.remove((Person) obj);
+			}
+			else
+			{
+				person_list.setModel(newModel);
+				deltaker_combo.insertItemAt((Group) obj,0);
+			}	
+		}
+		if(person_list.getModel().getSize() > 0)
+		{
+			person_list.setSelectedIndex(0);
 		}
 	}
 	
 }
+
+private static final Pattern rfc2822 = Pattern.compile(
+        "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+);
+
 protected void add_buttonActionPerformed(ActionEvent e) 
 {
 	if(deltaker_combo.getModel().getSize()>0)
 	{
-		Object obj = deltaker_combo.getSelectedItem();
-		deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
-		DefaultListModel newModel = (DefaultListModel) person_list.getModel();
-		if(obj instanceof Person)
+		if(deltaker_combo.getSelectedItem() instanceof String)
 		{
-			newModel.addElement((Person) obj);
-			person_list.setModel(newModel);
+			String mailaddress = JOptionPane.showInputDialog("Skriv inn mail til ekstern bruker:");
+			if(mailaddress != null )
+			{
+				if (rfc2822.matcher(mailaddress).matches()) {
+					Database.sendMail(null, mailaddress, 
+							("Avtaleinvitasjon " + avtalenavn_textfield.getText().toString()).replace(" ", "[space]"), 
+							("Du er invitert til møte klokken: " + start_textfield.getText().toString() 
+							+ " i " + "av: " + Bruker.getInstance().getUser().getName()).replace(" ", "[space]"));
+
+					DefaultListModel newModel = (DefaultListModel) person_list.getModel();	
+					newModel.addElement(mailaddress);
+					person_list.setModel(newModel);
+				}else{
+					System.err.println("ERROR: mail format");
+				}
+				
+				
+			}
 		}
 		else
-		{
-			newModel.addElement((Group) obj);
-			person_list.setModel(newModel);
+		{	Object obj = deltaker_combo.getSelectedItem();
+			deltaker_combo.removeItemAt(deltaker_combo.getSelectedIndex());
+			DefaultListModel newModel = (DefaultListModel) person_list.getModel();
+			if(obj instanceof Person)
+			{
+				newModel.addElement((Person) obj);
+				person_list.setModel(newModel);
+				setStatus.put((Person) obj, "IkkeSvart");
+			}
+			else
+			{
+				newModel.addElement((Group) obj);
+				person_list.setModel(newModel);
+			}
 		}
 	}
 }
@@ -613,36 +831,91 @@ public void editDate(Integer increment)
 	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
 }
 
-private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+private boolean harID = false;
+private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
 	meeting.setCreator(Bruker.getInstance().getUser().getId());
 	meeting.setDescription(beskrivelse_textfield.getText());
 	meeting.setName(avtalenavn_textfield.getText());
-	meeting.setStart(start);
-	meeting.setEnd(slutt);
-	
-	if (rom_list.getSelectedValue() != null) {
+	meeting.setStart(toDateTime(date_textfield.getText(),start_textfield.getText()));
+	System.out.println("Date = " + date_textfield.getText());
+	meeting.setEnd(toDateTime(date_textfield.getText(), slutt_textfield.getText()));
+	System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
+	System.out.println(meeting.getStart());
+	System.out.println(rom_list.getSelectedValue() instanceof Room);
+	System.out.println(rom_list.getSelectedIndex());
+	if (rom_list.getSelectedValue() != null)
+	{
 		room = (Room) rom_list.getSelectedValue();
+		meeting.setPlace("NA");
+		meeting.setRoom(room.getId());
 	}
-	if (room == null) {
-		meeting.setPlace(rom_textfield.getText());
+	else if (rom_list.getSelectedValue() == null) 
+	{
+		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) 
+		{
+			meeting.setPlace("NA");
+		}
+		else meeting.setPlace(rom_textfield.getText());
 	}
-	meeting.setRoom(room.getId());
+	else
+	{
+		JOptionPane.showMessageDialog(this, "Du må spesifisere et rom eller velge fra listen.");
+		return;
+	}
+
 	ArrayList list = new ArrayList();
-	Component[] participants = person_list.getComponents();
-	for (Component person : participants) {
-		list.add(person);
+	for (int x = 0; x<person_list.getModel().getSize(); x++) 
+	{
+		if (person_list.getModel().getElementAt(x) instanceof Person) {
+			list.add((Person) person_list.getModel().getElementAt(x));			
+		} else {
+			list.add(person_list.getModel().getElementAt(x));
+		}
 	}
 	meeting.setParticipants(list);
-
 	if (edit) {
-		System.out.println("update");
+		complete = true;
+		System.out.println("Sending update to server");
 		Database.updateMeeting(this, meeting);
+		
 	}
 	else {
-		System.out.println("add");
+		complete = true;
 		Database.addMeeting(this, meeting);
-		Database.addParticipants(this, avtale_id, csvPeople, csvStatus);
 	}
+	ArrayList<Meeting> mongobarn = Bruker.getInstance().getAvtaler();
+	if(edit)
+	{
+		for(Meeting m : mongobarn)
+		{
+			if(m.getId() == meeting.getId()){
+				mongobarn.remove(m);
+				break;
+			}
+		}
+	}
+	mongobarn.add(meeting);
+	Bruker.getInstance().setAvtaler(mongobarn);
+	
+	if((setStatus.size() != 0 && this.edit))
+	{
+		for(Person p: setStatus.keySet())
+		{
+			Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), ""+setStatus.get(p));
+		}
+	}
+	System.out.println("I got here..");
+	System.out.println(main.getTabs().getComponents());
+	for(Component c : main.getTabs().getComponents())
+	{
+		((Panel) c).addMeeting(meeting);
+		((Panel) c).refresh();
+	}
+	main.setMeeting(meeting);
+	main.updateKomMeetings();
+	main.setVisible(true);
+	this.setVisible(false);
 }
 
 private void avbryt_buttonActionPerformed(java.awt.event.ActionEvent evt){
@@ -652,7 +925,8 @@ this.setVisible(false);
 }
 
 private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
-	if (auto_select_choice.isSelected()) {
+	if (auto_select_choice.isSelected())
+	{
 		if (!rom_list.isSelectionEmpty()) {
 			rom_list.clearSelection();
 		}
@@ -664,6 +938,7 @@ private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
 				room = r;		
 			}
 		}
+		meeting.setPlace("NA");
 		
 	}
 	else {
@@ -672,12 +947,20 @@ private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
 		
 }
 
-private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) 
-{
+private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) {
+		
 	date_textfield.setText(
-					 dateChooser.getSelectionDate().getDate()+":"
-					+(dateChooser.getSelectionDate().getMonth()+1)+":"
-					+(dateChooser.getSelectionDate().getYear()+1900));
+				 dateChooser.getSelectionDate().getDate()+":"
+				+(0+dateChooser.getSelectionDate().getMonth()+1)+":"
+				+(dateChooser.getSelectionDate().getYear()+1900));
+	System.out.println("Date..." + date_textfield.getText());
+	start = start_textfield.getText();
+	slutt = slutt_textfield.getText();
+	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
+		start = toDateTime(date_textfield.getText(), start);
+		slutt = toDateTime(date_textfield.getText(), slutt);
+		Database.getAvaliableRooms(this, start, slutt);
+		}
 }
 
 private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)
@@ -725,6 +1008,7 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField varighet_textfield;
     private org.jdesktop.swingx.JXMonthView dateChooser;
     private DefaultListModel romlist_model;
+    private DefaultListModel personlist_model;
     
     private class combo_box_person_renderer extends JLabel implements ListCellRenderer
     {
@@ -747,6 +1031,12 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 				String ID = Integer.toString(person.getId());
 				this.setText(name + " - " + ID);
 			}
+			else if(value instanceof String)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/email.png");
+				this.setIcon(icon);
+				this.setText("Ekstern bruker");
+			}
 			else
 			{
 				ImageIcon icon = new ImageIcon("resources/images/group.png");
@@ -756,17 +1046,16 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 				String ID = Integer.toString(group.getID());
 				this.setText("Gruppe "+ID+": " +name);
 			}
-			System.out.println(" ");
 			return this;
 		}
     	
     }
     private class list_person_renderer extends JLabel implements ListCellRenderer
     {
-
     	public list_person_renderer()
     	{
-    		this.setOpaque(true);
+    		setOpaque(true);
+    		
     	}
 		@Override
 		public JLabel getListCellRendererComponent(JList list, Object value,
@@ -783,21 +1072,28 @@ private void date_textfieldActionPerformed(java.awt.event.ActionEvent evt)
 			if(value instanceof Person)
 			{
 				ImageIcon icon = new ImageIcon("resources/images/person.png");
-				this.setIcon(icon);
 				Person person = (Person) value;
 				String name = person.getName();
-				String ID = Integer.toString(person.getId());
-				String email = ((Person) value).getEmail(); 
-				this.setText(name + " - " + ID + " - " + email);
+				String email = ((Person) value).getEmail();
+				setIcon(icon);
+				setText(name + " - " + email);
+			}
+
+			else if(value instanceof String)
+			{
+				ImageIcon icon = new ImageIcon("resources/images/email.png");
+				this.setIcon(icon);
+				this.setText("Ekstern bruker - "+ value.toString());
+				
 			}
 			else
 			{
 				ImageIcon icon = new ImageIcon("resources/images/group.png");
-				this.setIcon(icon);
 				Group group = (Group) value;
 				String name = group.getName();
 				String ID = Integer.toString(group.getID());
-				this.setText("Gruppe "+ID+": " +name);
+				setIcon(icon);
+				setText(name + " -  Gruppe" + ID);
 			}
 			return this;
 		}

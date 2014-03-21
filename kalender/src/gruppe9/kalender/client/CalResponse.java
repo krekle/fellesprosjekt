@@ -34,26 +34,40 @@ public class CalResponse {
 			return false;
 		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
-		try 
-		{
-			if(arrayResponse != null){
-				for (int i = 0; i < arrayResponse.length(); i++) {
-					JSONObject jo;
+		if(arrayResponse != null){
+			for (int i = 0; i < arrayResponse.length(); i++) {
+				JSONObject jo;
+				try {
 					jo = arrayResponse.getJSONObject(i);
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
-				}}
-			Bruker.getInstance().setAvtaler(meetList);
-			return true;
-		}catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return false;
+					int rom = 0;
+					if(!(jo.getString("rom").equals("NA") || jo.getString("rom").equals(null))){
+						try {
+							rom = Integer.parseInt(jo.getString("rom"));
+							System.out.println("ROM GOTTEN!");
+						} catch (Exception e) {
+						}
+						
+					}else{
+						System.out.println("NO ROM");
+					}
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")),
+							Integer.parseInt(jo.getString("skaper")), 
+							jo.getString("Starttidspunkt"), 
+							jo.getString("Sluttidspunkt"), 
+							jo.getString("Beskrivelse").replace("[space]", " "), 
+							rom, 
+							jo.getString("Tittel"), 
+							jo.getString("Status")));
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			}}
+		Bruker.getInstance().setAvtaler(meetList);
+		return true;
 	}
+
 	public ArrayList<Meeting> getOtherMeetings(){
-//		if(!var.equals("avtaler"))
-//		{
-//			return null;
-//		}
 		ArrayList<Meeting> meetList = new ArrayList<Meeting>();
 		try 
 		{
@@ -61,8 +75,13 @@ public class CalResponse {
 				for (int i = 0; i < arrayResponse.length(); i++) {
 					JSONObject jo;
 					jo = arrayResponse.getJSONObject(i);
-					System.out.println("jo: " + jo.toString());
-					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), Integer.parseInt(jo.getString("rom")), jo.getString("Tittel")));				
+					int rom;
+					try {
+						rom = Integer.parseInt(jo.getString("rom"));
+					} catch (Exception e) {
+						rom = 0;
+					}
+					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")), Integer.parseInt(jo.getString("skaper")), jo.getString("Starttidspunkt"), jo.getString("Sluttidspunkt"), jo.getString("Beskrivelse").replace("[space]", " "), rom, jo.getString("Tittel"), null));				
 				}}
 		}catch (JSONException e) {
 			e.printStackTrace();
@@ -71,6 +90,9 @@ public class CalResponse {
 	}
 
 	public ArrayList<Deltaker> getDeltakere(){
+		if (var == null) {
+			return null;
+		}
 		if(!var.equals("deltakere")){
 			return null;
 		}
@@ -79,7 +101,7 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				deltakerList.add(new Deltaker(jo.getInt("Person_Ansattnummer"), jo.getInt("Avtale_AvtaleID"), jo.getString("Status"), jo.getString("SistSett")));
+				deltakerList.add(new Deltaker(jo.getString("navn"), jo.getInt("Person_Ansattnummer"), jo.getInt("Avtale_AvtaleID"), jo.getString("Status"), jo.getString("SistSett")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -107,7 +129,7 @@ public class CalResponse {
 	}
 
 	public boolean getNotifications(){
-		if(!var.equals("melding")){
+		if(!var.equals("melding") || arrayResponse == null){
 			return false;
 		}
 		ArrayList<Notification> notifytList = new ArrayList<Notification>();
@@ -115,8 +137,8 @@ public class CalResponse {
 			JSONObject jo;
 			try {
 				jo = arrayResponse.getJSONObject(i);
-				notifytList.add(new Notification(jo.getString("Aarsak"), Integer.parseInt(jo.getString("Avtale_AvtaleID")), jo.getString("Tidspunkt")));
-				System.out.println("notification added!");
+				int aid = ((jo.getString("Avtale_AvtaleID").equals("null")? 0: Integer.parseInt(jo.getString("Avtale_AvtaleID"))));
+				notifytList.add(new Notification(jo.getString("Aarsak"), aid, jo.getString("Tidspunkt")));
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return false;
@@ -127,7 +149,12 @@ public class CalResponse {
 	}
 
 	public ArrayList<Room> getRoms(){
-		if(!var.equals("Room")){
+		//VAR BLIR HER null NÅR DEN ETTER ALLE SIGENDE SKULLE VÆRT "Room"
+		if (var == null) {
+			return null;
+		}
+		if(!var.equals("Room"))
+		{
 			return null;
 		}
 		ArrayList<Room> roomList = new ArrayList<Room>();
@@ -136,7 +163,6 @@ public class CalResponse {
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
 				roomList.add(new Room(jo.getInt("ID"), jo.getString("Bygg"), jo.getInt("Etasje"), jo.getString("Beskrivelse"), jo.getInt("Stoerrelse")));
-				System.out.println("notification added!");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -166,24 +192,40 @@ public class CalResponse {
 		return true;
 	}
 
-	public ArrayList<Group> getGroups(){
+	public boolean getGroups(){
 		if(!var.equals("groups")){
-			return null;
+			return false;
 		}
 		ArrayList<Group> groups = new ArrayList<Group>();
 		try {
-			JSONObject jo;
+			JSONObject jo;			
+			ArrayList<Person> personList = new ArrayList<Person>();
 			for (int i = 0; i < arrayResponse.length(); i++) {
 				jo = arrayResponse.getJSONObject(i);
-				groups.add(new Group(jo.getString("Gruppenavn"), jo.getString("Beskrivelse"), jo.getInt("GruppeID")));
+				
+				JSONArray peopleArray = jo.getJSONArray("people");
+				for (int j = 0; j < peopleArray.length(); j++) {
+					JSONObject jobj = (JSONObject) peopleArray.get(j);
+					personList.add(new Person(jobj.getInt("Ansattnummer"), 
+												jobj.getString("Navn"), 
+												jobj.getInt("Telefonnummer"), 
+												jobj.getString("adresse"), 
+												jobj.getString("Epost")));	
+				}
+				groups.add(new Group(jo.getString("Gruppenavn"), 
+						jo.getString("Beskrivelse"), 
+						jo.getInt("GruppeID"),
+						personList));
+				personList = new ArrayList<Person>();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
-		return groups;
+		Bruker.getInstance().setGroups(groups);
+		return true;
 	}
-	
+
 	public boolean confirmLogin(){
 		try {
 			if(objectResponse != null){
@@ -231,10 +273,17 @@ public class CalResponse {
 	 * 
 	 */
 	public String getSimpleResponse(String var){
+		String result = "";
+		System.out.println("Var var " + var);
 		try {
-			return objectResponse.getString(var);
+			result = objectResponse.getString(var);
 		} catch (JSONException e) {
-			return null;
+			try {
+				result =  objectResponse.getInt(var)+"";
+			} catch (Exception e2) {
+				return null;
+			}
 		}
+		return result;
 	}
 }

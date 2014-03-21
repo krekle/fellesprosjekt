@@ -98,7 +98,7 @@ public class Handler extends Thread
 			else if(O.containsKey("request") && ((String) O.get("request")).equals("logout"))
 			{
 				JSONObject ReplyObject = new JSONObject();
-				if(!Server.user_Handler.values().contains(this.username))
+				if(!Server.user_Handler.keySet().contains(this.username))
 				{
 					ReplyObject.put("response", "logout");
 					ReplyObject.put("error","Not logged in!");

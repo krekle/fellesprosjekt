@@ -2,11 +2,23 @@ package gruppe9.kalender.client;
 
 import gruppe9.kalender.client.Client.Type;
 import gruppe9.kalender.model.Meeting;
+import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
 
+import java.util.ArrayList;
 
-public class Database {
 
+public class Database implements Runnable, ApiCaller
+{
+	ArrayList<Object> objects;
+	int mode;
+	public Database(int mode, ArrayList<Object> objects)
+	{
+		this.mode = mode;
+		this.objects = objects;
+		Thread t = new Thread(this);
+		t.start();		
+	}
 	public static void login(ApiCaller caller, String email, String password) {
 		String result = "";
 		try {
@@ -226,5 +238,23 @@ public class Database {
 			e.printStackTrace();
 		}
 		caller.callBack(new CalResponse(result, "groups"));
+	}
+
+	@Override
+	public void run() 
+	{
+		if(mode==0)
+		{
+			for(Object o : objects)
+			{
+				Database.deleteNotification(this, Bruker.getInstance().getUser().getId(), ((Notification) o).getMeetingId());
+			}
+		}
+		
+	}
+	@Override
+	public void callBack(CalResponse response)
+	{
+		System.out.println("Deleted or did something else to cause the server to respond.");
 	}
 }

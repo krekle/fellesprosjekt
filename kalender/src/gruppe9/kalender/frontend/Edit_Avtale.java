@@ -807,6 +807,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	{
 		for(Person p: setStatus.keySet())
 		{
+			System.out.println("I probably crashed here...");
 			Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), ""+setStatus.get(p));
 		}
 	}

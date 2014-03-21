@@ -43,6 +43,8 @@ public class Database implements Runnable, ApiCaller
 	public static void addMeeting(ApiCaller caller, Meeting m){
 		String result = "";
 		try {
+			int rom = ((m.getPlace().equals("NA") || m.getPlace().equals("")? m.getRoom(): 0)); 
+			
 			result = new Client("add/avtale",Type.GET,
 					"tittel", m.getName(),
 					"start", m.getStart(), 
@@ -51,7 +53,7 @@ public class Database implements Runnable, ApiCaller
 					"varighet", "",
 					"sted", m.getPlace(),
 					"skaper", m.getCreator() + "",
-					"romid", m.getRoom()+"")
+					"romid", rom+"")
 			.execute();
 
 		} catch (Exception e) {
@@ -102,7 +104,7 @@ public class Database implements Runnable, ApiCaller
 					"Beskrivelse", m.getDescription().replace(" ", "[space]"),
 					"varighet", "0",
 					"sted", m.getPlace(),
-					"romid", m.getRoom() + ""
+					"rom", m.getRoom() + ""
 					).execute();
 		} catch (Exception e) {
 			e.printStackTrace();

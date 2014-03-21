@@ -154,7 +154,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 					Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 				}
 			}
-			else if (response.getCode().equals("200") && complete == true) {
+			else if (response.getCode().equals("200") && complete && !edit) {
 				id = response.getSimpleResponse("avtaleid");
 				String csv = "";
 				String csvS = "";
@@ -788,9 +788,9 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		list.add(person);
 	}
 	meeting.setParticipants(list);
-	System.out.println(meeting);
 	if (edit) {
 		complete = true;
+		System.out.println("Sending update to server");
 		Database.updateMeeting(this, meeting);
 		
 	}

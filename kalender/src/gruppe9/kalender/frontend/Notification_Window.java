@@ -199,15 +199,18 @@ public class Notification_Window extends javax.swing.JFrame{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
+				ArrayList<Object> notes = new ArrayList<Object>();
 				for(int x = 0; x < jList1.getModel().getSize(); x++)
 				{
 					Notification n = (Notification) jList1.getModel().getElementAt(x);
 					if(n.hasBeenRead)
 					{
-						notifications.remove(n);
-						Database.deleteNotification(null, Bruker.getInstance().getUser().getId(), n.getMeetingId());
+						notes.add(n);
 					}
+					
+					
 				}
+				Database d = new Database(0, notes);
 			}
 			@Override
 			public void windowClosed(WindowEvent e){}

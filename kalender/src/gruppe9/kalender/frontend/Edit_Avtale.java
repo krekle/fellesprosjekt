@@ -145,7 +145,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		}
 		if (response.getCode() != null) {
 			if (response.getCode().equals("200") && edit == true && editComplete == true) {
-				if (setStatus.size() != 0 && !this.edit) {
+				if (setStatus.size() != 0) {
 					String people = "", statuses = "";
 					for(Person p: setStatus.keySet())
 					{
@@ -188,9 +188,6 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 //				System.out.println(people.substring(0, people.length()-1));
 //				System.out.println(statuses.substring(0, statuses.length()-1));
 				Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
-//				csv = csv.substring(0, csv.length()-1);
-//				csvS = csvS.substring(0, csvS.length()-1);
-//				Database.addParticipants(this, id, csv, csvS);
 			}
 		}
 		
@@ -659,15 +656,23 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 
 private String toDateTime(String dato, String tid) {
 	
-	System.out.println(dato.substring(5));
-	System.out.println(dato.substring(2, 4));
-	
-	String year = dato.substring(5);
+	System.out.println(dato);
+	System.out.println(tid);
+	String[] date = dato.split(":");
+	if (date[0].length() == 1) {
+		date[0] = "0" + date[0]; 
+	}
+	if (date[1].length() == 1) {
+		date[1] = "0" + date[1];
+	}
+	dato = date[0] + date[1] + date[2];
+	String year = dato.substring(4);
 	String day = dato.substring(0, 2);
-	String date1 = dato.substring(3,4);
+	String date1 = dato.substring(2,4);
 	String time = tid.substring(0,2);
 	String min = tid.substring(3,5);
 	String total = year + "-" + date1 + "-" + day + " " + time + ":" + min + ":" + "00";
+	System.out.println(total);
 	return total;
 }
     
@@ -801,6 +806,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		list.add(person);
 	}
 	meeting.setParticipants(list);
+	System.out.println(meeting);
 	if (edit) {
 		complete = true;
 		Database.updateMeeting(this, meeting);
@@ -858,12 +864,12 @@ private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
 		
 }
 
-private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) 
-{
+private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) {
+		
 	date_textfield.setText(
-					 dateChooser.getSelectionDate().getDate()+":"
-					+(0+dateChooser.getSelectionDate().getMonth()+1)+":"
-					+(dateChooser.getSelectionDate().getYear()+1900));
+				 dateChooser.getSelectionDate().getDate()+":"
+				+(0+dateChooser.getSelectionDate().getMonth()+1)+":"
+				+(dateChooser.getSelectionDate().getYear()+1900));
 }
 
 private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)

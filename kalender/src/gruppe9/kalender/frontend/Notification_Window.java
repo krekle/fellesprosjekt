@@ -105,6 +105,14 @@ public class Notification_Window extends javax.swing.JFrame{
 					jLabel3.setText(note.getTime());
 					jTextArea1.setText(note.getDescription());
 				}
+				else
+				{
+					jLabel1.setText(Bruker.getInstance().getUser().getId()+"");
+					jLabel2.setText("Ingen notifikasjon");
+					jLabel3.setText("Ingen notifikasjon");
+					jTextArea1.setText("Ingen nye notifikasjoner.");
+					
+				}
 			}
 		});
         jList1.setCellRenderer(new NotificationRenderer());

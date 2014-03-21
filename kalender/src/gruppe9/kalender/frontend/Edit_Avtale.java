@@ -31,6 +31,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -709,6 +710,11 @@ protected void fjern_buttonActionPerformed(ActionEvent e)
 	}
 	
 }
+
+private static final Pattern rfc2822 = Pattern.compile(
+        "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+);
+
 protected void add_buttonActionPerformed(ActionEvent e) 
 {
 	if(deltaker_combo.getModel().getSize()>0)
@@ -718,11 +724,20 @@ protected void add_buttonActionPerformed(ActionEvent e)
 			String mailaddress = JOptionPane.showInputDialog("Skriv inn mail til ekstern bruker:");
 			if(mailaddress != null )
 			{
+				if (rfc2822.matcher(mailaddress).matches()) {
+					Database.sendMail(null, mailaddress, 
+							"Invitasjon til avtale" + avtalenavn_textfield.toString(), 
+							"Du er invitert til møte klokken: " + start.toString() 
+							+ " i " + "av: " + Bruker.getInstance().getUser().getName());
+
+					DefaultListModel newModel = (DefaultListModel) person_list.getModel();	
+					newModel.addElement(mailaddress);
+					person_list.setModel(newModel);
+				}else{
+					System.err.println("ERROR: mail format");
+				}
 				
-//				TODO LEGG TIL SKAPELSE AV CUSTOM-PERSON FOR Å HOLDE PÅ MAILEN.
-				DefaultListModel newModel = (DefaultListModel) person_list.getModel();	
-				newModel.addElement(mailaddress);
-				person_list.setModel(newModel);
+				
 			}
 		}
 		else

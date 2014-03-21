@@ -340,6 +340,17 @@ def delete_varsel():
   else:
     return respond(131, 'Varsel ikke slettet', None)
 
+@route('/add/alarm', method = 'GET')
+def add_alarm():
+  d = request.query.decode()
+  if(d):
+    if(insert.create_varsel(d)):
+      return respond(200, 'Alarm laget', None)
+    else:
+      return respond(134, 'Alarm ikke laget', None)
+  else:
+    return respon(132, 'Error: input format', None)
+
 @route('/delete/alarm', method = 'GET')
 def delete_varsel():
   d = request.query.decode()

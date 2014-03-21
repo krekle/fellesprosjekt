@@ -58,6 +58,8 @@ def create_Person(d):
 
 def create_varsel(d):
   varsel = db['Alarm']
+  d['Tidspunkt'] = d['Tidspunkt'].replace('[space]', ' ')
+  d['Varselstekst'] = d['Varselstekst'].replace('[space]', ' ')
   try:
     varsel.insert(d)
     return True

@@ -274,6 +274,7 @@ public class CalResponse {
 	 */
 	public String getSimpleResponse(String var){
 		String result = "";
+		System.out.println("Var var " + var);
 		try {
 			result = objectResponse.getString(var);
 		} catch (JSONException e) {

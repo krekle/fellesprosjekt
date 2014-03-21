@@ -69,6 +69,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	if (edit) 
     	{
     		setMeetingFields();
+    	
     	}
         this.main = main;
         person_list.setCellRenderer(new list_person_renderer());
@@ -127,11 +128,17 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 			}
 		});
         deltaker_combo.setRenderer(new combo_box_person_renderer());
-        
+    	start = start_textfield.getText();
+    	slutt = slutt_textfield.getText();
+    	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
+    		start = toDateTime(date_textfield.getText(), start);
+    		slutt = toDateTime(date_textfield.getText(), slutt);
+    		Database.getAvaliableRooms(this, start, slutt);}    
     }
     
     @Override
-	public void callBack(CalResponse response) {
+	public void callBack(CalResponse response) 
+    {
 		if(response.getRoms() != null){
 			rooms = response.getRoms();
 			if (!romlist_model.isEmpty()) {
@@ -160,7 +167,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 					Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 				}
 			}
-			else if (response.getCode().equals("200") && complete && !edit) {
+			else if (response.getCode().equals("200") && complete && !edit  && !harID) {
 				id = response.getSimpleResponse("avtaleid");
 				String csv = "";
 				String csvS = "";
@@ -184,25 +191,28 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 						statuses += setStatus.get(p)+",";
 					}
 				}
-				System.out.println("Skapte møte..");
-				System.out.println(meeting.toString());
-//				System.out.println(people.substring(0, people.length()-1));
-//				System.out.println(statuses.substring(0, statuses.length()-1));
-				Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
+				meeting.setId(Integer.parseInt(id));
+				Database.addParticipants(null, id, people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
+				harID = true;
 			}
 		}
-		
 	}
     
 	private void setMeetingFields(){
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
-		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth(), meeting.getDayOfMonth()));
-		
+		Date date = new Date();
+		date.setYear(meeting.getYear()-1900); date.setMonth(meeting.getMonth()-1); date.setDate(meeting.getDayOfMonth()); 
+		dateChooser.updateUI();
+		dateChooser.ensureDateVisible(date);
+		dateChooser.setSelectionDate(date);
+		date_textfield.setText(dateChooser.getSelectionDate().getDate()+":"
+				+(dateChooser.getSelectionDate().getMonth()+1)+":"
+				+(dateChooser.getSelectionDate().getYear()));
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
-		romlist_model.addElement(meeting.getRoom());
+		romlist_model.addElement(new Room(meeting.getRoom(), "",0,"",0));
 		Database.getParticipants(this, meeting);
 		ArrayList<Person> p = Bruker.getInstance().getAllPeople();
 		ArrayList<Person> deltakende = new ArrayList<Person>();
@@ -270,7 +280,34 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         auto_select_choice = new javax.swing.JRadioButton();
         romlist_model = new DefaultListModel();
         personlist_model = new DefaultListModel();
-
+        rom_textfield.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rom_list.clearSelection();
+			}
+		});
         this.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -536,9 +573,8 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         rom_label.setText("Rom:");
         velg_label.setText("Velg fra liste:");
         rom_list.setModel(romlist_model);
-        
         romScrollPane.setViewportView(rom_list);
-
+        
         auto_select_choice.setText("Velg automatisk");
         auto_select_choice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -795,31 +831,42 @@ public void editDate(Integer increment)
 	date_textfield.setText(date.getDate()+":"+(date.getMonth()+1)+":"+(date.getYear()+1900));
 }
 
-private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
+private boolean harID = false;
+private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) 
+{
 	meeting.setCreator(Bruker.getInstance().getUser().getId());
 	meeting.setDescription(beskrivelse_textfield.getText());
 	meeting.setName(avtalenavn_textfield.getText());
 	meeting.setStart(toDateTime(date_textfield.getText(),start_textfield.getText()));
 	System.out.println("Date = " + date_textfield.getText());
 	meeting.setEnd(toDateTime(date_textfield.getText(), slutt_textfield.getText()));
-	
-	if (rom_list.getSelectedValue() != null) {
+	System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
+	System.out.println(rom_list.getSelectedValue() instanceof Room);
+	System.out.println(rom_list.getSelectedIndex());
+	if (rom_list.getSelectedValue() != null)
+	{
 		room = (Room) rom_list.getSelectedValue();
 		meeting.setPlace("NA");
 		meeting.setRoom(room.getId());
 	}
-	if (rom_list.getSelectedValue() == null) {
-		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) {
-			meeting.setPlace("spacetime");
-			//JASSÅ, kaller dette brukerfeil?
+	else if (rom_list.getSelectedValue() == null) 
+	{
+		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) 
+		{
+			meeting.setPlace("NA");
 		}
 		else meeting.setPlace(rom_textfield.getText());
 	}
+	else
+	{
+		JOptionPane.showMessageDialog(this, "Du må spesifisere et rom eller velge fra listen.");
+		return;
+	}
 
 	ArrayList list = new ArrayList();
-	Component[] participants = person_list.getComponents();
-	for (Component person : participants) {
-		list.add(person);
+	for (int x = 0; x<person_list.getModel().getSize(); x++) 
+	{
+		list.add((Person) person_list.getModel().getElementAt(x));
 	}
 	meeting.setParticipants(list);
 	if (edit) {
@@ -833,21 +880,34 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 		Database.addMeeting(this, meeting);
 	}
 	ArrayList<Meeting> mongobarn = Bruker.getInstance().getAvtaler();
+	if(edit)
+	{
+		for(Meeting m : mongobarn)
+		{
+			if(m.getId() == meeting.getId()){
+				mongobarn.remove(m);
+				break;
+			}
+		}
+	}
 	mongobarn.add(meeting);
 	Bruker.getInstance().setAvtaler(mongobarn);
-	for(Component c : main.getTabs().getComponents()){
-		((Panel) c).addMeeting(meeting);
-		((Panel) c).refresh();
-	}
 	
 	if((setStatus.size() != 0 && this.edit))
 	{
 		for(Person p: setStatus.keySet())
 		{
-			System.out.println("I probably crashed here...");
 			Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), ""+setStatus.get(p));
 		}
 	}
+	System.out.println("I got here..");
+	System.out.println(main.getTabs().getComponents());
+	for(Component c : main.getTabs().getComponents())
+	{
+		((Panel) c).addMeeting(meeting);
+		((Panel) c).refresh();
+	}
+	main.setMeeting(meeting);
 	main.updateKomMeetings();
 	main.setVisible(true);
 	this.setVisible(false);
@@ -860,7 +920,8 @@ this.setVisible(false);
 }
 
 private void auto_select_choiceActionPerformed(java.awt.event.ActionEvent evt) {
-	if (auto_select_choice.isSelected()) {
+	if (auto_select_choice.isSelected())
+	{
 		if (!rom_list.isSelectionEmpty()) {
 			rom_list.clearSelection();
 		}
@@ -887,6 +948,14 @@ private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) {
 				 dateChooser.getSelectionDate().getDate()+":"
 				+(0+dateChooser.getSelectionDate().getMonth()+1)+":"
 				+(dateChooser.getSelectionDate().getYear()+1900));
+	System.out.println("Date..." + date_textfield.getText());
+	start = start_textfield.getText();
+	slutt = slutt_textfield.getText();
+	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
+		start = toDateTime(date_textfield.getText(), start);
+		slutt = toDateTime(date_textfield.getText(), slutt);
+		Database.getAvaliableRooms(this, start, slutt);
+		}
 }
 
 private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)

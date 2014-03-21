@@ -13,7 +13,7 @@ public class Bruker {
 	
 	private Person bruker;
 	
-	private ArrayList<Meeting> avtaler;
+	private ArrayList<Meeting> avtaler  =new ArrayList<Meeting>();
 	
 	private ArrayList<Alert> varsler;
 	private ArrayList<Notification> notifications;

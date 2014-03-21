@@ -40,8 +40,10 @@ public class Notification_Window extends javax.swing.JFrame{
      * @param main_Window */
 	private Notification_Window THIS = this;
 	ArrayList<Notification> notifications = new ArrayList<Notification>();
-    public Notification_Window() 
+	Main_Window main;
+    public Notification_Window(Main_Window main) 
     {
+    	this.main = main;
         initComponents();
         if(Bruker.getInstance().getNotifications() != null)
         {
@@ -206,11 +208,14 @@ public class Notification_Window extends javax.swing.JFrame{
 					if(n.hasBeenRead)
 					{
 						notes.add(n);
+						notifications.remove(n);
 					}
-					
-					
 				}
 				Database d = new Database(0, notes);
+				if(!THIS.hasUnread())
+				{
+					main.setImage("resources/images/notification.png");
+				}
 			}
 			@Override
 			public void windowClosed(WindowEvent e){}

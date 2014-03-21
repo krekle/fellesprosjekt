@@ -104,7 +104,7 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     		return;
     	}
         Collections.sort(meetings);
-        for(int x = 0; x<5; x++)
+        for(int x = 1; x<6; x++)
         {
         	DefaultListModel<Meeting> avtaler = new DefaultListModel<Meeting>();
         	ArrayList<String> boop = new ArrayList<String>();

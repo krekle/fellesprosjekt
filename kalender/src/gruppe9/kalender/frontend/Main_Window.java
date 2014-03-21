@@ -122,7 +122,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				//				felles_deltakere_box.removeItemAt(felles_deltakere_box.getSelectedIndex());
 			}
 		});
-		notifications = new Notification_Window();
+		notifications = new Notification_Window(this);
 		String path = "resources/images/no_notification.png";
 		if(hasNewNotification())
 		{
@@ -136,7 +136,12 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		{
 			public void valueChanged(ListSelectionEvent e) 
 			{
-				setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));
+				if(kom_møte_list.getSelectedIndex() > 0){
+					setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));					
+					}
+				else{
+					setMeeting(null);
+				}
 			}
 		});
 		//        updateKomMeetings();
@@ -241,7 +246,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	{
 		if(meeting != null)
 		{
-			beskrivelse_area.setText("Avtalenavn " + meeting.getName() + "\n Beskrivelse: " + meeting.getDescription());
+			beskrivelse_area.setText("Avtalenavn " + meeting.getName() +
+					"\n Rom: " + meeting.getRoom()+
+					"\n Beskrivelse: " + meeting.getDescription());
 			avtale_label.setText("Avtale: " + meeting.getId());
 			dato_label.setText("Dato: "+meeting.getDayOfMonth()+"."+(meeting.getMonth())+"."+meeting.getYear());
 			tidspkt_label.setText("Tidspunkt: "+meeting.getStartTime());
@@ -301,7 +308,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			this.current_Avtale = meeting;
 		}
 		else
-		
 		{
 			beskrivelse_area.setText("");
 			avtale_label.setText("");
@@ -310,7 +316,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			AvslåDelta.clearSelection();
 			eier_label.setText("");
 			deltaker_list.setModel(new DefaultListModel<>());
-			
 			this.rediger_button.setEnabled(false);
 			this.slett_button.setEnabled(false);
 		}
@@ -857,7 +862,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	{
 		ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
 		meetings.remove(current_Avtale);
-
 		if(Bruker.getInstance().getUser().getId() == current_Avtale.getCreator())
 		{
 			Database.deleteMeeting(null, current_Avtale);
@@ -940,7 +944,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		return tabWindow;
 	}
 
-	private void setImage(String image_path)
+	public void setImage(String image_path)
 	{
 		Image icon =new ImageIcon(image_path).getImage();
 		ImageIcon notify_icon = new ImageIcon(icon.getScaledInstance(27, 27, java.awt.Image.SCALE_SMOOTH));

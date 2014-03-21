@@ -12,7 +12,7 @@ def create_avtale(d):
   maker = db['SkaperAv']
   room = db['TarPlassI']
   try:
-    meet = {'Tittel':d['tittel'],'Starttidspunkt':d['start'],'Sluttidspunkt': d['slutt'],'Beskrivelse': d['beskrivelse'],'varighet': d['varighet'],'sted': d['sted'], 'SistEndret':now.strftime(f), 'Opprettet': now.strftime(f)}
+    meet = {'Tittel':d['tittel'],'Starttidspunkt':d['start'],'Sluttidspunkt': d['slutt'],'Beskrivelse': d['beskrivelse'],'varighet': d['varighet'],'sted': d['sted'], 'SistEndret':now.strftime(f), 'Opprettet': now.strftime(f), 'rom':d['romid']}
     print(meet)
     meeting.insert(meet)
     print("Avtale: Success")

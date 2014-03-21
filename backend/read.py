@@ -35,7 +35,9 @@ def get_mine_avtaler(person_id):
   mine_avtaler = []
   if(md):
     for deltar in md:
-      mine_avtaler.append(get_avtale(deltar['Avtale_AvtaleID']))
+      d = get_avtale(deltar['Avtale_AvtaleID'])
+      d['Status'] = deltar['Status']
+      mine_avtaler.append(d)
   if(mine_avtaler):
     for avtale in mine_avtaler:
       avtaleToString(avtale)
@@ -49,13 +51,8 @@ def get_avtale(avtale_id):
   skaperData = db['SkaperAv']
 
   avtale = avtaleData.find_one(AvtaleID = avtale_id)
-  if(avtale['sted'] not 'NA'):
-    avtale['rom'] = str(romData.find_one(Avtale_AvtaleID = avtale_id)['Rom_ID'])i
-  else:
-    avtale['rom'] = avtale['sted']
-  print(avtale['rom'])
+  avtale['rom'] = str(romData.find_one(Avtale_AvtaleID = avtale_id)['Rom_ID'])
   avtale['skaper'] = str(skaperData.find_one(Avtale_AvtaleID = avtale_id)['Person_Ansattnummer'])
-  print(avtale['skaper'])
 
   if (avtale):
     avtale = dict(avtale)
@@ -72,6 +69,8 @@ def get_personvarsler(id):
   if(varsler):
     for varsel in varsler:
       varsel['Tidspunkt'] = str(varsel['Tidspunkt'])
+      varsel = dict(varsel)
+      print(varsel)
       mine_varsler.append(varsel)
   if (mine_varsler):
     result['alarm'] = mine_varsler
@@ -143,15 +142,27 @@ def get_deltakere(aid):
   try:
     aid = str(aid)
     deltakereData = db['DeltagendeI']
+    personData = db['Person']
     deltakere = deltakereData.find(Avtale_AvtaleID=aid)
     res = []
     for d in deltakere:
+      p = personData.find_one(Ansattnummer=d['Person_Ansattnummer'])
+      # print(p)
       d = dict([(str(k),str(v)) for k, v in d.items()])
+      d['navn'] = p['Navn']
       res.append(d)
     return res
   except:
     traceback.print_exc()
     return False
+
+def get_rom(romid):
+  Rom = db['Rom']
+  rom = {}
+  rom['Room'] = dict(Rom.find_one(ID=romid))
+  if (rom):
+    return rom
+  return false
 
 def get_ledige_rom(starttidspunkt, sluttidspunkt):
   st = datetime.datetime.strptime(starttidspunkt, "%Y-%m-%d %H:%M:%S")
@@ -159,48 +170,57 @@ def get_ledige_rom(starttidspunkt, sluttidspunkt):
   TarPlassI = db['TarPlassI']
   Rom = db['Rom']
   romListe = []
+  romDict = {}
   for rom in Rom:
-    romListe.append(rom)
-  romDictionary = dict(Room = romListe)
-
-  #Sjekker hvorvidt rom er ledig i tidsperiode, rotekode uten sidestykke, sorry...
-  if (et < st):
-    return
+    romListe.append(dict(Rom.find_one(ID=rom['ID'])))
   for rom in TarPlassI:
-    start = datetime.datetime.strptime(str(rom['Start']), '%Y-%m-%d %H:%M:%S')
-    slutt = None
-    if(rom['Slutt']):
-      slutt = datetime.datetime.strptime(str(rom['Slutt']), '%Y-%m-%d %H:%M:%S')
-    if (not(start or slutt)):
-      continue
-    if (st >= start and st < slutt):
-      romDictionary['Room'].remove(rom['ID'])
-      continue
-    if (et > start and et <= slutt):
-      romDictionary['Room'].remove(rom['ID'])
-      continue
-    if (st <= start and et >= slutt):
-      romDictionary['Room'].remove(rom['ID'])
-      continue
-  return romDictionary
+    if rom['Start'] >= st and rom['Start'] < et:
+      if dict(Rom.find_one(ID=rom['Rom_ID'])) in romListe:
+        romListe.remove(dict(Rom.find_one(ID=rom['Rom_ID'])))
+    elif rom['Slutt'] > st and rom['Slutt'] <= et:
+      if dict(Rom.find_one(ID=rom['Rom_ID'])) in romListe:
+        romListe.remove(dict(Rom.find_one(ID=rom['Rom_ID'])))
+  romDict['Room'] = romListe
+  if romDict:
+    return romDict
+  return false
+
+def get_avtale_rom(avtaleid):
+  TarPlassI = db['TarPlassI']
+  Rom = db['Rom']
+  romListe = []
+  romDict = {}
+  for rom in TarPlassI:
+    if rom['Avtale_AvtaleID'] == avtaleid:
+      romListe.append(dict(Rom.find_one(ID=rom['Rom_ID'])))
+      break
+  romDict['Room'] = romListe
+  if romDict:
+    return romDict
+  return false
 
 def get_person_groups(personid):
+  pid = personid
+  MedlemI = db['MedlemI']
+  Person = db['Person']
+  Gruppe = db['Gruppe']
+  groupList = []
+  groupDict = {}
+  personList = []
   try:
-    personid = str(personid)
-    MedlemI = db['MedlemI']
-    groupList = MedlemI.find(Ansattnummer=personid)
-    groupids = []
-    res = []
-    result = {}
-    for group in MedlemI:
-      if group.items()[1][1]==int(personid):
-        group = dict([(str(k), str(v)) for k, v in group.items()])
-        groupids.append(group.values()[1])
-    for groupid in groupids:
-	res.append(dict(get_gruppe(groupid)))
-    result['groups'] = res
-    return result
+    for medlem in MedlemI:
+      if medlem['Ansattnummer']==pid:
+        groupList.append(dict(Gruppe.find_one(GruppeID=medlem['GruppeID'])))
+    for group in groupList:
+      personList = []
+      for medlem in MedlemI:
+        if medlem['GruppeID'] == group['GruppeID']:
+          personList.append(dict(Person.find_one(Ansattnummer=medlem['Ansattnummer'])))
+      group['people'] = personList
+    groupDict['groups'] = groupList
   except:
     traceback.print_exc()
-    return False
+    return "ERROR"
+  return groupDict
+
 

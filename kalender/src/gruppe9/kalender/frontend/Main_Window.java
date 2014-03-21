@@ -82,13 +82,19 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				THIS.getContentPane().setBackground(x);
 				Timer t = new Timer(100, new ActionListener() {
 					boolean boop = false;
-					int r = 0; int g = 100; int b = 200; 
 					@Override
 					public void actionPerformed(ActionEvent e) 
 					{
-						r++; g++; b++;
-						if(r > 255){r = 0;} if(g > 255){ g = 0;} if(b > 255){b = 0;}
-						Color x = new Color(r,g,b);
+						Color x;
+						if(boop){
+							x = new Color(255,0,255);
+							boop = false;
+						}
+						else
+						{
+							x = new Color(0,255,0);
+							boop = true;
+						}
 						THIS.getContentPane().setBackground(x);
 					}
 				});

@@ -202,11 +202,14 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		avtalenavn_textfield.setText(meeting.getName());
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
-		dateChooser.setSelectionDate(new Date(meeting.getYear(), meeting.getMonth()-1, meeting.getDayOfMonth()));
+		Date date = new Date();
+		date.setYear(meeting.getYear()); date.setMonth(meeting.getMonth()-1); date.setDate(meeting.getDayOfMonth()); 
+		dateChooser.updateUI();
+		dateChooser.ensureDateVisible(date);
+		dateChooser.setSelectionDate(date);
 		date_textfield.setText(dateChooser.getSelectionDate().getDate()+":"
 				+(dateChooser.getSelectionDate().getMonth()+1)+":"
-				+(dateChooser.getSelectionDate().getYear()+1900));
-		dateChooser.updateUI();
+				+(dateChooser.getSelectionDate().getYear()));
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		romlist_model.addElement(new Room(meeting.getRoom(), "",0,"",0));
@@ -810,6 +813,9 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	meeting.setStart(toDateTime(date_textfield.getText(),start_textfield.getText()));
 	System.out.println("Date = " + date_textfield.getText());
 	meeting.setEnd(toDateTime(date_textfield.getText(), slutt_textfield.getText()));
+	System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
+	System.out.println(rom_list.getSelectedValue() instanceof Room);
+	System.out.println(rom_list.getSelectedIndex());
 	if (rom_list.getSelectedValue() != null) {
 		room = (Room) rom_list.getSelectedValue();
 		meeting.setPlace("NA");
@@ -817,7 +823,8 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 		meeting.setRoom(room.getId());
 	}
 	if (rom_list.getSelectedValue() == null) {
-		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) {
+		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) 
+		{
 			meeting.setPlace("NA");
 		}
 		else meeting.setPlace(rom_textfield.getText());
@@ -840,6 +847,16 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 		Database.addMeeting(this, meeting);
 	}
 	ArrayList<Meeting> mongobarn = Bruker.getInstance().getAvtaler();
+	if(edit)
+	{
+		for(Meeting m : mongobarn)
+		{
+			if(m.getId() == meeting.getId()){
+				mongobarn.remove(m);
+				break;
+			}
+		}
+	}
 	mongobarn.add(meeting);
 	Bruker.getInstance().setAvtaler(mongobarn);
 	
@@ -850,7 +867,10 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 			Database.updateParticipantStatus(this, ""+meeting.getId(), ""+p.getId(), ""+setStatus.get(p));
 		}
 	}
-	for(Component c : main.getTabs().getComponents()){
+	System.out.println("I got here..");
+	System.out.println(main.getTabs().getComponents());
+	for(Component c : main.getTabs().getComponents())
+	{
 		((Panel) c).addMeeting(meeting);
 		((Panel) c).refresh();
 	}

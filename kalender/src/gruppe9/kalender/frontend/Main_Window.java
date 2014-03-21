@@ -862,7 +862,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	{
 		ArrayList<Meeting> meetings = Bruker.getInstance().getAvtaler();
 		meetings.remove(current_Avtale);
-
 		if(Bruker.getInstance().getUser().getId() == current_Avtale.getCreator())
 		{
 			Database.deleteMeeting(null, current_Avtale);

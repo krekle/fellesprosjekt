@@ -36,6 +36,7 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -76,11 +77,28 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) 
 			{
+				System.out.println(e.getValue());
 				Color  x= new Color(255-e.getValue(),130, 255-e.getValue());
 				THIS.getContentPane().setBackground(x);
-				if(e.getValue() == 255)
+				Timer t = new Timer(100, new ActionListener() {
+					boolean boop = false;
+					int r = 0; int g = 100; int b = 200; 
+					@Override
+					public void actionPerformed(ActionEvent e) 
+					{
+						r++; g++; b++;
+						if(r > 255){r = 0;} if(g > 255){ g = 0;} if(b > 255){b = 0;}
+						Color x = new Color(r,g,b);
+						THIS.getContentPane().setBackground(x);
+					}
+				});
+				if(e.getValue() == 245)
 				{
-					
+					t.start();
+
+				}
+				else{
+					t.stop();
 				}
 			}
 		});

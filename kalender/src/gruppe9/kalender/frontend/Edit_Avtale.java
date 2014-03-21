@@ -726,9 +726,9 @@ protected void add_buttonActionPerformed(ActionEvent e)
 			{
 				if (rfc2822.matcher(mailaddress).matches()) {
 					Database.sendMail(null, mailaddress, 
-							"Invitasjon til avtale" + avtalenavn_textfield.toString(), 
-							"Du er invitert til møte klokken: " + start.toString() 
-							+ " i " + "av: " + Bruker.getInstance().getUser().getName());
+							("Avtaleinvitasjon " + avtalenavn_textfield.getText().toString()).replace(" ", "[space]"), 
+							("Du er invitert til møte klokken: " + start_textfield.getText().toString() 
+							+ " i " + "av: " + Bruker.getInstance().getUser().getName()).replace(" ", "[space]"));
 
 					DefaultListModel newModel = (DefaultListModel) person_list.getModel();	
 					newModel.addElement(mailaddress);

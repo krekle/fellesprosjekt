@@ -80,32 +80,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				System.out.println(e.getValue());
 				Color  x= new Color(255-e.getValue(),130, 255-e.getValue());
 				THIS.getContentPane().setBackground(x);
-				Timer t = new Timer(100, new ActionListener() {
-					boolean boop = false;
-					@Override
-					public void actionPerformed(ActionEvent e) 
-					{
-						Color x;
-						if(boop){
-							x = new Color(255,0,255);
-							boop = false;
-						}
-						else
-						{
-							x = new Color(0,255,0);
-							boop = true;
-						}
-						THIS.getContentPane().setBackground(x);
-					}
-				});
-				if(e.getValue() == 245)
-				{
-					t.start();
-
-				}
-				else{
-					t.stop();
-				}
 			}
 		});
 		groupPanels = new ArrayList<Panel>();

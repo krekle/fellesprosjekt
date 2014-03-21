@@ -136,7 +136,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		{
 			public void valueChanged(ListSelectionEvent e) 
 			{
-				if(kom_møte_list.getSelectedIndex() > 0){
+				if(kom_møte_list.getSelectedIndex() >= 0)
+				{
 					setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));					
 					}
 				else{
@@ -532,6 +533,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		beskrivelse_area.setColumns(20);
 		beskrivelse_area.setLineWrap(true);
 		beskrivelse_area.setRows(5);
+		beskrivelse_area.setEditable(false);
 		jScrollPane3.setViewportView(beskrivelse_area);
 
 

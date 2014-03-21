@@ -13,6 +13,7 @@ package gruppe9.kalender.frontend;
 import gruppe9.kalender.client.ApiCaller;
 import gruppe9.kalender.client.CalResponse;
 import gruppe9.kalender.client.Database;
+import gruppe9.kalender.model.Group;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Person;
 import gruppe9.kalender.user.Bruker;
@@ -42,7 +43,6 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
 	ArrayList<Meeting> meetings = new ArrayList<Meeting>();
 	private ArrayList<Person> people = new ArrayList<Person>();
 	private String name;
-	
     public Panel(JScrollBar scroller, Main_Window main, String name) 
     {
     	this.main = main;

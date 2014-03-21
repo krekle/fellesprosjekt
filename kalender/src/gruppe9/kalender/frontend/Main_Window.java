@@ -17,6 +17,8 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -53,7 +55,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	static boolean popupExists = false;
 	private Notification_Window notifications;
 	private javax.swing.JTabbedPane tabWindow;
-	
+	Main_Window THIS = this;
 	/** Creates new form Main_Window */
 	public Main_Window(Login_Window login) 
 	{
@@ -66,6 +68,19 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		// Resultatet kommer til callBack() metoden.    	
 		initComponents();
 		Panel me = new Panel(week_list_scroller, this, "me");
+
+		week_list_scroller.setMinimum(0); week_list_scroller.setMaximum(255);
+		week_list_scroller.addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) 
+			{
+				Color  x= new Color(255-e.getValue(),130, 255-e.getValue());
+				THIS.getContentPane().setBackground(x);
+//				THIS.setForeground(x);
+			}
+		});
+//		kom_møte_list
 		groupPanels = new ArrayList<Panel>();
 		Felles = new Panel(week_list_scroller, this, "felles");
 		tabWindow.addTab("Me", me);

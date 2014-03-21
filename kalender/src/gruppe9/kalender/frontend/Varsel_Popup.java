@@ -23,9 +23,11 @@ public class Varsel_Popup extends javax.swing.JFrame {
 
     /** Creates new form Varsel_Popup */
     Alert alert;
+    Meeting meeting;
     @SuppressWarnings("unused")
 	public Varsel_Popup(String type, Meeting avtale) 
     {
+    	meeting = avtale;
         initComponents();
         Alert A = null;
         type_label.setText(type);
@@ -115,6 +117,7 @@ public class Varsel_Popup extends javax.swing.JFrame {
         });
 
         sound_button.setText("Lyd");
+        sound_button.setVisible(false);
         sound_button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         sound_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -185,19 +188,13 @@ public class Varsel_Popup extends javax.swing.JFrame {
     }
     private void save_buttonActionPerformed(java.awt.event.ActionEvent evt)
     {
+    	Alert a = new Alert("","","",0,"");
     	alert.setDesciption(melding_text.getText());
-    	alert.setSound(sound_label.getText());
-    	alert.setTime(this.date_time_text.getText());
-    	if(this.type_label.getText().equals("e-mail"))
-    	{
-    		alert.setType("E-mail");
-    	}
-    	else
-    	{
-    		alert.setType("Alarm");
-    	}
+    	alert.setTime(this.date_time_text.getText());    	
+    	alert.setType("E-mail");
+    	a.setMeetingID(meeting.getId());
+    	this.setVisible(false);
     	Main_Window.popupExists = false;
-     
     }
     private void cancel_buttonActionPerformed(java.awt.event.ActionEvent evt) 
     {

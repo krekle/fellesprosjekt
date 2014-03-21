@@ -171,9 +171,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 				//Avtalene ble hentet fra serveren og ligger nå i
 				// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-				for(Component c : tabWindow.getComponents())
+				for(int i = 0; i< 2; i++)
 				{
-					((Panel) c).addMe();    				
+					((Panel) tabWindow.getComponents()[i]).addMe();    				
 				}
 				updateKomMeetings();
 				//Her kan man nå kjøre f.eks:
@@ -211,24 +211,32 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				ArrayList<Group> groupList = Bruker.getInstance().getGroups();
 				for (int i = 0; i < groupList.size(); i++) 
 				{
-					groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
-
-					try {
-						tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
-						for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
-//							System.out.println(groupPanels.get(i).getPeople());
-							if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId()){
-								groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
-							}
-						}
-//						groupPanels.get(i).addMe();
-					} catch (Exception e) 
+					for(Person p : groupList.get(i).getPeople())
 					{
-						e.printStackTrace();
+						
+					if(p.getId() == Bruker.getInstance().getUser().getId())
+					{						
+						groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
+						try {
+							tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
+							for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
+								if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId())
+								{
+									groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+								}
+							}
+						} catch (Exception e) 
+						{
+							e.printStackTrace();
+						}
 					}
+					else{
+					}
+				}
 				}
 				for(Panel group : groupPanels)
 				{
+					System.out.println();System.out.println();System.out.println();System.out.println();
 					System.out.println(group.getPeople());
 					tabWindow.add(group);
 				}
@@ -979,9 +987,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		else if(o instanceof Meeting)
 		{
 			Meeting meeting = (Meeting) o;
-			for(Component c : tabWindow.getComponents())
+			for(int i = 0; i < tabWindow.getComponents().length; i++)
 			{
-				((Panel) c).addMe();
+				((Panel) tabWindow.getComponents()[i]).addMe();
 			}
 			updateKomMeetings();
 		}

@@ -123,19 +123,19 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
         	}
         	switch(x)
 			{
-			case 0:
+			case 1:
 				mandag_list.setModel(avtaler);
 				break;
-			case 1:
+			case 2:
 				tirsdag_list.setModel(avtaler);
 				break;
-			case 2:
+			case 3:
 				onsdag_list.setModel(avtaler);
 				break;
-			case 3:
+			case 4:
 				torsdag_list.setModel(avtaler);
 				break;
-			case 4:
+			case 5:
 				fredag_list.setModel(avtaler);
 				break;
 			}

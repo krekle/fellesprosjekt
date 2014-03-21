@@ -413,7 +413,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			public void actionPerformed(ActionEvent e) 
 			{
 				String in = uke_search.getText();
-				if(in.matches("[0-9]*") && Integer.parseInt(in) >= 0 && Integer.parseInt(in)<=52)
+				if(in.matches("[0-9]*") && Integer.parseInt(in) > 0 && Integer.parseInt(in)<=52)
 				{
 					current_week = Integer.parseInt(uke_search.getText());
 					uke_label.setText(current_week+"/"+current_year);

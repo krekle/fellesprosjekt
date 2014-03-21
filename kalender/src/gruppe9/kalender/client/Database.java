@@ -60,11 +60,27 @@ public class Database {
 			caller.callBack(new CalResponse(result, null));			
 		}
 	}
+	
+	public static void sendMail(ApiCaller caller, String to, String subject, String msg){
+		String result = "";
+		try {
+			result = new Client("send/mail", Type.GET,
+					"to", to,
+					"subject", subject,
+					"msg", msg
+					).execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(caller != null){
+			caller.callBack(new CalResponse(result, null));
+		}
+
+	}
+	
 
 	public static void updateMeeting(ApiCaller caller, Meeting m){
 		String result = "";
-		System.out.println(m.getStart());
-		System.out.println(m.getEnd());
 		try {
 			result = new Client("update/avtale/" + m.getId(), Type.GET,
 					"avtale_id", m.getId()+"",

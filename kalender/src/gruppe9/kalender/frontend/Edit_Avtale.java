@@ -810,7 +810,8 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt) {
 	}
 	if (rom_list.getSelectedValue() == null) {
 		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) {
-			meeting.setPlace("NA");
+			meeting.setPlace("spacetime");
+			//JASSÅ, kaller dette brukerfeil?
 		}
 		else meeting.setPlace(rom_textfield.getText());
 	}

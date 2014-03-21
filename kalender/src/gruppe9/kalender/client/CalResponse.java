@@ -39,7 +39,7 @@ public class CalResponse {
 				JSONObject jo;
 				try {
 					jo = arrayResponse.getJSONObject(i);
-					int rom = -1;
+					int rom = 0;
 					if(!(jo.getString("rom").equals("NA") || jo.getString("rom").equals(null))){
 						try {
 							rom = Integer.parseInt(jo.getString("rom"));

@@ -136,7 +136,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		{
 			public void valueChanged(ListSelectionEvent e) 
 			{
-				if(kom_møte_list.getSelectedIndex() > 0){
+				if(kom_møte_list.getSelectedIndex() >= 0)
+				{
 					setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));					
 					}
 				else{

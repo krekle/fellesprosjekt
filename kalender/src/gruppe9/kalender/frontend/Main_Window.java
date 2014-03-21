@@ -187,9 +187,19 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 				//Avtalene ble hentet fra serveren og ligger nå i
 				// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
-				for(int i = 0; i< 2; i++)
-				{
-					((Panel) tabWindow.getComponents()[i]).addMe();    				
+//<<<<<<< HEAD
+//				for(Component c : tabWindow.getComponents())
+//				{
+//					((Panel) c).addMe();
+//				}
+				for (int i = 0; i < tabWindow.getComponents().length; i++) {
+					if (i==2) { break; } // gruppetabs skal ikke addMe
+					((Panel)tabWindow.getComponents()[i]).addMe();
+//=======
+//				for(int i = 0; i< 2; i++)
+//				{
+//					((Panel) tabWindow.getComponents()[i]).addMe();    				
+//>>>>>>> f8422b15639d405b79f1a59a2417fa6d84410d67
 				}
 				updateKomMeetings();
 				//Her kan man nå kjøre f.eks:
@@ -227,43 +237,58 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				ArrayList<Group> groupList = Bruker.getInstance().getGroups();
 				for (int i = 0; i < groupList.size(); i++) 
 				{
-					for(Person p : groupList.get(i).getPeople())
-					{
-						
-					if(p.getId() == Bruker.getInstance().getUser().getId())
-					{						
-						groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
-						try {
-							tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
-							for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
-								if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId())
-								{
-									groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
-								}
+					groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
+					try {
+						tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
+						for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
+							if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId()){
+								groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
 							}
-						} catch (Exception e) 
-						{
-							e.printStackTrace();
+							if((groupList.get(i).getPeople().size()==1) // om eneste gruppemedlem er deg selv
+									&& (groupList.get(i).getPeople().get(0).getId() == Bruker.getInstance().getUser().getId())){
+								groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+							}
 						}
-					}
-					else{
-					}
+					} catch (Exception e) 
+					{
+						e.printStackTrace();
+//=======
+//					for(Person p : groupList.get(i).getPeople())
+//					{
+//						
+//					if(p.getId() == Bruker.getInstance().getUser().getId())
+//					{						
+//						groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
+//						try {
+//							tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
+//							for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
+//								if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId())
+//								{
+//									groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+//								}
+//							}
+//						} catch (Exception e) 
+//						{
+//							e.printStackTrace();
+//						}
+//>>>>>>> f8422b15639d405b79f1a59a2417fa6d84410d67
+//					}
+//					else{
+//					}
 				}
 				}
 				for(Panel group : groupPanels)
 				{
-					System.out.println();System.out.println();System.out.println();System.out.println();
-					System.out.println(group.getPeople());
 					tabWindow.add(group);
 				}
 				for(Component c : tabWindow.getComponents()){
-					((Panel) c).refresh();}
+					((Panel) c).refresh();
 				}
+			}
+		} catch (Exception e)
+		{	
+			
 		}
-		catch (Exception e)
-		{
-		}
-
 		//vi må sjekke at response.* metodene funker her. etterhver vil vi også sjekke
 		// response.getVarsler() her
 	}

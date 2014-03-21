@@ -84,6 +84,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 		return Integer.parseInt(start.substring(0,4));
 	}
 	public int getMonth(){
+//		System.out.println(start.substring(5,7));
 		return Integer.parseInt(start.substring(5,7));
 	}
 	public int getDayOfMonth(){

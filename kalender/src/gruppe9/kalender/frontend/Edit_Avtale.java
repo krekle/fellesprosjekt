@@ -29,8 +29,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -96,19 +98,22 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 						@Override
 						public void actionPerformed(ActionEvent e) 
 						{
-							Person p = person_list.getModel().getElementAt(person_list.getSelectedIndex());
-							switch(((JMenuItem) e.getSource()).getText())
-							{
-							case("Udefinert"):
-								//TODO ADD FUNCTIONALITY FOR SETTING PARTICIPATING/NOT PARTICIPATING-STATUS
-								setStatus.put(p, "IkkeSvart");
+							if(person_list.getModel().getElementAt(person_list.getSelectedIndex()) instanceof Person)
+							{								
+								Person p = person_list.getModel().getElementAt(person_list.getSelectedIndex());
+								switch(((JMenuItem) e.getSource()).getText())
+								{
+								case("Udefinert"):
+									//TODO ADD FUNCTIONALITY FOR SETTING PARTICIPATING/NOT PARTICIPATING-STATUS
+									setStatus.put(p, "IkkeSvart");
 								break;
-							case("Godtar"):
-								setStatus.put(p, "Deltar");
+								case("Godtar"):
+									setStatus.put(p, "Deltar");
 								break;
-							case("Avslår"):
-								setStatus.put(p, "Avslaatt");
+								case("Avslår"):
+									setStatus.put(p, "Avslaatt");
 								break;
+								}
 							}
 						}
 					};
@@ -158,24 +163,30 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 				id = response.getSimpleResponse("avtaleid");
 				String csv = "";
 				String csvS = "";
-				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
-					Person p = (Person) o;
-					csv += p.getId() + ",";
-					csvS += "IkkeSvart,";
-				}
-				
 				String people = "";
 				String statuses = "";
+				for (Object o : ((DefaultListModel) person_list.getModel()).toArray()) {
+					if (o instanceof Group){
+						for (Person p : ((Group) o).getPeople())
+						{
+							people += p.getId() + ",";
+							statuses += "IkkeSvart,";													
+						}
+						}
+					}
+				
 				for(Person p: setStatus.keySet())
 				{
-				
-					people +=p.getId() + ",";
-					statuses += setStatus.get(p)+",";
+					if(!Arrays.asList(people.split(",")).contains(p.getId()))
+					{
+						people +=p.getId() + ",";
+						statuses += setStatus.get(p)+",";
+					}
 				}
 				System.out.println("Skapte møte..");
 				System.out.println(meeting.toString());
-				System.out.println(people.substring(0, people.length()-1));
-				System.out.println(statuses.substring(0, statuses.length()-1));
+//				System.out.println(people.substring(0, people.length()-1));
+//				System.out.println(statuses.substring(0, statuses.length()-1));
 				Database.addParticipants(this, Integer.toString(meeting.getId()), people.substring(0, people.length()-1), statuses.substring(0, statuses.length()-1));
 //				csv = csv.substring(0, csv.length()-1);
 //				csvS = csvS.substring(0, csvS.length()-1);
@@ -634,9 +645,13 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
     	varighet_label.setVisible(false);
     	DefaultComboBoxModel d = new DefaultComboBoxModel();
     	ArrayList<Person> people = Bruker.getInstance().getAllPeople();
+    	ArrayList<Group> grupper = Bruker.getInstance().getGroups();
     	for (Person p : people) {
     		d.addElement(p);
     	}
+    	for (Group g : grupper) {
+			d.addElement(g);
+		}
     	d.addElement("EPOST");
     	deltaker_combo.setModel(d);
     	

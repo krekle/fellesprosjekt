@@ -126,7 +126,6 @@ public class Database {
 		}
 		caller.callBack(new CalResponse(result, "deltakere"));
 	}
-
 	public static void deleteParticipant(ApiCaller caller, String avtale_id, String person_id){
 		String result = "";
 		try {

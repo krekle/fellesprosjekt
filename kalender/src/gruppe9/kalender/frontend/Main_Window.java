@@ -247,6 +247,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	{
 		if(meeting != null)
 		{
+			varsling_box.setEnabled(true);
+			rediger_button.setEnabled(true);
+			accept_choice.setEnabled(true);
+			decline_choice.setEnabled(true);
 			beskrivelse_area.setText("Avtalenavn " + meeting.getName() +
 					"\n Rom: " + meeting.getRoom()+
 					"\n Beskrivelse: " + meeting.getDescription());
@@ -455,7 +459,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		jScrollPane2.setViewportView(deltaker_list);
 
 		eier_label.setText("Eier:");
-
+		
+		accept_choice.setEnabled(false);
+		decline_choice.setEnabled(false);
 		decline_choice.setText("Avslå ");
 		decline_choice.addActionListener(new java.awt.event.ActionListener() 
 		{
@@ -464,7 +470,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				decline_choiceActionPerformed(evt);
 			}
 		});
-
+		
 		accept_choice.setText("Delta");
 		accept_choice.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -477,6 +483,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 
 		varsling_label.setText("Varsling:");
 
+		varsling_box.setEnabled(false);
+		rediger_button.setEnabled(false);
+		
 		dato_label.setText("Dato:");
 
 		varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Alarm" }));
@@ -833,16 +842,20 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	}
 
 	private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
-		current_Avtale.setMyStatus("Avslaatt");
-		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
-		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		if (current_Avtale != null) {
+			current_Avtale.setMyStatus("Avslaatt");
+			Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
+			((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		}
 	}
 
 	private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
 	{
-		current_Avtale.setMyStatus("Deltar");
-		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
-		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		if (current_Avtale != null) {
+			current_Avtale.setMyStatus("Deltar");
+			Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
+			((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		}
 	}
 
 	private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 

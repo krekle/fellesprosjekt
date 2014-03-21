@@ -780,9 +780,9 @@ protected void add_buttonActionPerformed(ActionEvent e)
 			{
 				if (rfc2822.matcher(mailaddress).matches()) {
 					Database.sendMail(null, mailaddress, 
-							"Invitasjon til avtale" + avtalenavn_textfield.toString(), 
-							"Du er invitert til møte klokken: " + start.toString() 
-							+ " i " + "av: " + Bruker.getInstance().getUser().getName());
+							("Avtaleinvitasjon " + avtalenavn_textfield.getText().toString()).replace(" ", "[space]"), 
+							("Du er invitert til møte klokken: " + start_textfield.getText().toString() 
+							+ " i " + "av: " + Bruker.getInstance().getUser().getName()).replace(" ", "[space]"));
 
 					DefaultListModel newModel = (DefaultListModel) person_list.getModel();	
 					newModel.addElement(mailaddress);
@@ -867,7 +867,11 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	ArrayList list = new ArrayList();
 	for (int x = 0; x<person_list.getModel().getSize(); x++) 
 	{
-		list.add((Person) person_list.getModel().getElementAt(x));
+		if (person_list.getModel().getElementAt(x) instanceof Person) {
+			list.add((Person) person_list.getModel().getElementAt(x));			
+		} else {
+			list.add(person_list.getModel().getElementAt(x));
+		}
 	}
 	meeting.setParticipants(list);
 	if (edit) {

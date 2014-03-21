@@ -19,7 +19,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	private String end;
 	private String description;
 	private int roomId;
-	private String place;
+	private String place = "NA";
 	private Group group = null;
 	private String myStatus;
 	
@@ -188,7 +188,7 @@ public class Meeting implements Comparable<Meeting>, ApiCaller{
 	}
 	
 	public DefaultListModel<Person> getParticipantListModel(){
-		DefaultListModel<Person> participantListModel = null;
+		DefaultListModel<Person> participantListModel = new DefaultListModel<Person>();
 		for (int i = 0; i < this.participants.size(); i++){
 			participantListModel.addElement(participants.get(i));
 		}

@@ -532,6 +532,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		beskrivelse_area.setColumns(20);
 		beskrivelse_area.setLineWrap(true);
 		beskrivelse_area.setRows(5);
+		beskrivelse_area.setEditable(false);
 		jScrollPane3.setViewportView(beskrivelse_area);
 
 

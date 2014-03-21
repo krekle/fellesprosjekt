@@ -3,6 +3,8 @@ import time
 import read
 import update
 import insert
+import traceback
+from mail import sendmail as send
 
 @route('/status')
 def status():
@@ -28,6 +30,24 @@ def get_avtale(id):
     return respond(200, 'ok', avtaler)
   else:
     return respond(131, 'Error: Ingen avtaler funnet', None)
+
+@route('/send/mail', method='GET')
+def send_mail():
+  d = request.query.decode()
+  print(d['to'])
+  print(d['subject'])
+  print(d['msg'])
+  send_to = d['to'].replace('[space]', ' ')
+  send_from = 'no-reply@kalender.no'
+  send_subject = d['subject'].replace('[space]', ' ')
+  send_msg = d['msg'].replace('[space]', ' ')
+  try:
+    send(send_to, send_from, send_subject, send_msg)
+    return respond(200, 'Mail sent', None)
+  except:
+    traceback.print_exc()
+    return respond(134, 'Error: mail not sent', None)
+
 
 @route('/test', method = 'GET')
 def test():
@@ -114,7 +134,9 @@ def get_person_notifications(id):
   notifications = None
   if(id):
     notifications = read.get_personvarsler(id)
-    print(notifications)
+    if(notifications):
+      for no in notifications['alarm']:
+        print('NOTIFICATION AVTALE_ID ' + str(no['Avtale_AvtaleID']))
   else:
     return respond(132, 'Error: Input format', None) 
   if(notifications):
@@ -155,7 +177,7 @@ def get_person_messages(personid):
   if (personid):
     personmessages = read.get_personmeldinger(personid)
   else:
-    return respnd(132, 'Error: Input format', None)
+    return respond(132, 'Error: Input format', None)
   if (personmessages):
     return respond(200, 'ok', dict(personmessages))
   else:
@@ -208,7 +230,6 @@ def update_avtale(aid):
   avtale = request.query.decode()
   avtale['AvtaleID'] = aid
   avtale = dict(avtale)
-  print(avtale)
   if(update.update_avtale(avtale)):
     return respond(200, 'Avtale endret', None)
   else:
@@ -342,14 +363,28 @@ def get_ledige_rom():
   else:
     return respond(132, 'Error: Input format', None)
 
+### Get room of a meeting ###
+@route('/get/avtalerom', method = 'GET')
+def get_avtale_rom():
+  d = request.query.decode()
+  aid = d['avtale_id']
+  if (aid):
+    rom = read.get_avtale_rom(aid)
+    return respond(200, 'ok', rom)
+  else:
+    return respond(132, 'Error: Input format', None)
+
 ### Get a persons group ###
 
 @route('/get/groups/<pid>', method = 'GET')
 def get_groups(pid):
-  d = request.query.decode()
-  if (pid):
-    groups = read.get_person_groups(pid)
-    return respond(200, 'ok', groups)
+  personid = int(pid)
+  if (personid):
+    try:
+      groups = read.get_person_groups(personid)
+      return respond(200, 'ok', groups)
+    except:
+      traceback.print_exc()
   else:
     return respond(131, 'Error: Input format', None)
 

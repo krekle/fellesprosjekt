@@ -17,8 +17,11 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -53,7 +57,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	static boolean popupExists = false;
 	private Notification_Window notifications;
 	private javax.swing.JTabbedPane tabWindow;
-	
+	Main_Window THIS = this;
 	/** Creates new form Main_Window */
 	public Main_Window(Login_Window login) 
 	{
@@ -66,6 +70,18 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		// Resultatet kommer til callBack() metoden.    	
 		initComponents();
 		Panel me = new Panel(week_list_scroller, this, "me");
+
+		week_list_scroller.setMinimum(0); week_list_scroller.setMaximum(255);
+		week_list_scroller.addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) 
+			{
+				System.out.println(e.getValue());
+				Color  x= new Color(255-e.getValue(),130, 255-e.getValue());
+				THIS.getContentPane().setBackground(x);
+			}
+		});
 		groupPanels = new ArrayList<Panel>();
 		Felles = new Panel(week_list_scroller, this, "felles");
 		tabWindow.addTab("Me", me);
@@ -496,7 +512,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		
 		dato_label.setText("Dato:");
 
-		varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Alarm" }));
+		varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"Ingen alarm", "E-Mail"}));
 		varsling_box.addActionListener(new ActionListener() 
 		{
 			@Override
@@ -504,15 +520,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 				if(!Main_Window.popupExists)
 				{
-					Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), null);
-					for(Alert a : Bruker.getInstance().getUser().getAlerts())
-					{
-						if(a.getMeetingID() == current_Avtale.getId() && p.getAlertType().equals(a.getType()))
-						{
-							p.setAlert(a);
-							break;
-						}
-					}
+					Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), current_Avtale);
 					p.setVisible(true);
 					Main_Window.popupExists = true;
 				}

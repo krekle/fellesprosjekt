@@ -120,15 +120,17 @@ public class Database implements Runnable, ApiCaller
 	public static void addAlert(ApiCaller caller, Alert alert){
 		String result = "";
 		try {
-			result = new Client("add/alarm/", Type.GET,
-					"Tidspunkt", alert.getTime(),
-					"Varselstekst", alert.getDesciption(),
+			result = new Client("add/alarm", Type.GET,
+					"Tidspunkt", alert.getTime().replace(" ", "[space]"),
+					"Varselstekst", alert.getDesciption().replace(" ", "[space]"),
 					"Avtale_AvtaleID", alert.getMeetingID()+"",
 					"Person_Ansattnummer", Bruker.getInstance().getUser().getId()+"").execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		caller.callBack(new CalResponse(result, null));
+		if(caller != null){
+			caller.callBack(new CalResponse(result, null));			
+		}
 
 	}
 

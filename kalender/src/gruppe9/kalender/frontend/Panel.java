@@ -89,9 +89,10 @@ public class Panel extends javax.swing.JPanel implements ChangeListener, ApiCall
     	{
     		people.remove(p);
     		meetings = new ArrayList<Meeting>();
+    		addMe();
     		for(Person pe: people)
     		{
-    			Database.getMeetings(this, pe.getId());
+    				Database.getMeetings(this, pe.getId());
     		}
     		refresh();
     	}

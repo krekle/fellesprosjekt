@@ -545,11 +545,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 				if(!Main_Window.popupExists)
 				{
-<<<<<<< HEAD
 					Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), current_Avtale);
-=======
-					Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), null);
->>>>>>> f8422b15639d405b79f1a59a2417fa6d84410d67
 					p.setVisible(true);
 					Main_Window.popupExists = true;
 				}

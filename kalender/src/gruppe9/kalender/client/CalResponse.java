@@ -40,8 +40,15 @@ public class CalResponse {
 				try {
 					jo = arrayResponse.getJSONObject(i);
 					int rom = 0;
-					if(!jo.getString("rom").equals("NA")){
-						rom = Integer.parseInt(jo.getString("rom"));	
+					if(!(jo.getString("rom").equals("NA") || jo.getString("rom").equals(null))){
+						try {
+							rom = Integer.parseInt(jo.getString("rom"));
+							System.out.println("ROM GOTTEN!");
+						} catch (Exception e) {
+						}
+						
+					}else{
+						System.out.println("NO ROM");
 					}
 					meetList.add(new Meeting(Integer.parseInt(jo.getString("AvtaleID")),
 							Integer.parseInt(jo.getString("skaper")), 

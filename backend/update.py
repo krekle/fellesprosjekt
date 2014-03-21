@@ -25,6 +25,20 @@ def add_deltakere_to_avtale(avtaleid, personids, statuses):
     print("Error")
     return False
 
+def update_location(avtale_id, new_rom, start, slutt):
+  locationData = db['TarPlassI']
+  try:
+    d = {}
+    d['Rom_ID'] = int(new_rom)
+    d['Avtale_AvtaleID'] = int(avtale_id)
+    d['Start'] = start
+    d['Slutt'] = slutt
+    locationData.update(d,['Avtale_AvtaleID'])
+    return True
+  except:
+    traceback.print_exc()
+    return False
+
 #Tested and works
 def update_person(d):
   try:
@@ -46,7 +60,12 @@ def update_avtale(d):
     for peo in p:
       people.append(str(peo['Person_Ansattnummer']))
     db['Avtale'].update(d, ['AvtaleID'])
-    insert.multiple_melding(people, d['AvtaleID'], ("Avtale" + d['AvtaleID'] + " er blitt endret"))
+    if(d['sted'] == 'NA'):
+      try:
+        update_location(d['AvtaleID'], d['rom'], d['Starttidspunkt'], d['Sluttidspunkt'])
+      except:
+        print("FEIL ROM")
+    insert.multiple_melding(people, d['AvtaleID'], ("Avtale " + d['AvtaleID'] + " er blitt endret"))
     print("Success")
     return True
   except:
@@ -60,7 +79,7 @@ def update_person_status(pid, aid, status):
     d['Status'] = status
     d['Person_Ansattnummer'] = pid
     d['Avtale_AvtaleID'] = aid
-    db['DeltagendeI'].update(d, ['Person_Ansattnummer', 'Avtale_AvtaleID'])
+    db['DeltagendeI'].upsert(d, ['Person_Ansattnummer', 'Avtale_AvtaleID'])
     return True
   except:
     return False

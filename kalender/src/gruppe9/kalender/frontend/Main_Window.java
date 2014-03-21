@@ -17,8 +17,11 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -53,7 +57,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	static boolean popupExists = false;
 	private Notification_Window notifications;
 	private javax.swing.JTabbedPane tabWindow;
-	
+	Main_Window THIS = this;
 	/** Creates new form Main_Window */
 	public Main_Window(Login_Window login) 
 	{
@@ -66,6 +70,18 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		// Resultatet kommer til callBack() metoden.    	
 		initComponents();
 		Panel me = new Panel(week_list_scroller, this, "me");
+
+		week_list_scroller.setMinimum(0); week_list_scroller.setMaximum(255);
+		week_list_scroller.addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) 
+			{
+				System.out.println(e.getValue());
+				Color  x= new Color(255-e.getValue(),130, 255-e.getValue());
+				THIS.getContentPane().setBackground(x);
+			}
+		});
 		groupPanels = new ArrayList<Panel>();
 		Felles = new Panel(week_list_scroller, this, "felles");
 		tabWindow.addTab("Me", me);
@@ -136,7 +152,8 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		{
 			public void valueChanged(ListSelectionEvent e) 
 			{
-				if(kom_møte_list.getSelectedIndex() > 0){
+				if(kom_møte_list.getSelectedIndex() >= 0)
+				{
 					setMeeting((Meeting)kom_møte_list.getModel().getElementAt(kom_møte_list.getSelectedIndex()));					
 					}
 				else{
@@ -170,6 +187,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 			{
 				//Avtalene ble hentet fra serveren og ligger nå i
 				// Bruker.getInstance().getAvtaler() <--returnerer en ArrayList med Meeting
+//<<<<<<< HEAD
 //				for(Component c : tabWindow.getComponents())
 //				{
 //					((Panel) c).addMe();
@@ -177,6 +195,11 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				for (int i = 0; i < tabWindow.getComponents().length; i++) {
 					if (i==2) { break; } // gruppetabs skal ikke addMe
 					((Panel)tabWindow.getComponents()[i]).addMe();
+//=======
+//				for(int i = 0; i< 2; i++)
+//				{
+//					((Panel) tabWindow.getComponents()[i]).addMe();    				
+//>>>>>>> f8422b15639d405b79f1a59a2417fa6d84410d67
 				}
 				updateKomMeetings();
 				//Her kan man nå kjøre f.eks:
@@ -229,7 +252,30 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 					} catch (Exception e) 
 					{
 						e.printStackTrace();
-					}
+//=======
+//					for(Person p : groupList.get(i).getPeople())
+//					{
+//						
+//					if(p.getId() == Bruker.getInstance().getUser().getId())
+//					{						
+//						groupPanels.add(new Panel(week_list_scroller, this, groupList.get(i).getName()));
+//						try {
+//							tabWindow.addTab(groupList.get(i).getName(), groupPanels.get(i));
+//							for (int j = 0; j < groupList.get(i).getPeople().size(); j++) {
+//								if(groupList.get(i).getPeople().get(j).getId() != Bruker.getInstance().getUser().getId())
+//								{
+//									groupPanels.get(i).addPerson(groupList.get(i).getPeople().get(j));
+//								}
+//							}
+//						} catch (Exception e) 
+//						{
+//							e.printStackTrace();
+//						}
+//>>>>>>> f8422b15639d405b79f1a59a2417fa6d84410d67
+//					}
+//					else{
+//					}
+				}
 				}
 				for(Panel group : groupPanels)
 				{
@@ -250,6 +296,10 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	{
 		if(meeting != null)
 		{
+			varsling_box.setEnabled(true);
+			rediger_button.setEnabled(true);
+			accept_choice.setEnabled(true);
+			decline_choice.setEnabled(true);
 			beskrivelse_area.setText("Avtalenavn " + meeting.getName() +
 					"\n Rom: " + meeting.getRoom()+
 					"\n Beskrivelse: " + meeting.getDescription());
@@ -458,7 +508,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		jScrollPane2.setViewportView(deltaker_list);
 
 		eier_label.setText("Eier:");
-
+		
+		accept_choice.setEnabled(false);
+		decline_choice.setEnabled(false);
 		decline_choice.setText("Avslå ");
 		decline_choice.addActionListener(new java.awt.event.ActionListener() 
 		{
@@ -467,7 +519,7 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				decline_choiceActionPerformed(evt);
 			}
 		});
-
+		
 		accept_choice.setText("Delta");
 		accept_choice.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -480,9 +532,12 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 
 		varsling_label.setText("Varsling:");
 
+		varsling_box.setEnabled(false);
+		rediger_button.setEnabled(false);
+		
 		dato_label.setText("Dato:");
 
-		varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "E-Mail", "Alarm" }));
+		varsling_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"Ingen alarm", "E-Mail"}));
 		varsling_box.addActionListener(new ActionListener() 
 		{
 			@Override
@@ -491,14 +546,6 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 				if(!Main_Window.popupExists)
 				{
 					Varsel_Popup p = new Varsel_Popup(varsling_box.getSelectedItem().toString(), null);
-					for(Alert a : Bruker.getInstance().getUser().getAlerts())
-					{
-						if(a.getMeetingID() == current_Avtale.getId() && p.getAlertType().equals(a.getType()))
-						{
-							p.setAlert(a);
-							break;
-						}
-					}
 					p.setVisible(true);
 					Main_Window.popupExists = true;
 				}
@@ -836,16 +883,20 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 	}
 
 	private void decline_choiceActionPerformed(java.awt.event.ActionEvent evt) {
-		current_Avtale.setMyStatus("Avslaatt");
-		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
-		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		if (current_Avtale != null) {
+			current_Avtale.setMyStatus("Avslaatt");
+			Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Avslaatt");
+			((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		}
 	}
 
 	private void accept_choiceActionPerformed(java.awt.event.ActionEvent evt) 
 	{
-		current_Avtale.setMyStatus("Deltar");
-		Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
-		((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		if (current_Avtale != null) {
+			current_Avtale.setMyStatus("Deltar");
+			Database.updateParticipantStatus(this, Integer.toString(current_Avtale.getId()), Integer.toString(Bruker.getInstance().getUser().getId()), "Deltar");
+			((Panel )tabWindow.getComponentAt(tabWindow.getSelectedIndex())).refresh();
+		}
 	}
 
 	private void rediger_buttonActionPerformed(java.awt.event.ActionEvent evt) 
@@ -982,9 +1033,9 @@ public class Main_Window extends javax.swing.JFrame implements ApiCaller
 		else if(o instanceof Meeting)
 		{
 			Meeting meeting = (Meeting) o;
-			for(Component c : tabWindow.getComponents())
+			for(int i = 0; i < tabWindow.getComponents().length; i++)
 			{
-				((Panel) c).addMe();
+				((Panel) tabWindow.getComponents()[i]).addMe();
 			}
 			updateKomMeetings();
 		}

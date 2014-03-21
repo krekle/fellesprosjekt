@@ -55,6 +55,9 @@ public class Login_Window extends javax.swing.JFrame implements ApiCaller {
 		pass_label = new javax.swing.JLabel();
 		pass_field = new javax.swing.JPasswordField();
 		login_button = new javax.swing.JButton();
+		
+		//Test:
+		
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);

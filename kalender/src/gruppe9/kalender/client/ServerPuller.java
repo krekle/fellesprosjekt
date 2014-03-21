@@ -30,7 +30,6 @@ public class ServerPuller {
 			try {
 				Database.getMeetings(this, Bruker.getInstance().getUser().getId());
 				Database.getNotifications(this);
-				Database.getNotifications(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -67,7 +66,7 @@ public class ServerPuller {
 		Runnable r = new Updater();
 		service = Executors.newScheduledThreadPool(1);
 		try {
-			service.scheduleAtFixedRate(r, 10, 60, TimeUnit.SECONDS);
+			service.scheduleAtFixedRate(r, 10, 240, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

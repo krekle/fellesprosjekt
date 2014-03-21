@@ -203,7 +203,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		beskrivelse_textfield.setText(meeting.getDescription());
 		//person_list.setListData(meeting.getParticipants().toArray());
 		Date date = new Date();
-		date.setYear(meeting.getYear()); date.setMonth(meeting.getMonth()-1); date.setDate(meeting.getDayOfMonth()); 
+		date.setYear(meeting.getYear()-1900); date.setMonth(meeting.getMonth()-1); date.setDate(meeting.getDayOfMonth()); 
 		dateChooser.updateUI();
 		dateChooser.ensureDateVisible(date);
 		dateChooser.setSelectionDate(date);
@@ -280,7 +280,34 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
         auto_select_choice = new javax.swing.JRadioButton();
         romlist_model = new DefaultListModel();
         personlist_model = new DefaultListModel();
-
+        rom_textfield.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rom_list.clearSelection();
+			}
+		});
         this.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -816,18 +843,24 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
 	System.out.println(rom_list.getSelectedValue() instanceof Room);
 	System.out.println(rom_list.getSelectedIndex());
-	if (rom_list.getSelectedValue() != null) {
+	if (rom_list.getSelectedValue() != null)
+	{
 		room = (Room) rom_list.getSelectedValue();
 		meeting.setPlace("NA");
-		System.out.println("ROOM ID: "+room.getId());
 		meeting.setRoom(room.getId());
 	}
-	if (rom_list.getSelectedValue() == null) {
+	else if (rom_list.getSelectedValue() == null) 
+	{
 		if (rom_textfield.getText() == "" || rom_textfield.getText() == null) 
 		{
 			meeting.setPlace("NA");
 		}
 		else meeting.setPlace(rom_textfield.getText());
+	}
+	else
+	{
+		JOptionPane.showMessageDialog(this, "Du må spesifisere et rom eller velge fra listen.");
+		return;
 	}
 
 	ArrayList list = new ArrayList();
@@ -915,12 +948,14 @@ private void dateChooserActionPerformed(java.awt.event.ActionEvent evt) {
 				 dateChooser.getSelectionDate().getDate()+":"
 				+(0+dateChooser.getSelectionDate().getMonth()+1)+":"
 				+(dateChooser.getSelectionDate().getYear()+1900));
+	System.out.println("Date..." + date_textfield.getText());
 	start = start_textfield.getText();
 	slutt = slutt_textfield.getText();
 	if (start_textfield.getText().length() == 5 && slutt_textfield.getText().length() == 5) {
 		start = toDateTime(date_textfield.getText(), start);
 		slutt = toDateTime(date_textfield.getText(), slutt);
-		Database.getAvaliableRooms(this, start, slutt);}
+		Database.getAvaliableRooms(this, start, slutt);
+		}
 }
 
 private void next_buttonActionPerformed(java.awt.event.ActionEvent evt)

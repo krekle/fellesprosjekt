@@ -1,6 +1,7 @@
 package gruppe9.kalender.client;
 
 import gruppe9.kalender.client.Client.Type;
+import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
 import gruppe9.kalender.model.Notification;
 import gruppe9.kalender.user.Bruker;
@@ -75,6 +76,8 @@ public class Database implements Runnable, ApiCaller
 		}
 	}
 	
+	
+	
 	public static void sendMail(ApiCaller caller, String to, String subject, String msg){
 		String result = "";
 		try {
@@ -112,6 +115,23 @@ public class Database implements Runnable, ApiCaller
 		if(caller != null){
 			caller.callBack(new CalResponse(result, null));
 		}
+	}
+	
+	public static void addAlert(ApiCaller caller, Alert alert){
+		String result = "";
+		try {
+			result = new Client("add/alarm", Type.GET,
+					"Tidspunkt", alert.getTime().replace(" ", "[space]"),
+					"Varselstekst", alert.getDesciption().replace(" ", "[space]"),
+					"Avtale_AvtaleID", alert.getMeetingID()+"",
+					"Person_Ansattnummer", Bruker.getInstance().getUser().getId()+"").execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(caller != null){
+			caller.callBack(new CalResponse(result, null));			
+		}
+
 	}
 
 	public static void addParticipants(ApiCaller caller, String avtale_id, String csvPeople, String csvStatus){

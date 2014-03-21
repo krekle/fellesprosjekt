@@ -10,6 +10,7 @@
  */
 package gruppe9.kalender.frontend;
 
+import gruppe9.kalender.client.Database;
 import gruppe9.kalender.model.Alert;
 import gruppe9.kalender.model.Meeting;
 
@@ -192,7 +193,12 @@ public class Varsel_Popup extends javax.swing.JFrame {
     	alert.setDesciption(melding_text.getText());
     	alert.setTime(this.date_time_text.getText());    	
     	alert.setType("E-mail");
+<<<<<<< HEAD
+    	alert.setMeetingID(meeting.getId());
+    	Database.addAlert(null, alert);
+=======
     	a.setMeetingID(meeting.getId());
+>>>>>>> f8422b15639d405b79f1a59a2417fa6d84410d67
     	this.setVisible(false);
     	Main_Window.popupExists = false;
     }

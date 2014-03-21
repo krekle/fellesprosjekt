@@ -209,7 +209,7 @@ public class Edit_Avtale extends javax.swing.JFrame implements ApiCaller {
 		dateChooser.setSelectionDate(date);
 		date_textfield.setText(dateChooser.getSelectionDate().getDate()+":"
 				+(dateChooser.getSelectionDate().getMonth()+1)+":"
-				+(dateChooser.getSelectionDate().getYear()));
+				+(dateChooser.getSelectionDate().getYear()+1900));
 		start_textfield.setText(meeting.getStartTime());
 		slutt_textfield.setText(meeting.getEndTime());
 		romlist_model.addElement(new Room(meeting.getRoom(), "",0,"",0));
@@ -841,6 +841,7 @@ private void lagre_buttonActionPerformed(java.awt.event.ActionEvent evt)
 	System.out.println("Date = " + date_textfield.getText());
 	meeting.setEnd(toDateTime(date_textfield.getText(), slutt_textfield.getText()));
 	System.out.println();System.out.println();System.out.println();System.out.println();System.out.println();
+	System.out.println(meeting.getStart());
 	System.out.println(rom_list.getSelectedValue() instanceof Room);
 	System.out.println(rom_list.getSelectedIndex());
 	if (rom_list.getSelectedValue() != null)
